@@ -6,14 +6,19 @@ m = data.mass;
 
 % Draw the particles
 theta = linspace(0,2*pi,15);
+scal = linspace(-1,1,15);
 s = sin(theta);
 c = cos(theta);
 
 
 % Partical position:
 for i=1:par.N
-    plot([c*r(i)+p(1,i)*ones(1,15)],[s*r(i)+p(2,i)*ones(1,15)],'r-')
+    plot([c*r(i)+p(1,i)*ones(1,15)],[s*r(i)+p(2,i)*ones(1,15)],'k-')
     hold on
+    xCross = DEM2Drotation(data.angular(1,i))*[1;0];
+    zCross = DEM2Drotation(data.angular(1,i))*[0;1];
+    plot([xCross(1)*scal*r(i) + p(1,i)*ones(1,15)],[xCross(2)*scal*r(i) + p(2,i)*ones(1,15)],'k-')
+    plot([zCross(1)*scal*r(i) + p(1,i)*ones(1,15)],[zCross(2)*scal*r(i) + p(2,i)*ones(1,15)],'k-')
 end
 
 % Walls: 

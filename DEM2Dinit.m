@@ -43,7 +43,8 @@ function data = DEM2Dinit(par)
     data.acceleration = zeros(2,par.N);
     data.velocity(2,:) = 0.01*ones(1,par.N);
     data.deltaOld = zeros(par.N,par.N);
-    data.angular = zeros(2,par.N); data.angular(1,:) = 0.1*ones(1,par.N);% 2D: angle, angular velocity
+    data.delta = zeros(par.N,par.N);
+    data.angular = zeros(3,par.N); data.angular(2,:) = -0.1*ones(1,par.N);% 2D: angle, angular velocity
     data.Xc = zeros(2,par.N,par.N); % contact point in local coordinates
     data.Xinorm = zeros(2,par.N,par.N);
     data.XinormOld = zeros(2,par.N,par.N);

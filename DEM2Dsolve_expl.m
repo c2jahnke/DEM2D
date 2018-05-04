@@ -1,4 +1,4 @@
-function [pk,vk] = DEM2Dsolve_expl(data,par)
+function [pk,vk,ak] = DEM2Dsolve_expl(data,par)
 
     N = par.N;
     dt = par.dt;
@@ -17,21 +17,25 @@ function [pk,vk] = DEM2Dsolve_expl(data,par)
     d = DEM2Ddist(x,z);
     
     % fx = zeros(N,N); fz = zeros(N,N);%
-    [fx,fz] = DEM2DinteractForce(x,z,vx,vz,d,r,par,data);
+    [fx,fz,tx,tz] = DEM2DinteractForce(x,z,vx,vz,d,r,par,data);
     [fwx,fwz] = DEM2DwallForce(x,z,vx,vz,d,r,par,data);
     
     
-    for i=1:N
+    for k=1:N
     % Define F:
-    F = DEM2DvectField(vx(i),vz(i),fx(i,:),fz(i,:),fwx(i),fwz(i),m(i),par);
+    F = DEM2DvectField(vx(k),vz(k),fx(k,:),fz(k,:),fwx(k),fwz(k),m(k),par);
     
-    vk(1,i) = vx(i) + F(3)*dt;
-    vk(2,i) = vz(i) + F(4)*dt;
+    vk(1,k) = vx(k) + F(3)*dt;
+    vk(2,k) = vz(k) + F(4)*dt;
     
-    pk(1,i) = x(i) + vk(1,i)*dt;
-    pk(2,i) = z(i) + vk(2,i)*dt;
-        
+    pk(1,k) = x(k) + vk(1,k)*dt;
+    pk(2,k) = z(k) + vk(2,k)*dt;
+    
+    data.angular(1,k) = data.angular(1,k) + data.angular(2,k)*dt;
+    data.angular(2,k) = data.angular(2,k) + data.angular(3,k)*dt;
+    % data.angular(3,i) = [tx(i); tz(i)]; How to do this?
+     
 end
-    
+    ak = data.angular;
 
 end

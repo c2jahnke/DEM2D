@@ -1,4 +1,4 @@
-function DEM2DplotDyn(data,par,P1,k)
+function DEM2DplotDyn(data,par,P1,A1,k)
 p = data.position;
 v = data.velocity;      
 r = data.radius;
@@ -15,8 +15,8 @@ c = cos(theta);
 for i=1:par.N
     plot([c*r(i)+P1(k,1,i)*ones(1,15)],[s*r(i)+P1(k,2,i)*ones(1,15)],'k-')
     hold all
-    xCross = DEM2Drotation(data.angular(1,i))*[1;0];
-    zCross = DEM2Drotation(data.angular(1,i))*[0;1];
+    xCross = DEM2Drotation(A1(k,1,i))*[1;0];
+    zCross = DEM2Drotation(A1(k,1,i))*[0;1];
     plot([xCross(1)*scal*r(i) + P1(k,1,i)*ones(1,15)],[xCross(2)*scal*r(i) + P1(k,2,i)*ones(1,15)],'k-')
     plot([zCross(1)*scal*r(i) + P1(k,1,i)*ones(1,15)],[zCross(2)*scal*r(i) + P1(k,2,i)*ones(1,15)],'k-')
 
