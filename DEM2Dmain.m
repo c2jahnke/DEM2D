@@ -1,8 +1,8 @@
 clc, clear all
 % -------------------------- Initialization -------------------------- %
 par = DEM2Dparam();
-data = DEM2Dinit(par);
-
+%data = DEM2Dinit(par);
+data = DEM2Dload();
 DEM2Dplot(data,par);
 %pause
 dt = par.dt;
@@ -10,7 +10,7 @@ T = par.T;
 step = par.step;
 P1  = zeros(T/step+1,2,par.N);
 V1  = zeros(T/step+1,2,par.N);
-A1 = zeros(T/step+1,3,par.N);
+A1 = zeros(T/step+1,3,par.N); 
 R1  = zeros(T/step+1,par.N);
 M1  = zeros(T/step+1,par.N);
 P1(1,:,:) = data.position;
@@ -20,6 +20,7 @@ R1(1,:) = data.radius;
 M1(1,:) = data.mass;
 n1(1) = par.N;
 
+pause()
 % ---------------------------- Iteratrion ---------------------------- %
 j = 1;
 count = 0;
@@ -33,7 +34,7 @@ for k = 1:T
     
     if count == step
         j = j+1;
-        count = 0;
+        count = 0; 
         
         P1(j,:,1:par.N) = pk;
         A1(j,:,1:par.N) = data.angular;
@@ -58,10 +59,7 @@ for k=1:J
     axis([-0.23+par.bBox(1) par.bBox(2)+0.03 -0.23+par.bBox(3) par.bBox(4)+0.03])
     axis equal
     hold off 
-    
     F(j) = getframe();
-    
-    pause(dt)
-    
+    pause(dt*15000)
 end
 save P1

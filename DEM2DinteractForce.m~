@@ -52,11 +52,11 @@ for i=1:N-1
         Xi(:,i,i+I(j)) = xc(:,i,i+I(j)) -xc(:,i+I(j),i);
         data.Xinorm(:,i,i+I(j)) = Xi(:,i,i+I(j)) - (Xi(:,i,i+I(j))'*[nx;nz])*[nx;nz];
         % tangential forces
-        if(data.XinormOld(:,i,i+I(j)) == 0) % fix to avoid strange behaviour by damping term 03.08.2018
+        if(data.XinormOld(:,i,i+I(j)) == 0)
             Ft(:,i,i+I(j)) = par.kT*data.Xinorm(:,i,i+I(j))
         else
         Ft(:,i,i+I(j)) = par.kT*data.Xinorm(:,i,i+I(j)) +par.dampT*(data.Xinorm(:,i,i+I(j)) - data.XinormOld(:,i,i+I(j)))/par.dt;
-        end % end fix
+        end
         vtx(i) = -2*Ft(1,i,i+I(j))*par.dt;
         vtz(i) = -2*Ft(2,i,i+I(j))*par.dt;
         % normal interaction % do not hard-code! What is 31.4?

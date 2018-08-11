@@ -16,7 +16,8 @@ function data = DEM2Dinit(par)
     while cond == 0
         count = count +1;
         disp("Arranging particles.")
-        data.position = [(par.bBox(2) - par.bBox(1) -2*par.r(2))*rand(1,par.N)+par.r(2) + par.bBox(1); (par.bBox(4)-par.bBox(3)-2*par.r(2))*rand(1,par.N)+par.r(2)+par.bBox(3)];
+
+        data.position = [(par.bBox(2) - par.bBox(1) -2*par.r(1))*rand(1,par.N)+par.r(1) + par.bBox(1); (par.bBox(4)-par.bBox(3)-2*par.r(1))*rand(1,par.N)+par.r(1)+par.bBox(3)];
 
         d = DEM2Ddist(data.position(1,:),data.position(2,:));
 
@@ -37,6 +38,7 @@ function data = DEM2Dinit(par)
             disp('Successfully arranged.')
         elseif count > 10
             disp("Too many particles for bounding box. 10 attempts to arange them failed.")
+            break;
         end
     end
     data.velocity =  0.001*(rand(2,par.N)-0.5);
@@ -48,5 +50,5 @@ function data = DEM2Dinit(par)
     data.Xc = zeros(2,par.N,par.N); % contact point in local coordinates
     data.Xinorm = zeros(2,par.N,par.N);
     data.XinormOld = zeros(2,par.N,par.N);
-
+    save('data')
 end

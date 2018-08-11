@@ -13,14 +13,14 @@ function [fwx,fwz] = DEM2DwallForce(x,z,vx,vz,d,r,par,data)
         if ((z(i)>box(4)-r(i) && z(i)<box(4)) && ( x(i)< box(3) || x(i)>box(1) ))
             deltaW(1,i) = r(i) - abs(z(i)-box(4));
             
-            fwz(i) = -31.4*r(i)*deltaW(1,i); % hard coded for concrete
+            fwz(i) = -10.4*r(i)*deltaW(1,i); %
             data.velocity(2,i) = - par.wallDistr*data.velocity(2,i);
         end
         
         % left
         if ((x(i)< box(1)+r(i) && x(i) > box(1)))
            deltaW(2,i) = r(i) - abs(x(i)-box(1));
-           fwx(i) = 31.4*r(i)*deltaW(2,i);
+           fwx(i) = par.kN*r(i)*deltaW(2,i);
            if(data.velocity(1,i) < 0)
                 data.velocity(1,i) = -par.wallDistr*data.velocity(1,i);
            end
@@ -29,21 +29,18 @@ function [fwx,fwz] = DEM2DwallForce(x,z,vx,vz,d,r,par,data)
         if ((z(i)<box(3)+r(i) && z(i)>box(3)) && ( x(i)< box(3) || x(i)>box(1) ))
             deltaW(4,i) = r(i) - abs(z(i)-box(3));
             
-            fwz(i) = 31.4*r(i)*deltaW(4,i);
+            fwz(i) = par.kN*r(i)*deltaW(4,i);
             data.velocity(2,i) = - par.wallDistr*data.velocity(2,i);
             data.acceleration(2,i) = 0;
         end
         % right
         if ((x(i)> box(2)-r(i) && x(i) < box(2)))
            deltaW(4,i) = r(i) - abs(x(i)-box(2));
-           fwx(i) = - 31.4*r(i)*deltaW(4,i); % what is 31.4?
+           fwx(i) = - par.kN*r(i)*deltaW(4,i); % what is 31.4?
            if(data.velocity(1,i) > 0)
                 data.velocity(1,i) = - par.wallDistr*data.velocity(1,i);
            end
         end
-        %fwx = fwx;% 0.8
-        %fwz = fwz;% 0.8
- 
         
         
         

@@ -17,7 +17,7 @@ function [pk,vk,ak] = DEM2Dsolve_expl(data,par)
     d = DEM2Ddist(x,z);
     
     % fx = zeros(N,N); fz = zeros(N,N);%
-    [fx,fz,tx,tz] = DEM2DinteractForce(x,z,vx,vz,d,r,par,data);
+    [fx,fz,tx,tz,vtx,vtz] = DEM2DinteractForce(x,z,vx,vz,d,r,par,data);
     [fwx,fwz] = DEM2DwallForce(x,z,vx,vz,d,r,par,data);
     
     
@@ -25,8 +25,8 @@ function [pk,vk,ak] = DEM2Dsolve_expl(data,par)
     % Define F:
     F = DEM2DvectField(vx(k),vz(k),fx(k,:),fz(k,:),fwx(k),fwz(k),m(k),par);
     
-    vk(1,k) = vx(k) + F(3)*dt;
-    vk(2,k) = vz(k) + F(4)*dt;
+    vk(1,k) = vx(k) + F(3)*dt + vtx(k);
+    vk(2,k) = vz(k) + F(4)*dt + vtz(k);
     
     pk(1,k) = x(k) + vk(1,k)*dt;
     pk(2,k) = z(k) + vk(2,k)*dt;
@@ -37,5 +37,4 @@ function [pk,vk,ak] = DEM2Dsolve_expl(data,par)
      
 end
     ak = data.angular;
-
 end
