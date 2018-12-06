@@ -22,7 +22,7 @@ j = 1;
 counter = 0;
 for k = 1:T
     counter = counter +1;
-    [pk,vk,ak] = DEM2Dsolve_expl(data,par);
+    [pk,vk,ak,data] = DEM2Dsolve_expl(data,par);
     
     data.position = pk;
     data.velocity = vk;

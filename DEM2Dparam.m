@@ -3,10 +3,10 @@ function par = DEM2Dparam()
 par = struct('N',[], 'g',[],'mu', [],'r',[],'bBox',[],'dt',[],'T',[],'step',[],'kN',[],'dN',[]);
 
 %number of particles
-par.N = 3;
+par.N = 1;
 
 % gravity
-par.g = 0.1*0.981; %[m/s²]
+par.g = 0.981; %[m/s²]
 % friction coefficient mu \in [0,1)
 par.mu = 0.5;
 

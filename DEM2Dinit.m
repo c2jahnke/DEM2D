@@ -1,19 +1,21 @@
 function data = DEM2Dinit(par)
-
+ 
     data = struct('position',[],'velocity',[],'acceleration',[],'radius',[],'mass',[],'deltaOld',[]);
-    m = 3/4*(par.r(1))^3*pi;
-%     % radii and weight randomly distributed
-%     C = rand(1,par.N);
-%     data.radius = par.r(1) + (par.r(2)-par.r(1)).*C; % [m], 20 mm = .02 m 
-%     data.mass = m + m/3 .*C; % kg
-    % two different radii
-    c = ceil(par.N*rand(1,1)); %random number between 0 and 100
+    data.contactsWall = struct;
+    data.contactsWall.isInitialized = zeros(par.N,4); % each particle may collide with all 4 walls
+    data.contactsWall.contactAge = zeros(par.N,4); % count contact age for particles
+    data.contactsWall.actuationPoint = zeros(par.N,2);
+    data.contactsWall.maxContactAge = 3;
+%     % radii randomly distributed
+
+    c = ceil(par.N/2*rand(1,1)); %random number between 0 and 100
     C = zeros(par.N,1); C(1:c) = par.r(1); C(c:par.N) = par.r(2);
     data.radius = C;
-    data.mass = 3/4*(data.radius).^3*pi;
-    cond = 0;
+    data.rho = 2700; % kg/m³
+    data.mass = 4/3*(data.radius).^3*pi;
+    isArranged = 0;
     count = 0;
-    while cond == 0
+    while isArranged == 0
         count = count +1;
         disp("Arranging particles.")
 
@@ -34,7 +36,7 @@ function data = DEM2Dinit(par)
         end
 
         if max(max(d<abs(R)))==0
-            cond = 1;
+            isArranged = 1;
             disp('Successfully arranged.')
         elseif count > 10
             disp("Too many particles for bounding box. 10 attempts to arange them failed.")

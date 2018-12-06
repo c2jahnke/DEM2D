@@ -1,4 +1,4 @@
-function [pk,vk,ak] = DEM2Dsolve_expl(data,par)
+function [pk,vk,ak,data] = DEM2Dsolve_expl(data,par)
 
     N = par.N;
     dt = par.dt;
@@ -18,7 +18,7 @@ function [pk,vk,ak] = DEM2Dsolve_expl(data,par)
     
     % fx = zeros(N,N); fz = zeros(N,N);%
     [fx,fz,tx,tz,vtx,vtz] = DEM2DinteractForce(x,z,vx,vz,d,r,par,data);
-    [fwx,fwz] = DEM2DwallForce(x,z,vx,vz,d,r,par,data);
+    [fwx,fwz,data] = DEM2DwallForce(x,z,vx,vz,d,r,par,data);
     
     
     for k=1:N
