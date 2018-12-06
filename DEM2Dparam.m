@@ -3,7 +3,7 @@ function par = DEM2Dparam()
 par = struct('N',[], 'g',[],'mu', [],'r',[],'bBox',[],'dt',[],'T',[],'step',[],'kN',[],'dN',[]);
 
 %number of particles
-par.N = 2;
+par.N = 3;
 
 % gravity
 par.g = 0.1*0.981; %[m/s²]
@@ -28,4 +28,5 @@ par.kT = 0.1*par.kN; % adjust accordingly
 par.dampN = 1e-1; % correct? 2 % of critial damping
 par.dampT = 1e-2; % tangential damping
 par.wallDistr = 0.1; % coefficient on wall
+% particle wall
 end

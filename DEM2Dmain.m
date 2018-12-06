@@ -1,8 +1,8 @@
 clc, clear all
 % -------------------------- Initialization -------------------------- %
 par = DEM2Dparam();
-%data = DEM2Dinit(par);
-data = DEM2Dload();
+data = DEM2Dinit(par);
+%data = DEM2Dload();
 DEM2Dplot(data,par);
 %pause
 dt = par.dt;
@@ -15,7 +15,7 @@ R1  = zeros(T/VisualizationStep+1,par.N); R1(1,:) = data.radius;
 M1  = zeros(T/VisualizationStep+1,par.N); M1(1,:) = data.mass;
 n1(1) = par.N;
 
-pause()
+% pause()
 % ---------------------------- Iteratrion ---------------------------- %
 % TODO: locate forgotten semi-cola
 j = 1;
