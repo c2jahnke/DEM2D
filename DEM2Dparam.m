@@ -17,8 +17,8 @@ par.bBox = [ 2.5 3.5;
              3 4];
 
 % numerical simulation
-par.dt = 1e-5;%1e-6
-par.T = 5e5;%1e6; %2e5
+par.dt = 5e-6;%1e-6
+par.T = 1e6;%1e6; %2e5
 par.step = round(0.05/par.dt);
 
 % force parameters
