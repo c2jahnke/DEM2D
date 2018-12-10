@@ -11,8 +11,8 @@ VisualizationStep = par.step;
 P1  = zeros(T/VisualizationStep+1,2,par.N); P1(1,:,:) = data.position;
 V1  = zeros(T/VisualizationStep+1,2,par.N); V1(1,:,:) = data.velocity;
 A1 = zeros(T/VisualizationStep+1,3,par.N); A1(1,:,:) = data.angular;
-R1  = zeros(T/VisualizationStep+1,par.N); R1(1,:) = data.radius;
-M1  = zeros(T/VisualizationStep+1,par.N); M1(1,:) = data.mass;
+% R1  = zeros(T/VisualizationStep+1,par.N); R1(1,:) = data.radius;
+% M1  = zeros(T/VisualizationStep+1,par.N); M1(1,:) = data.mass;
 n1(1) = par.N;
 
 % pause()
@@ -30,8 +30,7 @@ for k = 1:T
     
     if counter == VisualizationStep
         j = j+1;
-        counter = 0; 
-        
+        counter = 0;
         P1(j,:,1:par.N) = pk; 
         A1(j,:,1:par.N) = data.angular;
     end

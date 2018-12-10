@@ -34,23 +34,30 @@ function [fwx,fwz,data] = DEM2DwallForce(x,z,vx,vz,d,radius,par,data)
        % bottom
         if ((z(i)<box(3)+radius(i) && z(i)>box(3)) && ( x(i)< box(3) || x(i)>box(1) ))
             if(data.contactsWall.isInitialized(i,3))
-
                 data.contactsWall.contactAge(i,3) = 1;
             else
                 data.contactsWall.isInitialized(i,3) = true;
+                data.contactsWall.actuationPoint(i,:,3) = [x(i) box(3)];
             end
+            % normal contact
             deltaW(4,i) = radius(i) - abs(z(i)-box(3));
             fwz(i) = normal_stiffness*radius(i)*deltaW(4,i);
-            actuationPoint = [x(i) box(3)];
-            x12 = actuationPoint - [x(i) z(i)];
-            dist = norm(x12);
-            data.velocity(2,i) = 0;%- par.wallDistr*data.velocity(2,i);
+            % tangential contact
+            tangentialSpring = (data.contactsWall.actuationPoint(i,:,3) - [x(i) box(3)])*[1;0];
+            if(tangentialSpring < eps)
+                fwx(i) = 0;
+            else
+                %data.contactsWall.actuationPoint(i,:,3) = [x(i) box(3)];
+                fwx(i) = par.kT*tangentialSpring;
+            end
+            data.velocity(2,i) = 0;
             data.acceleration(2,i) = 0;
         elseif(data.contactsWall.isInitialized(i,3)) % initialized but no contact with bottom
             data.contactsWall.contactAge(i,3) = data.contactsWall.contactAge(i,3) + 1;
             if(data.contactsWall.contactAge(i,3) >= data.contactsWall.maxContactAge)
                 data.contactsWall.contactAge(i,3) = 0;
                 data.contactsWall.isInitialized(i,3) = false;
+                data.contactsWall.actuationPoint(i,:,3) = [0 0];
             end
         end
 
