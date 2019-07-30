@@ -1,10 +1,11 @@
-clc, clear all
+clc, clear all, close all
 % -------------------------- Initialization -------------------------- %
 par = DEM2Dparam();
-data = DEM2Dinit(par);
-%data = DEM2Dload();
+%data = DEM2Dinit(par);
+data = DEM2Dload();
+figure(1)
 DEM2Dplot(data,par);
-%pause
+pause
 dt = par.dt;
 T = par.T;
 VisualizationStep = par.step;
@@ -37,7 +38,7 @@ for k = 1:T
 end
 
 pause
-figure
+figure(1)
 % ----------------------------- Drawing ----------------------------- %
 DEM2DplotSim(P1,A1,par,data,j)
 

@@ -4,7 +4,7 @@ function data = DEM2Dinit(par)
     data.contactsWall = struct;
     data.contactsWall.isInitialized = zeros(par.N,4); % each particle may collide with all 4 walls
     data.contactsWall.contactAge = zeros(par.N,4); % count contact age for particles
-    data.contactsWall.actuationPoint = zeros(par.N,2,4);
+    data.contactsWall.actuationPoint = zeros(par.N,2,4); % actuation point for each particle and each wall
     data.contactsWall.maxContactAge = 3;
 %     % radii randomly distributed
 
