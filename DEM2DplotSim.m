@@ -26,7 +26,7 @@ end
      [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
     hold    on
     title('Simulation')
-    text(par.bBox(1)-0.15,par.bBox(3)-0.08,['t = ',num2str((k-1)*par.dt*par.step,'%10.2f') 's'])
+    text(par.bBox(1)-0.15,par.bBox(3)-0.15,['t = ',num2str((k-1)*par.dt*par.step,'%10.2f') 's'])
     axis([-0.03+par.bBox(1) par.bBox(2)+0.03 -0.03+par.bBox(3) par.bBox(4)+0.03])
     axis equal
     hold off 

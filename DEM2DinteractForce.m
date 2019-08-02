@@ -37,6 +37,10 @@ for i=1:N-1
         % normal direction
         nx = (x(i)-x(i+I(j)))/d(i,i+I(j));
         nz = (z(i)-z(i+I(j)))/d(i,i+I(j));
+        % relative mass
+        effMass = data.mass(i)*data.mass(j)/(data.mass(i)+data.mass(j));
+        % normal stiffness
+        normalStiffness = par.Emodul*(r(i)+r(i+I(j)))/2*pi/2;
         %%%%%%%%%%%%%%%%%%% Coulomb Friction %%%%%%%%%%%%%%%%%%%%%%%
         % tangential direction
         tx = nz;
@@ -55,12 +59,12 @@ for i=1:N-1
         if(data.XinormOld(:,i,i+I(j)) == 0) % fix to avoid strange behaviour by damping term 03.08.2018
             Ft(:,i,i+I(j)) = par.kT*data.Xinorm(:,i,i+I(j))
         else
-        Ft(:,i,i+I(j)) = par.kT*data.Xinorm(:,i,i+I(j)) +par.dampT*(data.Xinorm(:,i,i+I(j)) - data.XinormOld(:,i,i+I(j)))/par.dt;
+        Ft(:,i,i+I(j)) = par.kT*data.Xinorm(:,i,i+I(j)) +par.dampT*2*sqrt(par.kT*effMass)*(data.Xinorm(:,i,i+I(j)) - data.XinormOld(:,i,i+I(j)))/par.dt;
         end % end fix
         vtx(i) = -2*Ft(1,i,i+I(j))*par.dt;
         vtz(i) = -2*Ft(2,i,i+I(j))*par.dt;
-        % normal interaction % do not hard-code! What is 31.4?
-        F(i,i+I(j)) = par.Emodul*(r(i)+r(i+I(j)))/2*delta(i,i+I(j)) + par.dampN * ddeltadt(i,i+I(j)); % kN = pi/2*E(r(i)+r(i+I(j)))/2 consider mass? par.kN = (r(i)+r(i+I(j)))/2
+        % normal interaction % do not hard-code! 
+        F(i,i+I(j)) = normalStiffness*delta(i,i+I(j)) + par.dampN*2*sqrt(normalStiffness*effMass)* ddeltadt(i,i+I(j)); % kN = pi/2*E(r(i)+r(i+I(j)))/2 consider mass? par.kN = (r(i)+r(i+I(j)))/2
         F(i+I(j),i) = - F(i,i+I(j));
         if (Ft(1,i,i+I(j)) + Ft(2,i,i+I(j)))^(1/2) > par.mu*F(i,i+I(j))
             % calculate actuation point
