@@ -13,9 +13,10 @@ par.mu = 0.5;
 % mean radius 
 par.r = [0.1 0.06]; %[m]
 % bounding box, x-length, z-length (height)
-par.bBox = [ 1.5 3.5; 
-             2.5 4];
-
+par.bBox = [ 1.5 2; 
+             2 2.5];
+% contact detection
+par.collisionThreshold = 2;
 % numerical simulation
 par.dt = 5e-4;%1e-6
 par.T = 1e4;%1e6; %2e5
