@@ -19,9 +19,17 @@ fz = zeros(N,N);
 vtx = zeros(1,N);
 vtz = zeros(1,N);
 ddeltadt = zeros(N,N); % calculate ddelta/dt'
+dist = DEM2Ddist(x,z);
 for i = 1:N
-    for j = i:N
+    for j = i+1:N
+        % numerical delta_dot
         ddeltadt(i,j) = (delta(i,j)-data.deltaOld(i,j))/par.dt; % du = (u^n+1 - u^n)/dt
+        % analytical delta_dot
+        Analytical_ddeltadt(i,j) = (x(i) - x(j))*(vx(i) - vx(j)) + (z(i) - z(j))*(vz(i) - vz(j))/dist(i,j);
+        if(Analytical_ddeltadt(i,j) ~= ddeltadt(i,j))
+        disp(['Different delta_dot: Analytical:' num2str(Analytical_ddeltadt(i,j)) 'Numerical:'  num2str(ddeltadt(i,j))]);
+        pause(0.1)
+        end
         ddeltadt(j,i) = ddeltadt(i,j);
     end
 end

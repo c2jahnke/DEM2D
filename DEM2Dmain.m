@@ -29,8 +29,8 @@ for k = 1:T
         ColCounter = 0;
         c = DEM2Dcontacts(data,par);
     end
-    [pk,vk,ak,data] = DEM2Dsolve_expl(data,par);
-    [pk,vk,ak,data] = DEM2Dsolve_pgs(data,par,c.contacts);
+     [pk,vk,ak,data] = DEM2Dsolve_expl(data,par);
+ %   [pk,vk,ak,data] = DEM2Dsolve_pgs(data,par,c.contacts);
     data.position = pk;
     data.velocity = vk;
     data.angular = ak;

@@ -28,7 +28,5 @@ classdef DEM2Dcontacts < handle
             end;
             c.contacts = contacts
         end
-           
-        
     end
 end

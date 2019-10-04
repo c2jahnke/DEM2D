@@ -8,7 +8,7 @@ function [fwx,fwz,data] = DEM2DwallForce(x,z,vx,vz,d,radius,par,data)
          0  1;
          1  0];    
     deltaW = zeros(4,par.N);
-    
+    ddeltaW = zeros(4,par.N);
     for i = 1 : par.N
     normal_stiffness = par.Emodul*pi/2*radius(i);
         
@@ -25,8 +25,9 @@ function [fwx,fwz,data] = DEM2DwallForce(x,z,vx,vz,d,radius,par,data)
         % right
         if ((x(i)> box(2)-radius(i) && x(i) < box(2)))
            deltaW(4,i) = radius(i) - abs(x(i)-box(2));
-           fwx(i) = - normal_stiffness*deltaW(4,i); 
+           fwx(i) = - normal_stiffness*deltaW(4,i);% + par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(4,i); 
            actuationPoint = [box(2) z(i)];
+          
            if(data.velocity(1,i) > 0)
                 data.velocity(1,i) = 0;% - par.wallDistr*data.velocity(1,i);
            end 
@@ -41,19 +42,20 @@ function [fwx,fwz,data] = DEM2DwallForce(x,z,vx,vz,d,radius,par,data)
             end
             % normal contact
             deltaW(4,i) = radius(i) - abs(z(i)-box(3));
-            fwz(i) = normal_stiffness*deltaW(4,i)
+            fwz(i) = normal_stiffness*deltaW(4,i) + par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(4,i);
+            ddeltaW(4,i) = 1;
             % tangential contact
-            tangentialSpring = (data.contactsWall.actuationPoint(i,:,3) - [x(i) box(3)])*[1;0]
+            tangentialSpring = (data.contactsWall.actuationPoint(i,:,3) - [x(i) box(3)])*[1;0];
             if(abs(tangentialSpring) < eps)
                 fwx(i) = 0;
             else
                 %data.contactsWall.actuationPoint(i,:,3) = [x(i) box(3)];
-                fwx(i) = par.kT*tangentialSpring
+                fwx(i) = par.kT*tangentialSpring;
             end
             % friction
             
             if(abs(fwx(i)) > fwz(i)*par.mu)
-                fwx(i) = sign(fwx(i))*fwz(i)*par.mu
+                fwx(i) = sign(fwx(i))*fwz(i)*par.mu;
             end
             data.velocity(2,i) = 0;
             data.acceleration(2,i) = 0;

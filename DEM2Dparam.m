@@ -11,7 +11,7 @@ par.g = 9.81; %[m/s²]
 par.mu = 0.5;
 
 % mean radius 
-par.r = [0.1 0.06]; %[m]
+par.r = [0.08 0.04]; %[m]
 % bounding box, x-length, z-length (height)
 par.bBox = [ 1.5 2; 
              2 2.5];
@@ -30,4 +30,5 @@ par.dampN = 1; % correct? 2 % of critial damping
 par.dampT = 1; % tangential damping
 par.wallDistr = 0.1; % coefficient on wall
 % particle wall
+par.cohesion = 0;
 end
