@@ -23,14 +23,15 @@ dist = DEM2Ddist(x,z);
 for i = 1:N
     for j = i+1:N
         % numerical delta_dot
-        ddeltadt(i,j) = (delta(i,j)-data.deltaOld(i,j))/par.dt; % du = (u^n+1 - u^n)/dt
-        % analytical delta_dot
-        Analytical_ddeltadt(i,j) = (x(i) - x(j))*(vx(i) - vx(j)) + (z(i) - z(j))*(vz(i) - vz(j))/dist(i,j);
-        if(Analytical_ddeltadt(i,j) ~= ddeltadt(i,j))
-        disp(['Different delta_dot: Analytical:' num2str(Analytical_ddeltadt(i,j)) 'Numerical:'  num2str(ddeltadt(i,j))]);
-        pause(0.1)
-        end
-        ddeltadt(j,i) = ddeltadt(i,j);
+        %ddeltadt(i,j) = (delta(i,j)-data.deltaOld(i,j))/par.dt; % du = (u^n+1 - u^n)/dt
+ %%       analytical delta_dot
+        Analytical_ddeltadt(i,j) = -(x(i) - x(j))*(vx(i) - vx(j)) + (z(i) - z(j))*(vz(i) - vz(j))/dist(i,j);
+%         if(Analytical_ddeltadt(i,j) ~= ddeltadt(i,j))
+%         disp(['Different delta_dot: Analytical:' num2str(Analytical_ddeltadt(i,j)) 'Numerical:'  num2str(ddeltadt(i,j))]);
+%         pause(0.1)
+%         end
+          ddeltadt(i,j) = Analytical_ddeltadt(i,j);
+          ddeltadt(j,i) = Analytical_ddeltadt(i,j);
     end
 end
 torqX = zeros(N,N); torqZ = zeros(N,N);
@@ -71,7 +72,7 @@ for i=1:N-1
         end % end fix
         vtx(i) = -2*Ft(1,i,i+I(j))*par.dt;
         vtz(i) = -2*Ft(2,i,i+I(j))*par.dt;
-        % normal interaction % do not hard-code! 
+        % normal interaction % do not hard-code constants!
         F(i,i+I(j)) = normalStiffness*delta(i,i+I(j)) + par.dampN*2*sqrt(normalStiffness*effMass)* ddeltadt(i,i+I(j)); % kN = pi/2*E(r(i)+r(i+I(j)))/2 consider mass? par.kN = (r(i)+r(i+I(j)))/2
         F(i+I(j),i) = - F(i,i+I(j));
         if (Ft(1,i,i+I(j)) + Ft(2,i,i+I(j)))^(1/2) > par.mu*F(i,i+I(j))
