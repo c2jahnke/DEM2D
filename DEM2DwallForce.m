@@ -14,11 +14,11 @@ function [fwx,fwz,data] = DEM2DwallForce(x,z,vx,vz,d,radius,par,data)
         
         % left
         if ((x(i)< box(1)+radius(i) && x(i) > box(1)))
-           deltaW(2,i) = radius(i) - abs(x(i)-box(1));
-           ddeltaW(2,i) = -vx(i);
-           fwx(i) = normal_stiffness*deltaW(2,i) + par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(2,i);
-%            disp(['normal force:' num2str(normal_stiffness*deltaW(2,i))]);
-%            disp(['dissipative force:' num2str(par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(2,i))]);
+           deltaW(1,i) = radius(i) - abs(x(i)-box(1));
+           ddeltaW(1,i) = -vx(i);
+           fwx(i) = normal_stiffness*deltaW(1,i) + par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(1,i);
+%            disp(['normal force:' num2str(normal_stiffness*deltaW(1,i))]);
+%            disp(['dissipative force:' num2str(par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(1,i))]);
         
            actuationPoint = [box(1) z(i)];
            if(data.velocity(1,i) < 0)
@@ -28,12 +28,12 @@ function [fwx,fwz,data] = DEM2DwallForce(x,z,vx,vz,d,radius,par,data)
 
         % right
         if ((x(i)> box(2)-radius(i) && x(i) < box(2)))
-           deltaW(3,i) = radius(i) - abs(x(i)-box(2));
-           ddeltaW(3,i) = -vx(i);
-           fwx(i) = - normal_stiffness*deltaW(3,i) - par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(3,i); 
+           deltaW(2,i) = radius(i) - abs(x(i)-box(2));
+           ddeltaW(2,i) = -vx(i);
+           fwx(i) = - normal_stiffness*deltaW(2,i) - par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(2,i); 
            actuationPoint = [box(2) z(i)];
-           disp(['normal force:' num2str(normal_stiffness*deltaW(3,i))]);
-           disp(['dissipative force:' num2str(par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(3,i))]);
+           disp(['normal force:' num2str(normal_stiffness*deltaW(2,i))]);
+           disp(['dissipative force:' num2str(par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(2,i))]);
      
            if(data.velocity(1,i) > 0)
                 data.velocity(1,i) = 0;% - par.wallDistr*data.velocity(1,i);
@@ -48,12 +48,12 @@ function [fwx,fwz,data] = DEM2DwallForce(x,z,vx,vz,d,radius,par,data)
                 data.contactsWall.actuationPoint(i,:,3) = [x(i) box(3)];
             end
             % normal contact
-            deltaW(4,i) = radius(i) - abs(z(i)-box(3));
-            ddeltaW(4,i) = -vz(i);
-            fwz(i) = normal_stiffness*deltaW(4,i) + par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(4,i);
-%             disp(['normal force:' num2str(normal_stiffness*deltaW(4,i))]);
-%             disp(['dissipative force:' num2str(par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(4,i))]);
-            ddeltaW(4,i) = 1;
+            deltaW(3,i) = radius(i) - abs(z(i)-box(3));
+            ddeltaW(3,i) = -vz(i);
+            fwz(i) = normal_stiffness*deltaW(3,i) + par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(3,i);
+%             disp(['normal force:' num2str(normal_stiffness*deltaW(3,i))]);
+%             disp(['dissipative force:' num2str(par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(3,i))]);
+            ddeltaW(3,i) = 1;
             % tangential contact
             tangentialSpring = (data.contactsWall.actuationPoint(i,:,3) - [x(i) box(3)])*[1;0];
             if(abs(tangentialSpring) < eps)
@@ -85,8 +85,8 @@ function [fwx,fwz,data] = DEM2DwallForce(x,z,vx,vz,d,radius,par,data)
                 data.contactsWall.contactAge(i,4) = 1;
             end
             deltaW(1,i) = radius(i) - abs(z(i)-box(4)); 
-%             ddeltaW(3,i) = -vz(i);
-            fwz(i) = -normal_stiffness*deltaW(1,i) - par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(3,i);%
+%            ddeltaW(4,i) = -vz(i);
+            fwz(i) = -normal_stiffness*deltaW(1,i) - par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(4,i);%
             actuationPoint = [x(i) box(4)];
             x12 = actuationPoint - [x(i) z(i)];
             dist = norm(x12)

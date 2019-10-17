@@ -3,7 +3,7 @@ function par = DEM2Dparam()
 par = struct('N',[], 'g',[],'mu', [],'r',[],'bBox',[],'dt',[],'T',[],'step',[],'kN',[],'dN',[]);
 
 %number of particles
-par.N = 3;
+par.N = 5;
 
 % gravity
 par.g = 9.81; %[m/s²]
@@ -11,7 +11,7 @@ par.g = 9.81; %[m/s²]
 par.mu = 0.5;
 
 % mean radius 
-par.r = [0.08 0.04]; %[m]
+par.r = [0.04 0.04]; %[m]
 % bounding box, x-length, z-length (height)
 par.bBox = [ 1.5 2; 
              2 2.5];
@@ -23,12 +23,12 @@ par.T = 1e4;%1e6; %2e5
 par.step = round(0.05/par.dt);
 
 % force parameters
-par.Emodul = 1e3; % should be 1e8
+par.Emodul = 1e4; % should be 1e8
 par.kN = par.Emodul*pi/2*par.r(1); % [N/m] stiffness
 par.kT = 0.1*par.kN; % adjust accordingly
-par.dampN = 1; % correct? 2 % of critial damping
+par.dampN = 0.1; % correct? 2 % of critial damping
 par.dampT = 1; % tangential damping
 par.wallDistr = 0.1; % coefficient on wall
 % particle wall
-par.cohesion = 0;
+par.cohesion = 100;
 end
