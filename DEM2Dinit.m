@@ -1,5 +1,6 @@
-function data = DEM2Dinit(par)
+function [data,SuccessFlag] = DEM2Dinit(par)
  
+    SuccessFlag = false;
     data = struct('position',[],'velocity',[],'acceleration',[],'radius',[],'mass',[],'deltaOld',[]);
     data.contactsWall = struct;
     data.contactsWall.isInitialized = zeros(par.N,4); % each particle may collide with all 4 walls
@@ -56,9 +57,11 @@ function data = DEM2Dinit(par)
         if max(max(d<abs(R)))==0
             isArranged = 1;
             disp('Successfully arranged.')
+            SuccessFlag = true;
         elseif count > 10
             disp("Too many particles for bounding box. 10 attempts to arange them failed.")
-            break;
+            return;
+            %break;
         end
     end
     data.velocity =  0.01*(rand(2,par.N)-0.05);

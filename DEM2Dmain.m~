@@ -3,7 +3,7 @@ clc, clear all, close all
 par = DEM2Dparam();
 SuccessFlag = true;
 data = DEM2Dload();
-%[data,SuccessFlag] = DEM2Dinit(par);
+[data,SuccessFlag] = DEM2Dinit(par);
 if(SuccessFlag == 0)
     return
 end
@@ -13,7 +13,7 @@ DEM2Dplot(data,par);
 %pause
 dt = par.dt;
 T = par.T;
-VisualizationStep = par.step; CollisionStep =  par.step;
+VisualizationStep = par.step*10; CollisionStep =  par.step;
 par.VisualizationStep = VisualizationStep;
 P1  = zeros(T/VisualizationStep+1,2,par.N); P1(1,:,:) = data.position;
 V1  = zeros(T/VisualizationStep+1,2,par.N); V1(1,:,:) = data.velocity;
@@ -44,7 +44,7 @@ for k = 1:T
     if VisCounter == VisualizationStep
         j = j+1; VisCounter = 0;
         P1(j,:,1:par.N) = data.position; 
-        A1(j,:,1:par.N) = data.angular; 
+        A1(j,:,1:par.N) = data.angular;
         V1(j,:,1:par.N) = data.velocity;
 %         DEM2Dplot(data,par);
 %         pause(par.dt*1000);
@@ -57,4 +57,4 @@ figure(1)
 % ----------------------------- Drawing ----------------------------- %
 DEM2DplotSim(P1,A1,par,data,j)
 
-%save('data')
+save('data')

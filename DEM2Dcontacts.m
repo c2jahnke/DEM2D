@@ -26,7 +26,7 @@ classdef DEM2Dcontacts < handle
             if numconstraints==0
                 contacts=[];
             end;
-            c.contacts = contacts
+            c.contacts = contacts;
         end
     end
 end

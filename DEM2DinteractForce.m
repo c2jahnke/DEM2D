@@ -22,16 +22,16 @@ ddeltadt = zeros(N,N); % calculate ddelta/dt'
 dist = DEM2Ddist(x,z);
 for i = 1:N
     for j = i+1:N
-        % numerical delta_dot
-        %ddeltadt(i,j) = (delta(i,j)-data.deltaOld(i,j))/par.dt; % du = (u^n+1 - u^n)/dt
- %%       analytical delta_dot
-        Analytical_ddeltadt(i,j) = -(x(i) - x(j))*(vx(i) - vx(j)) + (z(i) - z(j))*(vz(i) - vz(j))/dist(i,j);
+% numerical delta_dot
+ddeltadt(i,j) = (delta(i,j)-data.deltaOld(i,j))/par.dt; % du = (u^n+1 - u^n)/dt
+ %%       analytical delta_dot - wrong! (only for quadratic force true)
+%        Analytical_ddeltadt(i,j) = -(x(i) - x(j))*(vx(i) - vx(j)) + (z(i) - z(j))*(vz(i) - vz(j))/dist(i,j);
 %         if(Analytical_ddeltadt(i,j) ~= ddeltadt(i,j))
 %         disp(['Different delta_dot: Analytical:' num2str(Analytical_ddeltadt(i,j)) 'Numerical:'  num2str(ddeltadt(i,j))]);
 %         pause(0.1)
 %         end
-          ddeltadt(i,j) = Analytical_ddeltadt(i,j);
-          ddeltadt(j,i) = Analytical_ddeltadt(i,j);
+%          ddeltadt(i,j) = Analytical_ddeltadt(i,j);
+          ddeltadt(j,i) = ddeltadt(i,j);
     end
 end
 torqX = zeros(N,N); torqZ = zeros(N,N);
@@ -66,7 +66,7 @@ for i=1:N-1
         data.Xinorm(:,i,i+I(j)) = Xi(:,i,i+I(j)) - (Xi(:,i,i+I(j))'*[nx;nz])*[nx;nz];
         % tangential forces
         if(data.XinormOld(:,i,i+I(j)) == 0) % fix to avoid strange behaviour by damping term 03.08.2018
-            Ft(:,i,i+I(j)) = par.kT*data.Xinorm(:,i,i+I(j))
+            Ft(:,i,i+I(j)) = par.kT*data.Xinorm(:,i,i+I(j));
         else
         Ft(:,i,i+I(j)) = par.kT*data.Xinorm(:,i,i+I(j)) +par.dampT*2*sqrt(par.kT*effMass)*(data.Xinorm(:,i,i+I(j)) - data.XinormOld(:,i,i+I(j)))/par.dt;
         end % end fix
