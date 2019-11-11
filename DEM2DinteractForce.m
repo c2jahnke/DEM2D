@@ -25,11 +25,11 @@ for i = 1:N
 % numerical delta_dot
 ddeltadt(i,j) = (delta(i,j)-data.deltaOld(i,j))/par.dt; % du = (u^n+1 - u^n)/dt
  %%       analytical delta_dot - wrong! (only for quadratic force true)
-%        Analytical_ddeltadt(i,j) = -(x(i) - x(j))*(vx(i) - vx(j)) + (z(i) - z(j))*(vz(i) - vz(j))/dist(i,j);
-%         if(Analytical_ddeltadt(i,j) ~= ddeltadt(i,j))
-%         disp(['Different delta_dot: Analytical:' num2str(Analytical_ddeltadt(i,j)) 'Numerical:'  num2str(ddeltadt(i,j))]);
-%         pause(0.1)
-%         end
+        Analytical_ddeltadt(i,j) = sqrt((vx(i) - vx(j))^2 + (vz(i) - vz(j))^2);%/dist(i,j);
+         if(Analytical_ddeltadt(i,j) ~= ddeltadt(i,j))
+         %disp(['Different delta_dot: Analytical:' num2str(Analytical_ddeltadt(i,j)) ' Numerical:'  num2str(ddeltadt(i,j))]);
+         %pause(0.1)
+         end
 %          ddeltadt(i,j) = Analytical_ddeltadt(i,j);
           ddeltadt(j,i) = ddeltadt(i,j);
     end

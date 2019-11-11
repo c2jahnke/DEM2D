@@ -1,16 +1,21 @@
 clc, clear all, close all
 % -------------------------- Initialization -------------------------- %
 par = DEM2Dparam();
+LoadData = false;
+if(LoadData == true)
 SuccessFlag = true;
 data = DEM2Dload();
-%[data,SuccessFlag] = DEM2Dinit(par);
+else
+[data,SuccessFlag] = DEM2Dinit(par);
 if(SuccessFlag == 0)
     return
 end
+end
 
+% -------------------------- Plot initial state -------------------------- %
 figure(1)
 DEM2Dplot(data,par);
-%pause
+
 dt = par.dt;
 T = par.T;
 VisualizationStep = par.step; CollisionStep =  par.step;
@@ -18,15 +23,11 @@ par.VisualizationStep = VisualizationStep;
 P1  = zeros(T/VisualizationStep+1,2,par.N); P1(1,:,:) = data.position;
 V1  = zeros(T/VisualizationStep+1,2,par.N); V1(1,:,:) = data.velocity;
 A1 = zeros(T/VisualizationStep+1,3,par.N); A1(1,:,:) = data.angular;
-% R1  = zeros(T/VisualizationStep+1,par.N); R1(1,:) = data.radius;
-% M1  = zeros(T/VisualizationStep+1,par.N); M1(1,:) = data.mass;
-n1(1) = par.N;
+% n1(1) = par.N;
 
-% pause()
-% ---------------------------- Interatrion ---------------------------- %
+% ---------------------------- Iteration ---------------------------- %
 
-j = 1;
-VisCounter = 0; ColCounter = 0;
+j = 1; VisCounter = 0; ColCounter = 0;
 c = DEM2Dcontacts(data,par);
 for k = 1:T
     VisCounter = VisCounter +1;
@@ -46,13 +47,9 @@ for k = 1:T
         P1(j,:,1:par.N) = data.position; 
         A1(j,:,1:par.N) = data.angular; 
         V1(j,:,1:par.N) = data.velocity;
-%         DEM2Dplot(data,par);
-%         pause(par.dt*1000);
     end
     
 end
-
-pause
 figure(1)
 % ----------------------------- Drawing ----------------------------- %
 DEM2DplotSim(P1,A1,par,data,j)
