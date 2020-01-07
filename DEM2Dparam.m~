@@ -26,21 +26,21 @@ function par = DEM2Dparam()
     par.collisionThreshold = 2;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 4;
-    par.dt = 1e-5;%1e-6
+    par.simulationEnd = 10;
+    par.dt = 1e-4;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
    
     par.step = round(0.02/par.dt);
     par.VisualizationStep = par.step;
-    par.CollisionTime = 2.5e-5;
+    par.CollisionTime = 2.5e-4;
     par.CollisionStep = round(par.CollisionTime/par.dt);
     %% force parameters
 
-    par.rho = 2700;%2700; % kg/m³
-    par.Emodul = 1e5; % should be 1e8
+    par.rho = 27;%2700; % kg/m³
+    par.Emodul = 1e4; % should be 1e8
     par.kN = par.Emodul*pi/2*par.r(1); % [N/m] stiffness
     par.kT = 1/1.2*par.kN; % adjust accordingly
-    par.dampN = 0.2; % correct? 2 % of critial damping
+    par.dampN = 0.15; % correct? 2 % of critial damping
     par.dampT = 0.2; % tangential damping
    % par.wallDistr = 0.1; % coefficient on wall
     % particle wall

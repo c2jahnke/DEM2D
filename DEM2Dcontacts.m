@@ -5,9 +5,10 @@ classdef DEM2Dcontacts < handle
     methods
         function c =DEM2Dcontacts(data,par)
             X = data.position;
-            %DT = delaunayTriangulation(X);
-            Tri = DelaunayTri(X');
-            E = edges(Tri);
+            DT = delaunayTriangulation(X');
+            %Tri = DelaunayTri(X'); soon deprecated
+            %E = edges(Tri);
+            E = edges(DT);
             numconstraints = 0;
             maxr=max([data.radius]);
             for k = 1:length(E')
@@ -23,9 +24,26 @@ classdef DEM2Dcontacts < handle
                     contacts(numconstraints) = DEM2Dcontact(i,j,data,normal,d);
                 end
             end
+            if(isempty(E) && par.N > 1) % points collinear?
+                d = DEM2Ddist(X(1,:),X(2,:));
+                for k = 1:length(X)
+                    for l = k+1:length(X)
+                        d(k,l) = d(k,l) - data.radius(k) - data.radius(l);
+                        if(d(k,l)<0)
+                            Di=data.position(1:2,k) - data.position(1:2,l);
+                            Di=Di';
+                            nD=norm(Di);
+                            %d=nD-data.radius(k)-data.radius(l);
+                            normal = Di'/nD;
+                            numconstraints=numconstraints+1;
+                            contacts(numconstraints) = DEM2Dcontact(k,l,data,normal,d(k,l));
+                        end
+                    end
+                end
+            end
             if numconstraints==0
                 contacts=[];
-            end;
+            end
             c.contacts = contacts;
         end
     end
