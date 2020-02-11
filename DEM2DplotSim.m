@@ -39,11 +39,11 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
 
             plot(c*r(i)+P1(k,1,i)*ones(1,AngleRes),s*r(i)+P1(k,2,i)*ones(1,AngleRes),'k-')
             
-            xCross = DEM2Drotation(A1(k,1,i))*[1;0];
-            zCross = DEM2Drotation(A1(k,1,i))*[0;1];
+            xCross = DEM2Drotation(A1(k,3,i))*[1;0];
+            zCross = DEM2Drotation(A1(k,3,i))*[0;1];
             plot(xCross(1)*scal*r(i) + P1(k,1,i)*ones(1,AngleRes),xCross(2)*scal*r(i) + P1(k,2,i)*ones(1,AngleRes),'k-')
             plot(zCross(1)*scal*r(i) + P1(k,1,i)*ones(1,AngleRes),zCross(2)*scal*r(i) + P1(k,2,i)*ones(1,AngleRes),'k-')
-            text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',par.videoFontsize)
+            text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',min(round(par.videoFontsize*20*par.r(2)),par.videoFontsize));
 
         end
 

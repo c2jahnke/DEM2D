@@ -2,7 +2,7 @@ clc, clear all, close all
 % -------------------------- Initialization -------------------------- %
 par = DEM2Dparam();
 
-LoadData = true;
+LoadData = false;
 
 if(LoadData == true)
     SuccessFlag = true;
@@ -14,7 +14,7 @@ if(SuccessFlag == 0)
 end
 end
 
-% -------------------------- Plot initial state -------------------------- %
+% ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 
 dt = par.dt;
@@ -51,7 +51,6 @@ for k = 1:T
         j = j+1; VisCounter = 0;
         P1(j,:,1:par.N) = data.position; 
         A1(j,:,1:par.N) = data.angular; 
-      
         V1(j,:,1:par.N) = data.velocity;
         if(data.contactsParticle.mergedParticles)
             for kk = 1: data.contactsMerged.N
@@ -70,4 +69,17 @@ end
 % -------------------------- Plot time series -------------------------- %
 DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
 
-% save('data')
+time = 1:j;
+for i = 1:par.N
+plot(time,A1(:,2,i)*180/pi)
+hold on
+title(['Angular Velocity of particle ' num2str(i)])
+end
+hold off
+figure;
+for i = 1:par.N
+plot(time,A1(:,1,i)*180/pi)
+hold on
+title(['Angle of particle ' num2str(i)])
+end
+%save('data')

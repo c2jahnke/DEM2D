@@ -1,7 +1,7 @@
 function [fx,fz,torqY,data] = DEM2DinteractForce(x,z,vx,vz,d,r,par,data,c)
 
 N = par.N;
-if 1
+if 0
     Rsparse = sparse(N,N);
 for i = 1:length(c.contacts)
     k = c.contacts(i).a;
@@ -20,6 +20,7 @@ for i=1:N
         %data.delta(j,i) = data.delta(i,j); % not needed, drop for optimization
     end 
 end
+Rsparse = R;
 end
 delta = data.delta;
 fx = zeros(N,N); fz = zeros(N,N); % particle interaction forces
@@ -106,10 +107,13 @@ for i=1:N-1
 %             disp(R(i,i+I(j))/2)
 %             disp('Normed distance to actuation point')
 %             disp(norm([x(i); z(i)] - data.contactsParticle.actuationPoint(:,i,i+I(j))))
-            torque = Ft(i,i+I(j))*R(i,i+I(j))/2; % check Obermayr S 70
+            torque = Ft(i,i+I(j))*Rsparse(i,i+I(j))/2; % check Obermayr S 70
             % where does the actuation point come into play?
             torqY(i) = torque;
             torqY(i+I(j)) = -torque;
+%             omega = (data.angular(2,i) - data.angular(2,i+I(j)))/2;
+%             data.angular(2,i) = omega;
+%             data.angular(2,i+I(j)) = - omega;
             end
             %[x(i); z(i)] - data.contactsParticle.actuationPoint(:,i,i+I(j))
         end

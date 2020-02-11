@@ -1,3 +1,3 @@
-function rot = DEM2Drotation(phi)
-    rot = [cos(phi) -sin(phi); sin(phi) cos(phi)];
+function rot = DEM2Drotation(rad)
+    rot = [cos(rad) -sin(rad); sin(rad) cos(rad)];
 end
