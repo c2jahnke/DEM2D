@@ -64,7 +64,6 @@ for k = 1:T
             VM(j,:,1:par.N) = Vk;
         end
     end
-    
 end
 % -------------------------- Plot time series -------------------------- %
 DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)

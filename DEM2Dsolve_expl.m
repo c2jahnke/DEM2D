@@ -35,15 +35,15 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
             I = 0.25*data.mass(k)*(data.radius(k)^2);
             % data.angular
             %disp(data.angular)
-            data.angular(3,k) = data.angular(3,k) +1/(I)*(sum(ty(k,:)) + sum(twy(k,:)))*dt;
-            data.angular(2,k) = data.angular(2,k) + data.angular(3,k)*dt;
+            %data.angular(3,k) = data.angular(3,k) 
+            data.angular(2,k) = data.angular(2,k) + +1/(I)*(sum(ty(k,:)) + sum(twy(k,:)))*dt;%data.angular(3,k)*dt;
             data.angular(1,k) = data.angular(1,k) + data.angular(2,k)*dt ;
             
         end
-        vk(1,k) = vx(k) + F(3)*dt;% + data.angular(3,k)*2*pi*data.radius(k)*dt;% + vtx(k);
+        vk(1,k) = vx(k) + F(3)*dt;% + vtx(k);
         vk(2,k) = vz(k) + F(4)*dt;% + vtz(k);
 
-        pk(1,k) = x(k) + vk(1,k)*dt;
+        pk(1,k) = x(k) + vk(1,k)*dt;% + 1e-2*data.angular(1,k)*2*pi;
         pk(2,k) = z(k) + vk(2,k)*dt;
 
         ak = data.angular;

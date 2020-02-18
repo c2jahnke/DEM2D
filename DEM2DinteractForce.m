@@ -1,7 +1,7 @@
 function [fx,fz,torqY,data] = DEM2DinteractForce(x,z,vx,vz,d,r,par,data,c)
 
 N = par.N;
-if 0
+if 1
     Rsparse = sparse(N,N);
 for i = 1:length(c.contacts)
     k = c.contacts(i).a;
@@ -10,17 +10,17 @@ for i = 1:length(c.contacts)
     data.delta(k,l) =  Rsparse(k,l) - d(k,l);
 end
 else
-    R = zeros(N,N);
+%     R = zeros(N,N);
 % old version for debugging only
-for i=1:N
-    for j=i:N
-        R(i,j) = r(i) + r(j);
-        R(j,i) = R(i,j); % not needed, drop for optimization
-        data.delta(i,j) =  R(i,j) - d(i,j);
-        %data.delta(j,i) = data.delta(i,j); % not needed, drop for optimization
-    end 
-end
-Rsparse = R;
+% for i=1:N
+%     for j=i:N
+%         R(i,j) = r(i) + r(j);
+%         R(j,i) = R(i,j); % not needed, drop for optimization
+%         data.delta(i,j) =  R(i,j) - d(i,j);
+%         %data.delta(j,i) = data.delta(i,j); % not needed, drop for optimization
+%     end 
+% end
+% Rsparse = R;
 end
 delta = data.delta;
 fx = zeros(N,N); fz = zeros(N,N); % particle interaction forces
@@ -54,6 +54,8 @@ for i=1:N-1
         nz = (z(i)-z(i+I(j)))/d(i,i+I(j)); 
         if(data.contactsParticle.isInitialized(i,i+I(j)))
             data.contactsParticle.ActiveContactAge(i,i+I(j)) = data.contactsParticle.ActiveContactAge(i,i+I(j)) + 1;
+            data.contactsParticle.contactPoint(:,i,i+I(j)) = DEM2Drotation(data.angular(2,i)*2*pi*par.dt)*data.contactsParticle.contactPoint(:,i,i+I(j))';
+            data.contactsParticle.contactPoint(:,i+I(j),i) = DEM2Drotation(data.angular(2,i+I(j))*2*pi*par.dt)*data.contactsParticle.contactPoint(:,i+I(j),i)';
         else
             data.contactsParticle.isInitialized(i,i+I(j)) = true;
             data.contactsParticle.PassiveContactAge(i,i+I(j)) = 0;
@@ -103,19 +105,26 @@ for i=1:N-1
 
             
             if( par.considerRotations)
-%             disp('Radius')
-%             disp(R(i,i+I(j))/2)
-%             disp('Normed distance to actuation point')
-%             disp(norm([x(i); z(i)] - data.contactsParticle.actuationPoint(:,i,i+I(j))))
-            torque = Ft(i,i+I(j))*Rsparse(i,i+I(j))/2; % check Obermayr S 70
-            % where does the actuation point come into play?
-            torqY(i) = torque;
-            torqY(i+I(j)) = -torque;
-%             omega = (data.angular(2,i) - data.angular(2,i+I(j)))/2;
-%             data.angular(2,i) = omega;
-%             data.angular(2,i+I(j)) = - omega;
+%           disp('Radius')
+%           disp(R(i,i+I(j))/2)
+%           disp('Normed distance to actuation point')
+%           disp(norm([x(i); z(i)] - data.contactsParticle.actuationPoint(:,i,i+I(j))))
+            torque1 = Ft(i,i+I(j))*norm(data.contactsParticle.actuationPoint(:,i,i+I(j))- [x(i); z(i)]);%Rsparse(i,i+I(j))/2; % check Obermayr S 29
+            torque2= -Ft(i,i+I(j))*norm(data.contactsParticle.actuationPoint(:,i,i+I(j))- [x(i+I(j)); z(i+I(j))]);
+            torqY(i) = torque1;
+            torqY(i+I(j)) = torque2;
+            
+            % rolling resistence CHECK!!! 16.02.2020
+%             data.contactsParticle.rollingDeformation(i,i+I(j)) = data.contactsParticle.contactPoint(:,i,i+I(j)) - data.contactsParticle.actuationPoint(:,i,i+I(j));
+%             data.contactsWall.accumulatedRollingDeformation(:,i,i+I(j)) = data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) + data.contactsParticle.rollingDeformation(:,i,i+I(j));
+% 
+%             if(abs(data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j))) > abs(fwz_b(i))*par.muWall/tangential_stiffness*0.1)
+%                 data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) = data.contactsWall.accumulatedRollingDeformation(:,i,i+I(j))*abs(fwz_b(i))*par.muWall/tangential_stiffness*1;
+%             end
+%             disp(["twy(i,3) no rolling resistance",twy(i,3)])
+%             twy(i,3) = twy(i,3) + tangential_stiffness*data.contactsWall.accumulatedRollingDeformation(i,1,3)*data.radius(i); % projection into tangential plane necessary
+%             disp(["twy(i,3) with rolling resistance",twy(i,3)])
             end
-            %[x(i); z(i)] - data.contactsParticle.actuationPoint(:,i,i+I(j))
         end
 
         % Euler Equations in 3D

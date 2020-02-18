@@ -2,11 +2,7 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
     box = par.bBox; radius = data.radius;
     fwx_l = zeros(par.N,1);fwx_r = zeros(par.N,1);fwx_b = zeros(par.N,1);fwx_t = zeros(par.N,1);
     fwz_l = zeros(par.N,1);fwz_r = zeros(par.N,1);fwz_b = zeros(par.N,1);fwz_t = zeros(par.N,1);
-    twy = zeros(par.N,4);
-%     n = [ 0 -1;
-%         -1  0;
-%          0  1;
-%          1  0];    
+    twy = zeros(par.N,4); 
     deltaW = zeros(4,par.N);
     ddeltaW = zeros(4,par.N);
     for i = 1 : par.N
@@ -33,7 +29,7 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
            if(abs(tangentialSpring) < 10*eps)
                fwz_l(i) = 0;
            else
-               fwz_l(i) = (tangential_stiffness*tangentialSpring + 2*par.dampT*sqrt(data.mass(i)*tangential_stiffness)*vz(i));
+               fwz_l(i) = (tangential_stiffness*tangentialSpring + 2*par.dampTwall*sqrt(data.mass(i)*tangential_stiffness)*vz(i));
                % friction
                if(abs(fwz_l(i)) > abs(fwx_l(i))*par.muWall)
                    fwz_l(i) = sign(fwz_l(i))*abs(fwx_l(i))*par.muWall;
@@ -73,7 +69,7 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
             if(abs(tangentialSpring) < 10*eps)
                 fwz_r(i) = 0;
             else
-                fwz_r(i) = (tangential_stiffness*tangentialSpring + 2*par.dampT*sqrt(data.mass(i)*tangential_stiffness)*vz(i));
+                fwz_r(i) = (tangential_stiffness*tangentialSpring + 2*par.dampTwall*sqrt(data.mass(i)*tangential_stiffness)*vz(i));
 
                 % friction
                 if(abs(fwz_r(i)) > abs(fwx_r(i))*par.muWall)
@@ -97,6 +93,7 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
         if ((z(i)<box(3)+radius(i) && z(i)>box(3)) && ( x(i)< box(3) || x(i)>box(1) ))
             if(data.contactsWall.isInitialized(i,3))
                 data.contactsWall.contactAge(i,3) = 1;
+                data.contactsWall.contactPoint(i,:,3) = DEM2Drotation(data.angular(2,i)*2*pi*par.dt)*data.contactsWall.contactPoint(i,:,3)'; % rotate contact point
             else
                 data.contactsWall.isInitialized(i,3) = true;
                 data.contactsWall.actuationPoint(i,:,3) = [x(i) box(3)];
@@ -114,13 +111,12 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
             if(abs(tangentialSpring) < 10*eps)
                 fwx_b(i) = 0;
             else
-                fwx_b(i) =tangential_stiffness*tangentialSpring +2*par.dampT*sqrt(data.mass(i)*tangential_stiffness)*vx(i);
+                fwx_b(i) =tangential_stiffness*tangentialSpring +2*par.dampTwall*sqrt(data.mass(i)*tangential_stiffness)*vx(i);
                 % friction
                 if(abs(fwx_b(i)) > abs(fwz_b(i))*par.muWall)
-                    disp(["Bottom friction, index" num2str(i) "Ft_old =" num2str(fwx_b(i)) ", Fx_new =" num2str(sign(fwx_b(i))*abs(fwz_b(i))*par.muWall)])
+                    %disp(["Bottom friction, index" num2str(i) "Ft_old =" num2str(fwx_b(i)) ", Fx_new =" num2str(sign(fwx_b(i))*abs(fwz_b(i))*par.muWall)])
                     fwx_b(i) = sign(fwx_b(i))*abs(fwz_b(i))*par.muWall;
-                    data.contactsWall.actuationPoint(i,:,3) = [
-                        x(i) box(3)];
+                    %data.contactsWall.actuationPoint(i,:,3) = [x(i) box(3)];
 
                 end
                 if(par.considerRotations)
@@ -131,12 +127,12 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
                     data.contactsWall.rollingDeformation(i,:,3) = data.contactsWall.contactPoint(i,:,3) - data.contactsWall.actuationPoint(i,:,3);
                     data.contactsWall.accumulatedRollingDeformation(i,:,3) = data.contactsWall.accumulatedRollingDeformation(i,:,3) + data.contactsWall.rollingDeformation(i,:,3);
                     
-                    if(abs(data.contactsWall.accumulatedRollingDeformation(i,1,3)) > abs(fwz_b(i))*par.muWall/tangential_stiffness*1)
+                    if(abs(data.contactsWall.accumulatedRollingDeformation(i,1,3)) > abs(fwz_b(i))*par.muWall/tangential_stiffness*0.1)
                         data.contactsWall.accumulatedRollingDeformation(i,:,3) = data.contactsWall.accumulatedRollingDeformation(i,:,3)*abs(fwz_b(i))*par.muWall/tangential_stiffness*1;
                     end
-                    %disp(["twy(i,3) no rolling resistance",twy(i,3)])
+                    disp(["twy(i,3) no rolling resistance",twy(i,3)])
                     twy(i,3) = twy(i,3) + tangential_stiffness*data.contactsWall.accumulatedRollingDeformation(i,1,3)*data.radius(i); % projection into tangential plane necessary
-                    %disp(["twy(i,3) with rolling resistance",twy(i,3)])
+                    disp(["twy(i,3) with rolling resistance",twy(i,3)])
                 end
             end
             
@@ -173,7 +169,7 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
             if(abs(tangentialSpring) < 10*eps)
                 fwx_t(i) = 0;
             else
-                fwx_t(i) = tangential_stiffness*tangentialSpring - 2*par.dampT*sqrt(data.mass(i)*tangential_stiffness)*vx(i);
+                fwx_t(i) = tangential_stiffness*tangentialSpring - 2*par.dampTwall*sqrt(data.mass(i)*tangential_stiffness)*vx(i);
             end
             
             % friction            
