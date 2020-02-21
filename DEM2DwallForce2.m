@@ -12,13 +12,9 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
         if ((x(i)< box(1)+radius(i) && x(i) > box(1)))
            if(data.contactsWall.isInitialized(i,1))
                 data.contactsWall.contactAge(i,1) = 1;
-                data.contactsWall.contactPoint(i,:,1) = DEM2Drotation(data.angular(2,i)*2*pi*par.dt)*data.contactsWall.contactPoint(i,:,1)'; % rotate contact point
-  
            else
                 data.contactsWall.isInitialized(i,1) = true;
                 data.contactsWall.actuationPoint(i,:,1) = [box(1) z(i)];
-                 data.contactsWall.contactPoint(i,:,1) = [box(1) z(i)]; % rolling resistance
-
            end
            
            % normal contact
@@ -29,7 +25,7 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
            fwx_l(i) =  normalConservative_l +normalDissipative_l;
 
            % tangential contact
-           tangentialSpring = (data.contactsWall.actuationPoint(i,:,1) - data.contactsWall.contactPoint(i,:,1))*[0;1];
+           tangentialSpring = (data.contactsWall.actuationPoint(i,:,1) - [box(1) z(i)])*[0;1];
            if(abs(tangentialSpring) < 10*eps)
                fwz_l(i) = 0;
            else
@@ -41,33 +37,10 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
                end
                
                if(par.considerRotations)
-                   twy(i,1) = fwz_l(i)*norm(data.contactsWall.actuationPoint(i,:,2)'-data.position(:,i));
+                   twy(i,1) = fwz_l(i)*data.radius(i);
                end
-                if(par.considerRotations)
-                    data.contactsWall.rollingDeformation(i,1,1) = data.contactsWall.contactPoint(i,1,1) - data.contactsWall.actuationPoint(i,1,1); % 4.27
-                    data.contactsWall.accumulatedRollingDeformation(i,1,1) = data.contactsWall.accumulatedRollingDeformation(i,1,1) + data.contactsWall.rollingDeformation(i,1,1);%4.28
-
-                    if(abs(data.contactsWall.accumulatedRollingDeformation(i,1,1)) > abs(fwx_l(i))*par.muWall/tangential_stiffness*1) %4.30
-                        data.contactsWall.accumulatedRollingDeformation(i,1,1) = data.contactsWall.accumulatedRollingDeformation(i,1,1)/abs(data.contactsWall.accumulatedRollingDeformation(i,1,1))*(fwz_b(i))*par.muWall/tangential_stiffness*1;
-                        %data.contactsWall.contactPoint(i,:,1) = data.contactsWall.actuationPoint(i,:,1);
-                    end
-%                      disp(["twy(i,1) no rolling resistance",twy(i,1)])
-                     twy(i,1) = twy(i,1) + tangential_stiffness*data.contactsWall.accumulatedRollingDeformation(i,1,1)*norm(data.contactsWall.actuationPoint(i,:,1)'-data.position(:,i)); % projection into tangential plane necessary
-%                      disp(["twy(i,1) with rolling resistance",twy(i,1)])
-                end
-%                if(par.considerRotations)
-%                     data.contactsWall.rollingDeformation(i,:,1) = data.contactsWall.contactPoint(i,:,1) - data.contactsWall.actuationPoint(i,:,1);
-%                     data.contactsWall.accumulatedRollingDeformation(i,:,1) = data.contactsWall.rollingDeformation(i,:,1);
-%                     % data.contactsWall.accumulatedRollingDeformation(i,:,1) + 
-%                     if(abs(data.contactsWall.accumulatedRollingDeformation(i,1,1)) > abs(fwx_l(i))*par.muWall/tangential_stiffness*0.1)
-%                         data.contactsWall.accumulatedRollingDeformation(i,:,1) = data.contactsWall.accumulatedRollingDeformation(i,:,1)*abs(fwx_l(i))*par.muWall/tangential_stiffness*0.1;
-%                     end
-% %                     disp(["twy(i,1) no rolling resistance",twy(i,1)])
-%                     twy(i,1) = twy(i,1) + tangential_stiffness*data.contactsWall.accumulatedRollingDeformation(i,1,1)*data.radius(i); % projection into tangential plane necessary
-% %                     disp(["twy(i,1) with rolling resistance",twy(i,1)])
-%                 end
            end
-           elseif(data.contactsWall.isInitialized(i,1)) % initialized but no contact with left wall
+           elseif(data.contactsWall.isInitialized(i,2)) % initialized but no contact with left wall
            data.contactsWall.contactAge(i,1) = data.contactsWall.contactAge(i,1) + 1;
            if(data.contactsWall.contactAge(i,1) >= data.contactsWall.maxContactAge)
                data.contactsWall.contactAge(i,1) = 0;
@@ -79,11 +52,9 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
         if ((x(i)> box(2)-radius(i) && x(i) < box(2)))
             if(data.contactsWall.isInitialized(i,2))
                 data.contactsWall.contactAge(i,2) = 1;
-                data.contactsWall.contactPoint(i,:,2) = DEM2Drotation(data.angular(2,i)*2*pi*par.dt)*data.contactsWall.contactPoint(i,:,2)'; % rotate contact point
             else
                 data.contactsWall.isInitialized(i,2) = true;
                 data.contactsWall.actuationPoint(i,:,2) = [box(2) z(i)];
-                data.contactsWall.contactPoint(i,:,2) = [box(2) z(i)]; % rolling resistance
             end
             
             % normal contact
@@ -94,7 +65,7 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
             fwx_r(i) = (normalConservative_r + normalDissipative_r);
             
             % tangential contact
-            tangentialSpring = (data.contactsWall.actuationPoint(i,:,2) - data.contactsWall.contactPoint(i,:,2))*[0;1];
+            tangentialSpring = (data.contactsWall.actuationPoint(i,:,2) - [box(2) z(i)])*[0;1];
             if(abs(tangentialSpring) < 10*eps)
                 fwz_r(i) = 0;
             else
@@ -106,31 +77,8 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
                     data.contactsWall.actuationPoint(i,:,2) = [box(2) z(i)];%[x(i) box(2)];
                 end
                 if(par.considerRotations)
-                    twy(i,2) = fwz_r(i)*norm(data.contactsWall.actuationPoint(i,:,2)'-data.position(:,i));
+                    twy(i,2) = fwz_r(i)*data.radius(i);
                 end
-                if(par.considerRotations)
-                    data.contactsWall.rollingDeformation(i,1,2) = data.contactsWall.contactPoint(i,1,2) - data.contactsWall.actuationPoint(i,1,2); % 4.27
-                    data.contactsWall.accumulatedRollingDeformation(i,1,2) = data.contactsWall.accumulatedRollingDeformation(i,1,2) + data.contactsWall.rollingDeformation(i,1,2);%4.28
-
-                    if(abs(data.contactsWall.accumulatedRollingDeformation(i,1,2)) > abs(fwx_r(i))*par.muWall/tangential_stiffness*1) %4.30
-                        data.contactsWall.accumulatedRollingDeformation(i,1,2) = data.contactsWall.accumulatedRollingDeformation(i,1,2)/abs(data.contactsWall.accumulatedRollingDeformation(i,1,2))*(fwz_b(i))*par.muWall/tangential_stiffness*1;
-                        %data.contactsWall.contactPoint(i,:,2) = data.contactsWall.actuationPoint(i,:,2);
-                    end
-%                      disp(["twy(i,2) no rolling resistance",twy(i,2)])
-                     twy(i,2) = twy(i,2) + tangential_stiffness*data.contactsWall.accumulatedRollingDeformation(i,1,2)*norm(data.contactsWall.actuationPoint(i,:,2)'-data.position(:,i)); % projection into tangential plane necessary
-%                      disp(["twy(i,2) with rolling resistance",twy(i,2)])
-                end
-%                 if(par.considerRotations)
-%                     data.contactsWall.rollingDeformation(i,:,2) = data.contactsWall.contactPoint(i,:,2) - data.contactsWall.actuationPoint(i,:,2);
-%                     data.contactsWall.accumulatedRollingDeformation(i,:,2) = data.contactsWall.rollingDeformation(i,:,2);
-%                     % data.contactsWall.accumulatedRollingDeformation(i,:,2) + 
-%                     if(abs(data.contactsWall.accumulatedRollingDeformation(i,1,2)) > abs(fwx_r(i))*par.muWall/tangential_stiffness*0.1)
-%                         data.contactsWall.accumulatedRollingDeformation(i,:,2) = data.contactsWall.accumulatedRollingDeformation(i,:,2)*abs(fwx_r(i))*par.muWall/tangential_stiffness*0.1;
-%                     end
-% %                     disp(["twy(i,2) no rolling resistance",twy(i,2)])
-%                     twy(i,2) = twy(i,2) + tangential_stiffness*data.contactsWall.accumulatedRollingDeformation(i,1,2)*data.radius(i); % projection into tangential plane necessary
-% %                     disp(["twy(i,2) with rolling resistance",twy(i,2)])
-%                 end
             end           
         elseif(data.contactsWall.isInitialized(i,2)) % initialized but no contact with bottom
             data.contactsWall.contactAge(i,2) = data.contactsWall.contactAge(i,2) + 1;
@@ -145,12 +93,11 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
         if ((z(i)<box(3)+radius(i) && z(i)>box(3)) && ( x(i)< box(3) || x(i)>box(1) ))
             if(data.contactsWall.isInitialized(i,3))
                 data.contactsWall.contactAge(i,3) = 1;
-                data.contactsWall.contactPoint(i,:,3) = DEM2Drotation(data.angular(2,i)*2*pi*par.dt)*([x(i) z(i)] - data.contactsWall.localContactPoint(i,:,3))'; % rotate contact point
+                data.contactsWall.contactPoint(i,:,3) = DEM2Drotation(data.angular(2,i)*2*pi*par.dt)*data.contactsWall.contactPoint(i,:,3)'; % rotate contact point
             else
                 data.contactsWall.isInitialized(i,3) = true;
                 data.contactsWall.actuationPoint(i,:,3) = [x(i) box(3)];
                 data.contactsWall.contactPoint(i,:,3) = [x(i) box(3)]; % rolling resistance
-                data.contactsWall.localContactPoint(i,:,3) = data.contactsWall.contactPoint(i,:,3) - [x(i) z(i)]; % rolling resistance
             end
             % normal contact
             deltaW(3,i) = radius(i) - abs(z(i)-box(3));
@@ -158,7 +105,7 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
             fwz_b(i) = normal_stiffness*deltaW(3,i) + 2*par.dampN*sqrt(data.mass(i)*normal_stiffness)*ddeltaW(3,i);
             
             % tangential contact
-            tangentialSpring = (data.contactsWall.actuationPoint(i,:,3) - data.contactsWall.contactPoint(i,:,3))*[1;0];
+            tangentialSpring = (data.contactsWall.actuationPoint(i,:,3) - [x(i) box(3)])*[1;0];
             if(abs(tangentialSpring) < 10*eps)
                 fwx_b(i) = 0;
             else
@@ -170,23 +117,21 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
                     % data.contactsWall.actuationPoint(i,:,3) = [x(i) box(3)];
 
                 end
-            end
-            if(par.considerRotations)
-                twy(i,3) = fwx_b(i)*norm(data.contactsWall.actuationPoint(i,:,3)'-data.position(:,i));
-            end
-            % rolling resistance
-            if(par.considerRotations)
-                data.contactsWall.rollingDeformation(i,1,3) = data.contactsWall.contactPoint(i,1,3) - data.contactsWall.actuationPoint(i,1,3); % 4.27
-                data.contactsWall.accumulatedRollingDeformation(i,1,3) = data.contactsWall.accumulatedRollingDeformation(i,1,3) + data.contactsWall.rollingDeformation(i,1,3);%4.28
-
-                if(abs(data.contactsWall.accumulatedRollingDeformation(i,1,3)) > abs(fwz_b(i))*par.muWall/tangential_stiffness*par.Cr) %4.30
-                    data.contactsWall.accumulatedRollingDeformation(i,1,3) = data.contactsWall.accumulatedRollingDeformation(i,1,3)/abs(data.contactsWall.accumulatedRollingDeformation(i,1,3))*(fwz_b(i))*par.muWall/tangential_stiffness*par.Cr;
-                    %data.contactsWall.contactPoint(i,:,3) = data.contactsWall.actuationPoint(i,:,3);
+                if(par.considerRotations)
+                twy(i,3) = fwx_b(i)*data.radius(i);
                 end
-                 disp(["twy(i,3) no rolling resistance",twy(i,3)])
-                 twy(i,3) = twy(i,3) + tangential_stiffness*data.contactsWall.accumulatedRollingDeformation(i,1,3)*norm(data.contactsWall.actuationPoint(i,:,3)'-data.position(:,i)); % projection into tangential plane necessary
-                 disp(["twy(i,3) with rolling resistance",twy(i,3)])
-
+                % rolling resistance
+                if(par.considerRotations)
+                    data.contactsWall.rollingDeformation(i,:,3) = data.contactsWall.contactPoint(i,:,3) - data.contactsWall.actuationPoint(i,:,3);
+                    data.contactsWall.accumulatedRollingDeformation(i,:,3) = data.contactsWall.rollingDeformation(i,:,3);
+                    % data.contactsWall.accumulatedRollingDeformation(i,:,3) + 
+                    if(abs(data.contactsWall.accumulatedRollingDeformation(i,1,3)) > abs(fwz_b(i))*par.muWall/tangential_stiffness*0.1)
+                        data.contactsWall.accumulatedRollingDeformation(i,:,3) = data.contactsWall.accumulatedRollingDeformation(i,:,3)*abs(fwz_b(i))*par.muWall/tangential_stiffness*0.1;
+                    end
+                    disp(["twy(i,3) no rolling resistance",twy(i,3)])
+                    twy(i,3) = twy(i,3) + tangential_stiffness*data.contactsWall.accumulatedRollingDeformation(i,1,3)*data.radius(i); % projection into tangential plane necessary
+                    disp(["twy(i,3) with rolling resistance",twy(i,3)])
+                end
             end
             
             

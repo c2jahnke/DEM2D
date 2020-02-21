@@ -19,6 +19,10 @@ function [data,SuccessFlag] = DEM2Dinit(par)
     data.contactsParticle.maxContactAge = 3;
     data.contactsParticle.deactivated = zeros(par.N,1);
     data.contactsParticle.mergedParticles = false;
+    data.contactsParticle.rollingDeformation = zeros(2,par.N,par.N);
+    data.contactsParticle.accumulatedRollingDeformation = zeros(2,par.N,par.N);
+    
+    
     
     data.contactsGlued = zeros(par.N,par.N);
     data.contactsMerged = struct;

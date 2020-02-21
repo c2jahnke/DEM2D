@@ -6,8 +6,6 @@ classdef DEM2Dcontacts < handle
         function c =DEM2Dcontacts(data,par)
             X = data.position;
             DT = delaunayTriangulation(X');
-            %Tri = DelaunayTri(X'); soon deprecated
-            %E = edges(Tri);
             E = edges(DT);
             numconstraints = 0;
             maxr=max([data.radius]);
@@ -33,7 +31,6 @@ classdef DEM2Dcontacts < handle
                             Di=data.position(1:2,k) - data.position(1:2,l);
                             Di=Di';
                             nD=norm(Di);
-                            %d=nD-data.radius(k)-data.radius(l);
                             normal = Di'/nD;
                             numconstraints=numconstraints+1;
                             contacts(numconstraints) = DEM2Dcontact(k,l,data,normal,d(k,l));

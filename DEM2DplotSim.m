@@ -61,7 +61,7 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
         set(gca,'fontsize', par.videoFontsize);
         drawnow;
         F(j) = getframe(h1);
-        %pause(DELAY)
+        pause(DELAY)
         %size(F(j).cdata)
         %hf=figure('Position', [100, 100, 1049, 895]);
 

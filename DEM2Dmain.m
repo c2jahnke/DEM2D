@@ -13,11 +13,13 @@ if(SuccessFlag == 0)
     return
 end
 end
-
+data.position(2,:) = 1.45;
+data.velocity(1) = 1
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 
-dt = par.dt;
+
+%ddt = par.dt;
 T = par.T;
 VisualizationStep = par.VisualizationStep; CollisionStep =  par.CollisionStep;
 
@@ -40,6 +42,7 @@ for k = 1:T
     if ColCounter == par.CollisionStep
         ColCounter = 0;
         c = DEM2Dcontacts(data,par);
+        %cWall = DEM2Dwallcontacts(data,par);
     end
     [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c);
 %   [pk,vk,ak,data] = DEM2Dsolve_pgs(data,par,c.contacts);
