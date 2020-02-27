@@ -3,7 +3,7 @@ function par = DEM2Dparam()
     par = struct('N',[], 'g',[],'mu', [],'r',[],'bBox',[],'dt',[],'T',[],'step',[],'kN',[],'dN',[]);
 
     %number of particles
-    par.N = 1;
+    par.N = 10;
 
     % gravity
     par.g = 9.81; %[m/s²]
@@ -12,7 +12,7 @@ function par = DEM2Dparam()
     par.muWall = 0.51;
 
     % mean radius 
-    par.r = [0.37 0.41]; %[m]
+    par.r = [0.17 0.21]; %[m]
     % bounding box, x-length, z-length (height)
         par.bBox = [ 1.5 1.0; % x first comp z first comp
                  3.5 5.0]; % x second comp, z second comp
@@ -38,14 +38,14 @@ function par = DEM2Dparam()
    % par.kT = 1/1.2*par.kN; % adjust accordingly
     par.dampN = 0.2; % correct? 2 % of critial damping
     par.dampT = 0.1; % tangential damping
-    par.dampTwall = 0;
+    par.dampTwall = 0.001;
    % par.wallDistr = 0.1; % coefficient on wall
     % particle wall
     par.cohesion = 0;
 
     % 2 DOF or 3 DOF? Not fully implemented - carefull
-    par.considerRotations = true;
-    par.Cr = 1; % rolling resistance coefficient
+    par.considerRotations = false;
+    par.Cr = 0.99; % rolling resistance coefficient
     
     %% video parameters
     par.writePdf = false;

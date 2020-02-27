@@ -35,8 +35,8 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
             I = 0.25*data.mass(k)*(data.radius(k)^2);
             data.angular(2,k) = data.angular(2,k) + 1/(I)*(sum(ty(k,:)) + sum(twy(k,:)))*dt;%data.angular(3,k)*dt;
             data.angular(1,k) = data.angular(1,k) + data.angular(2,k)*dt ;
-            if(data.contactsWall.isInitialized(3))
-                pk(1,k) = pk(1,k) + data.angular(2,k)*2*pi*dt;
+            if(data.contactsWall.isInitialized) % check
+                pk(1,k) = pk(1,k);% + data.angular(2,k)*2*pi*dt;
             end
             
         end
