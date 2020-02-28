@@ -1,10 +1,7 @@
-clc, clear all, close all
 % -------------------------- Initialization -------------------------- %
 par = DEM2Dparam();
-
-LoadData = true;
-
-if(LoadData == false)
+LoadData = false;
+if(LoadData == true)
     SuccessFlag = true;
     data = DEM2Dload();
 else
@@ -13,19 +10,19 @@ if(SuccessFlag == 0)
     return
 end
 end
-%data.position(2,:) = 1.5;
-%data.position(1,:) = 2.05;
-%data.velocity(1) = -0.5;
-%data.velocity(2) = 0.1;
+
+% data.position(1,1) = 2.05;
+% data.position(2,1) = 1.5;
+% data.velocity(1,1) = 0.5;
+% data.velocity(2,1) = -0.3;
+% data.position(1,2) = 2.5;
+% data.position(2,2) = 2.5;
+% data.velocity(1,2) = -0.5;
+% data.velocity(2,2) = -0.3;
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 
-
-%ddt = par.dt;
-T = par.T;
-VisualizationStep = par.VisualizationStep; CollisionStep =  par.CollisionStep;
-
-
+T = par.T; VisualizationStep = par.VisualizationStep; CollisionStep =  par.CollisionStep;
 
 P1 = zeros(T/VisualizationStep+1,2,par.N); P1(1,:,:) = data.position;
 V1 = zeros(T/VisualizationStep+1,2,par.N); V1(1,:,:) = data.velocity;
@@ -44,7 +41,6 @@ for k = 1:T
     if ColCounter == par.CollisionStep
         ColCounter = 0;
         c = DEM2Dcontacts(data,par);
-        %cWall = DEM2Dwallcontacts(data,par);
     end
     [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c);
 %   [pk,vk,ak,data] = DEM2Dsolve_pgs(data,par,c.contacts);
@@ -53,6 +49,9 @@ for k = 1:T
     data.angular = ak;
     
     if VisCounter == par.VisualizationStep
+        if(mod(j,10) == 0)
+            disp(['################## ' sprintf('% 4d',j) '/' num2str(T/VisualizationStep) ' frames <-> ' sprintf('% 4d',floor(round(j/T*VisualizationStep,2)*100)) ' Prozent ##################']);
+        end
         j = j+1; VisCounter = 0;
         P1(j,:,1:par.N) = data.position; 
         A1(j,:,1:par.N) = data.angular; 
@@ -73,17 +72,17 @@ end
 % -------------------------- Plot time series -------------------------- %
 DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
 
-time = 1:j;
-for i = 1:par.N
-plot(time,A1(1:j,2,i)*180/pi)
-hold on
-title(['Angular Velocity of particle ' num2str(i)])
-end
-hold off
-figure;
-for i = 1:par.N
-plot(time,A1(1:j,1,i)*180/pi)
-hold on
-title(['Angle of particle ' num2str(i)])
-end
-%save('data')
+% time = 1:j;
+% for i = 1:par.N
+% plot(time,A1(1:j,2,i)*180/pi)
+% hold on
+% title(['Angular Velocity of particle ' num2str(i)])
+% end
+% hold off
+% figure;
+% for i = 1:par.N
+% plot(time,A1(1:j,1,i)*180/pi)
+% hold on
+% title(['Angle of particle ' num2str(i)])
+% end
+% save('data')

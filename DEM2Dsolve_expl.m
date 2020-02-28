@@ -1,8 +1,8 @@
 function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
-    
-    Pk = [];
-    Vk = [];
-    N = par.N;
+     N = par.N;
+    Pk = zeros(2,N);
+    Vk = zeros(2,N);
+
     dt = par.dt;
 
     pk = zeros(2,N);
@@ -23,13 +23,12 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
     [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data);
 
     
-    for k=1:N
+   for k=1:N
         if(data.contactsParticle.deactivated(k))
             continue
         else
-        % Define F:
-        F = DEM2DvectField(vx(k),vz(k),fx(k,:),fz(k,:),fwx(k),fwz(k),m(k),par);
-        
+        ax = (sum(fx(k,:)) + fwx(k,:))/m(k) + par.g;% - par.g;
+        az = (sum(fz(k,:)) + fwz(k,:))/m(k);% - 1*par.g;
         if(par.considerRotations)
             % 2D inertia tensor for spheres around y-axis I = 0.25mr²
             I = 0.25*data.mass(k)*(data.radius(k)^2);
@@ -40,12 +39,11 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
             end
             
         end
-        vk(1,k) = vx(k) + F(3)*dt;% + vtx(k);
-        vk(2,k) = vz(k) + F(4)*dt;% + vtz(k);
+        vk(1,k) = vx(k) + ax*dt;% + vtx(k);
+        vk(2,k) = vz(k) + az*dt;% + vtz(k);
 
         pk(1,k) = x(k) + vk(1,k)*dt; 
         pk(2,k) = z(k) + vk(2,k)*dt;
-
         ak = data.angular;
         end
     end

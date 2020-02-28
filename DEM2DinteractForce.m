@@ -10,11 +10,11 @@ for i = 1:length(c.contacts)
 end
 
 delta = data.delta;
-fx = zeros(N,N); fz = zeros(N,N); % particle interaction forces
+fx = sparse(N,N); fz = sparse(N,N); % particle interaction forces
 
-torqY = zeros(N,N);
+torqY = sparse(N,N);
 Ft = zeros(2,par.N,par.N);
-F = zeros(par.N, par.N);
+F = sparse(par.N, par.N);
 
 for i=1:N-1
     for k = i:N
@@ -66,15 +66,15 @@ for i=1:N-1
         if(par.cohesion>0)
             Fcohesion = -par.cohesion*((data.radius(i)+data.radius(i+I(j))));
         end
-        FnormalCons = normalStiffness*delta(i,i+I(j));
-        FnormalDiss = -par.dampN*2*sqrt(normalStiffness*effMass)*  norm(relVel_ij.*[nx; nz]);
+%         FnormalCons = normalStiffness*delta(i,i+I(j));
+%         FnormalDiss = -par.dampN*2*sqrt(normalStiffness*effMass)*  norm(relVel_ij.*[nx; nz]);
         F(i,i+I(j)) = normalStiffness*delta(i,i+I(j)) - par.dampN*4*sqrt(normalStiffness*effMass)*  norm(relVel_ij.*[nx; nz]) + Fcohesion ;%ddeltadt(i,i+I(j)); 
         F(i+I(j),i) = - F(i,i+I(j));
         % tangential interaction
         globalContactPoint_1 = [x(i+I(j));z(i+I(j))] + data.contactsParticle.contactPoint(:,i,i+I(j));
         globalContactPoint_2 = [x(i);z(i)] + data.contactsParticle.contactPoint(:,i+I(j),i);% check sign
         tangentialSpring = (globalContactPoint_2 - globalContactPoint_1)'*[tx;tz];
-        if(tangentialSpring > eps)
+        if(abs(tangentialSpring) > eps)
             tangentialSpringLength = norm(tangentialSpring);
             tangentialStiffness = 1/1.2*normalStiffness;
             scaleSpringLength =  F(i,i+I(j))*par.mu/(tangentialStiffness*tangentialSpringLength);
@@ -90,12 +90,7 @@ for i=1:N-1
             % add tangential dissipation force;
             Ft(i,i+I(j)) = -tangentialSpring*tangentialStiffness;
 
-            
-            if( par.considerRotations)
-%           disp('Radius')
-%           disp(R(i,i+I(j))/2)
-%           disp('Normed distance to actuation point')
-%           disp(norm([x(i); z(i)] - data.contactsParticle.actuationPoint(:,i,i+I(j))))
+            if(par.considerRotations)
             torque1 = Ft(i,i+I(j))*norm(data.contactsParticle.actuationPoint(:,i,i+I(j))- [x(i); z(i)]);%Rsparse(i,i+I(j))/2; % check Obermayr S 29
             torque2= -Ft(i,i+I(j))*norm(data.contactsParticle.actuationPoint(:,i,i+I(j))- [x(i+I(j)); z(i+I(j))]);
             torqY(i) = torque1;
@@ -136,7 +131,6 @@ for i=1:N-1
             fx(i,i+I(j)) = 0;             fx(i+I(j),i) = 0;
             fz(i,i+I(j)) = 0;             fz(i+I(j),i) = 0;
             data.contactsParticle.mergedParticles = true;
-            
             % deactivate glued particles
             data.contactsParticle.deactivated(i) = 1;
             data.contactsParticle.deactivated(i+I(j)) = 1;
@@ -153,6 +147,5 @@ for i=1:N-1
         end       
     end 
 end
-% data.deltaOld = data.delta;
 
 end
