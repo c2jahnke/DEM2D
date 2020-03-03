@@ -11,14 +11,14 @@ if(SuccessFlag == 0)
 end
 end
 
-% data.position(1,1) = 2.05;
-% data.position(2,1) = 1.5;
-% data.velocity(1,1) = 0.5;
-% data.velocity(2,1) = -0.3;
+data.position(1,1) = 2.5;
+data.position(2,1) = 3.5;
+data.velocity(1,1) = -1.20;
+data.velocity(2,1) = 1.20;
 % data.position(1,2) = 2.5;
 % data.position(2,2) = 2.5;
 % data.velocity(1,2) = -0.5;
-% data.velocity(2,2) = -0.3;
+% data.velocity(2,2) = -0.25;
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 
@@ -72,17 +72,17 @@ end
 % -------------------------- Plot time series -------------------------- %
 DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
 
-% time = 1:j;
-% for i = 1:par.N
-% plot(time,A1(1:j,2,i)*180/pi)
-% hold on
-% title(['Angular Velocity of particle ' num2str(i)])
-% end
-% hold off
-% figure;
-% for i = 1:par.N
-% plot(time,A1(1:j,1,i)*180/pi)
-% hold on
-% title(['Angle of particle ' num2str(i)])
-% end
-% save('data')
+time = 1:j;
+for i = 1:par.N
+plot(time,A1(1:j,2,i)*180/pi)
+hold on
+title(['Angular Velocity of particle ' num2str(i)])
+end
+hold off
+figure;
+for i = 1:par.N
+plot(time,A1(1:j,1,i)*180/pi)
+hold on
+title(['Angle of particle ' num2str(i)])
+end
+save('data')

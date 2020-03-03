@@ -3,13 +3,13 @@ function par = DEM2Dparam()
     par = struct('N',[], 'g',[],'mu', [],'r',[],'bBox',[],'dt',[],'T',[],'step',[],'kN',[],'dN',[]);
 
     %number of particles
-    par.N = 5;
+    par.N = 1;
 
     % gravity
     par.g = 9.81; %[m/s²]
     % friction coefficient mu \in [0,1)
-    par.mu = 0.3;
-    par.muWall = 0.51;
+    par.mu = 0.21;
+    par.muWall = 0.61;
 
     % mean radius 
     par.r = [0.37 0.41]; %[m]
@@ -22,8 +22,8 @@ function par = DEM2Dparam()
     par.collisionThreshold = 1.25;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 8;
-    par.dt = 1e-4%1e-6
+    par.simulationEnd = 4;
+    par.dt = 1e-4;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
    
     par.step = round(0.025/par.dt);
@@ -38,7 +38,7 @@ function par = DEM2Dparam()
    % par.kT = 1/1.2*par.kN; % adjust accordingly
     par.dampN = 0.2; % correct? 2 % of critial damping
     par.dampT = 0.1; % tangential damping
-    par.dampTwall = 0.001;
+    par.dampTwall = 0.1;
    % par.wallDistr = 0.1; % coefficient on wall
     % particle wall
     par.cohesion = 0;
@@ -52,13 +52,13 @@ function par = DEM2Dparam()
     par.writeEps = false;
     par.writePng = false;
     par.writeVid = false;
-    par.videoname = 'video-rot';%video4-merged';
+    par.videoname = 'video-left-rot';%video4-merged';
     par.video_framerate = 20;
     par.videoFontsize = 16;
     
     
     %% merge parameters
-    par.merge = true;
+    par.merge = false;
     par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merg
 
 end

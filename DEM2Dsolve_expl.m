@@ -27,13 +27,15 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
         if(data.contactsParticle.deactivated(k))
             continue
         else
-        ax = (sum(fx(k,:)) + fwx(k,:))/m(k) + par.g;% - par.g;
-        az = (sum(fz(k,:)) + fwz(k,:))/m(k);% - 1*par.g;
+        ax = (sum(fx(k,:)) + fwx(k,:))/m(k) - par.g;% - par.g;
+        az = (sum(fz(k,:)) + fwz(k,:))/m(k);%  - 1*par.g;
         if(par.considerRotations)
             % 2D inertia tensor for spheres around y-axis I = 0.25mr²
             I = 0.25*data.mass(k)*(data.radius(k)^2);
             data.angular(2,k) = data.angular(2,k) + 1/(I)*(sum(ty(k,:)) + sum(twy(k,:)))*dt;%data.angular(3,k)*dt;
             data.angular(1,k) = data.angular(1,k) + data.angular(2,k)*dt ;
+            data.contactsWall.localContactPoint(k,:,1) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,1)'; 
+            data.contactsWall.localContactPoint(k,:,2) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,2)'; 
             if(data.contactsWall.isInitialized) % check
                 pk(1,k) = pk(1,k);% + data.angular(2,k)*2*pi*dt;
             end
