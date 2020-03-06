@@ -12,9 +12,9 @@ end
 end
 
 data.position(1,1) = 2.5;
-data.position(2,1) = 3.5;
-data.velocity(1,1) = -1.20;
-data.velocity(2,1) = 1.20;
+data.position(2,1) = 2.5;
+data.velocity(1,1) = -0.20;
+data.velocity(2,1) = 0.20;
 % data.position(1,2) = 2.5;
 % data.position(2,2) = 2.5;
 % data.velocity(1,2) = -0.5;

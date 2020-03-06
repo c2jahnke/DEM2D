@@ -27,8 +27,8 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
         if(data.contactsParticle.deactivated(k))
             continue
         else
-        ax = (sum(fx(k,:)) + fwx(k,:))/m(k) - par.g;% - par.g;
-        az = (sum(fz(k,:)) + fwz(k,:))/m(k);%  - 1*par.g;
+        ax = (sum(fx(k,:)) + fwx(k,:))/m(k) + par.g;% - par.g;
+        az = (sum(fz(k,:)) + fwz(k,:))/m(k);% 1*par.g;
         if(par.considerRotations)
             % 2D inertia tensor for spheres around y-axis I = 0.25mr²
             I = 0.25*data.mass(k)*(data.radius(k)^2);
