@@ -121,9 +121,9 @@ function [data,SuccessFlag] = DEM2Dinit(par)
     data.delta = zeros(par.N,par.N);
     data.angular = zeros(3,par.N); % angular position, velocity and acceleration
     %data.angular(2,:) = 0.05*ones(1,par.N);% 2D: angle, angular velocity
-    data.Xc = zeros(2,par.N,par.N); % contact point in local coordinates
-    data.Xinorm = zeros(2,par.N,par.N);
-    data.XinormOld = zeros(2,par.N,par.N);
+%     data.Xc = zeros(2,par.N,par.N); % contact point in local coordinates
+%     data.Xinorm = zeros(2,par.N,par.N);
+%     data.XinormOld = zeros(2,par.N,par.N);
 
     save('data')
 end
