@@ -79,12 +79,13 @@ function [data,SuccessFlag] = DEM2Dinit(par)
             if(length(z) < sqrt(par.N))
                 error('Reduce number of particles, the particle radius or increase bounding box.');
             end 
+        end
         maxSize = length(x)*length(z);
         [X,Z] = meshgrid(x,z); % generate mesh
         Zr = reshape(Z,1,maxSize);
         zInd = randperm(length(Zr),par.N);
         %xInd = randi([1 length(Xr)],1,par.N);
-        end
+       
         % choose positions from indices
         data.position = [X(zInd)+ 0.1*max(data.radius)*(rand(1,par.N)-0.5) ; Z(zInd) + 0.1*max(data.radius)*(rand(1,par.N)-0.5)];
         %data.position = [(par.bBox(2) - par.bBox(1) -2*par.r(1))*rand(1,par.N)+par.r(1) + par.bBox(1); (par.bBox(4)-par.bBox(3)-2*par.r(1))*rand(1,par.N)+par.r(1)+par.bBox(3)];

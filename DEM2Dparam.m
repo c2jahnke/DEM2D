@@ -3,21 +3,21 @@ function par = DEM2Dparam()
     par = struct('N',[], 'g',[],'mu', [],'r',[],'bBox',[],'dt',[],'T',[],'step',[],'kN',[],'dN',[]);
 
     %number of particles
-    par.N = 1;
+    par.N = 3;
 
     % gravity
-    par.g = 9.81; %[m/s²]
+    par.g = 9.81; %[m/s^2]
     % friction coefficient mu \in [0,1)
-    par.mu = 0.21;
-    par.muWall = 0.21;
+    par.mu = 0.31;
+    par.muWall = 0.31;
 
     % mean radius 
-    par.r = [0.37 0.41]; %[m]
+    par.r = [0.416 0.4160]; %[m]
     % bounding box, x-length, z-length (height)
-        par.bBox = [ 1.5 1.0; % x first comp z first comp
-                 4.5 4.0]; % x second comp, z second comp
-    par.spawnBox = [ 1.5 1.0; % x first comp z first comp
-                 4.5 4.0];
+        par.bBox = [ 1.5 1.5; % x first comp z first comp
+                 3.5 3.5]; % x second comp, z second comp
+    par.spawnBox = [ 1.5 1.5; % x first comp z first comp
+                 3.5 3.5];
     % contact detection
     par.collisionThreshold = 1.25;
     % numerical simulation
@@ -52,7 +52,7 @@ function par = DEM2Dparam()
     par.writeEps = false;
     par.writePng = false;
     par.writeVid = false;
-    par.videoname = 'video-left-rot';%video4-merged';
+    par.videoname = 'video-40-rot';%video4-merged';
     par.video_framerate = 20;
     par.videoFontsize = 16;
     

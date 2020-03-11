@@ -10,16 +10,18 @@ if(SuccessFlag == 0)
     return
 end
 end
-
-data.position(1,1) = 2.5;
-data.position(2,1) = 1.5;
-data.velocity(1,1) = 3.1;
-data.velocity(2,1) = 2.50;
-% data.angular(2,1) = -1;
-% data.position(1,2) = 2.5;
+% data.velocity(1,:) = 0;
+% data.velocity(2,:) = 0;
+% % data.angular(2,1) = 0;
+% data.angular(2,2) = 1;
+% data.position(1,1) = 3.01;
+% data.position(2,1) = 2.5;
+% data.velocity(1,1) = -0.5;
+% % data.velocity(2,1) = -0.6;
+% data.position(1,2) = 2.0;
 % data.position(2,2) = 2.5;
-% data.velocity(1,2) = -0.5;
-% data.velocity(2,2) = -0.25;
+% data.velocity(1,2) = +0.3;
+% % data.velocity(2,2) = -0.6;
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 
@@ -86,4 +88,4 @@ plot(time,A1(1:j,1,i)*180/pi)
 hold on
 title(['Angle of particle ' num2str(i)])
 end
-save('data')
+% save('data')
