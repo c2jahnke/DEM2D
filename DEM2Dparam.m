@@ -3,7 +3,7 @@ function par = DEM2Dparam()
     par = struct('N',[], 'g',[],'mu', [],'r',[],'bBox',[],'dt',[],'T',[],'step',[],'kN',[],'dN',[]);
 
     %number of particles
-    par.N = 1;
+    par.N = 2;
 
     % gravity
     par.g = 9.81; %[m/s^2]
@@ -44,7 +44,7 @@ function par = DEM2Dparam()
     par.cohesion = 0;
 
     % 2 DOF or 3 DOF? Not fully implemented - carefull
-    par.considerRotations = true;
+    par.considerRotations = false;
     par.Cr = 0.5; % rolling resistance coefficient
     
     %% video parameters

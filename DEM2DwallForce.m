@@ -170,9 +170,9 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
                     data.contactsWall.accumulatedRollingDeformation(i,1,3) =data.contactsWall.accumulatedRollingDeformation(i,1,3)/abs(data.contactsWall.accumulatedRollingDeformation(i,1,3))*(fwz_b(i))*par.muWall/tangentialStiffness*par.Cr; %data.contactsWall.accumulatedRollingDeformation(i,1,3)/abs(data.contactsWall.accumulatedRollingDeformation(i,1,3))*
 
                 end
-                disp(["twy(i,3) no rolling resistance",twy(i,3)])
+%                 disp(["twy(i,3) no rolling resistance",twy(i,3)])
                 twy(i,3) = twy(i,3) + tangentialStiffness*data.contactsWall.accumulatedRollingDeformation(i,1,3)*(data.contactsWall.actuationPoint(i,2,3)'-data.position(2,i)); % projection into tangential plane necessary           
-                disp(["twy(i,3) with rolling resistance",twy(i,3)])
+%                 disp(["twy(i,3) with rolling resistance",twy(i,3)])
             end  
             
         elseif(data.contactsWall.isInitialized(i,3)) % initialized but no contact with bottom
@@ -231,9 +231,9 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
                 if(abs(data.contactsWall.accumulatedRollingDeformation(i,1,4)) > abs(fwz_t(i))*par.muWall/tangentialStiffness*par.Cr) %4.30
                     data.contactsWall.accumulatedRollingDeformation(i,1,4) = data.contactsWall.accumulatedRollingDeformation(i,1,4)/abs(data.contactsWall.accumulatedRollingDeformation(i,1,4))*abs(fwz_t(i))*(par.muWall/tangentialStiffness)*par.Cr;
                 end
-                  disp(["twy(i,4) no rolling resistance",twy(i,4)])
+%                   disp(["twy(i,4) no rolling resistance",twy(i,4)])
                   twy(i,4) = twy(i,4) - tangentialStiffness*data.contactsWall.accumulatedRollingDeformation(i,1,4)*(data.contactsWall.actuationPoint(i,2,4)'-data.position(2,i)); % projection into tangential plane necessary
-                  disp(["twy(i,4) with rolling resistance",twy(i,4)])
+%                   disp(["twy(i,4) with rolling resistance",twy(i,4)])
             end
 
         elseif(data.contactsWall.isInitialized(i,4)) % initialized but no contact with top

@@ -12,8 +12,9 @@ end
 delta = data.delta;
 fx = sparse(N,N); fz = sparse(N,N); % particle interaction forces
 
-torqY = sparse(N,N);
+torqY = spalloc(par.N,par.N,2*par.N);
 Ft = zeros(2,par.N,par.N);
+Ft1D = sparse(N,N);
 F = sparse(N, N);
 
 for i=1:N-1
@@ -90,25 +91,24 @@ for i=1:N-1
             end
             % add tangential dissipation force;
             Ft(i,i+I(j)) = -tangentialSpring*tangentialStiffness;
-
+            Ft1D(i,i+I(j)) =  -tangentialSpring*tangentialStiffness;
             if(par.considerRotations)
-            torqY(i,i+I(j)) = Ft(i,i+I(j))*(data.contactsParticle.actuationPoint(:,i,i+I(j))- [x(i); z(i)])'*[nx; nz];%Rsparse(i,i+I(j))/2; % check Obermayr S 29
-            torqY(i+I(j),i) = Ft(i,i+I(j))*(data.contactsParticle.actuationPoint(:,i+I(j),i)- [x(i+I(j)); z(i+I(j))])'*[nx; nz];
+                torqY(i,i+I(j)) = Ft(i,i+I(j))*(data.contactsParticle.actuationPoint(:,i,i+I(j))- [x(i); z(i)])'*[nx; nz];%Rsparse(i,i+I(j))/2; % check Obermayr S 29
+                torqY(i+I(j),i) = Ft(i,i+I(j))*(data.contactsParticle.actuationPoint(:,i+I(j),i)- [x(i+I(j)); z(i+I(j))])'*[nx; nz];
 
-            
-            % rolling resistence CHECK!!! 11.03.2020, compare to
-            % DEM2DwallForce
-            % consider 1-dimensional rollingDeformation in tangential plane
-            data.contactsParticle.rollingDeformation(:,i,i+I(j)) = (globalContactPoint_1 - globalContactPoint_2);% - ((globalContactPoint_1 - globalContactPoint_2)'*[nx;nz])*[nx;nz];
-            data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) = data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) + data.contactsParticle.rollingDeformation(:,i,i+I(j)); %rolling deformation
-            data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) = data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) - (data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j))'*[nx;nz])*[nx;nz]; %projection
-            if(abs(data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j))) > abs(F(i,i+I(j)))*par.mu/tangentialStiffness*par.Cr)
-                data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) = sign(data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)))*abs(F(i,i+I(j)))*par.muWall/tangentialStiffness*0.1;
-            end
 
-%              disp(["torqY(i) no rolling resistance",torqY(i)])
-             torqY(i,i+I(j)) = torqY(i,i+I(j)) - tangentialStiffness*det([data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) (data.contactsParticle.actuationPoint(:,i,i+I(j))-[x(i); z(i)])]); %2 d cross product
-             torqY(i+I(j),i) = torqY(i+I(j),i) - tangentialStiffness*det([data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) (data.contactsParticle.actuationPoint(:,i+I(j),i)-[x(i+I(j)); z(i+I(j))])]);
+                % rolling resistence CHECK!!! 11.03.2020, compare to DEM2DwallForce
+                % consider 1-dimensional rollingDeformation in tangential plane
+                data.contactsParticle.rollingDeformation(:,i,i+I(j)) = (globalContactPoint_1 - globalContactPoint_2);% - ((globalContactPoint_1 - globalContactPoint_2)'*[nx;nz])*[nx;nz];
+                data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) = data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) + data.contactsParticle.rollingDeformation(:,i,i+I(j)); %rolling deformation
+                data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) = data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) - (data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j))'*[nx;nz])*[nx;nz]; %projection
+                if(abs(data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j))) > abs(F(i,i+I(j)))*par.mu/tangentialStiffness*par.Cr)
+                    data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) = sign(data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)))*abs(F(i,i+I(j)))*par.muWall/tangentialStiffness*0.1;
+                end
+
+    %              disp(["torqY(i) no rolling resistance",torqY(i)])
+                 torqY(i,i+I(j)) = torqY(i,i+I(j)) - tangentialStiffness*det([data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) (data.contactsParticle.actuationPoint(:,i,i+I(j))-[x(i); z(i)])]); %2 d cross product
+                 torqY(i+I(j),i) = torqY(i+I(j),i) - tangentialStiffness*det([data.contactsParticle.accumulatedRollingDeformation(:,i,i+I(j)) (data.contactsParticle.actuationPoint(:,i+I(j),i)-[x(i+I(j)); z(i+I(j))])]);
 %              disp(["torqY(i) with rolling resistance",torqY(i)])
             end
         end
@@ -119,9 +119,14 @@ for i=1:N-1
         % omegadot3 = 1/I_3*(I_2 - I_1)omega1*omega2 = M_3
         %%%%%%%%%%%%%%%%%%% END: Coulomb Friction %%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%% Transformation to global coordinate system %%%%%%%%%%%%%%%%%%%%%%%
-        fx(i,i+I(j)) = F(i,i+I(j))*nx + Ft(1,i,i+I(j))*tx; fx(i+I(j),i) = F(i+I(j),i)*nx - Ft(1,i,i+I(j))*tx;
-        fz(i,i+I(j)) = F(i,i+I(j))*nz + Ft(2,i,i+I(j))*tz; fz(i+I(j),i) = F(i+I(j),i)*nz - Ft(2,i,i+I(j))*tz;
+        fxOld(i,i+I(j)) = F(i,i+I(j))*nx + Ft(1,i,i+I(j))*tx; fxOld(i+I(j),i) = F(i+I(j),i)*nx - Ft(1,i,i+I(j))*tx;
+        fzOld(i,i+I(j)) = F(i,i+I(j))*nz + Ft(2,i,i+I(j))*tz; fzOld(i+I(j),i) = F(i+I(j),i)*nz - Ft(2,i,i+I(j))*tz;
+        fx(i,i+I(j)) = F(i,i+I(j))*nx + Ft1D(i,i+I(j))*tx; fx(i+I(j),i) = F(i+I(j),i)*nx - Ft1D(i,i+I(j))*tx;
+        fz(i,i+I(j)) = F(i,i+I(j))*nz + Ft1D(i,i+I(j))*tz; fz(i+I(j),i) = F(i+I(j),i)*nz - Ft1D(i,i+I(j))*tz;
         
+        if ~((fx - fxOld) == sparse(N,N) )
+            disp(['warning'])
+        end%&& (fz - fzNew) == sparse(N,N)
         %%%%%%%%%%%%%%%%%%%%%%% Merge Particles %%%%%%%%%%%%%%%%%%%%%%%%%
         % check if ActiveContactAge is large, relative velocities small
         % --> glue particles together

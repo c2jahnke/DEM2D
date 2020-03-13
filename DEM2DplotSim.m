@@ -23,7 +23,7 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
     scal = linspace(-1,1,AngleRes);
     s = sin(theta);
     c = cos(theta);
-    DELAY = par.dt*par.VisualizationStep*0.4/par.N;
+    DELAY = par.dt*par.VisualizationStep*0.4/par.N*10;
 
     for k=1:j    
         plot(reshape(P1(k,1,:),[1 par.N]),reshape(P1(k,2,:),[1 par.N]),'.','MarkerEdgeColor','w')
