@@ -1,5 +1,7 @@
 % -------------------------- Initialization -------------------------- %
+global par;
 par = DEM2Dparam();
+global data;
 LoadData = false;
 if(LoadData == true)
     SuccessFlag = true;
@@ -10,20 +12,21 @@ if(SuccessFlag == 0)
     return
 end
 end
-% data.velocity(1,:) = 0;
-% data.velocity(2,:) = 0;
-% % data.angular(2,1) = 0;
+data.velocity(1,:) = 0;
+data.velocity(2,:) = 0;
+% data.angular(2,1) = 0;
 % data.angular(2,2) = 1;
-% data.position(1,1) = 3.01;
-% data.position(2,1) = 2.5;
-% data.velocity(1,1) = -0.5;
-% % data.velocity(2,1) = -0.6;
+data.position(1,1) = 3.01;
+data.position(2,1) = 2.5;
+data.velocity(1,1) = 0.5;
+% data.velocity(2,1) = -0.6;
 % data.position(1,2) = 2.0;
 % data.position(2,2) = 2.5;
 % data.velocity(1,2) = +0.3;
-% % data.velocity(2,2) = -0.6;
+% data.velocity(2,2) = -0.6;
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
+drawnow;
 
 T = par.T; VisualizationStep = par.VisualizationStep; CollisionStep =  par.CollisionStep;
 
@@ -81,8 +84,10 @@ plot(time,A1(1:j,2,i)*180/pi)
 hold on
 title(['Angular Velocity of particle ' num2str(i)])
 end
+
 hold off
 figure;
+
 for i = 1:par.N
 plot(time,A1(1:j,1,i)*180/pi)
 hold on

@@ -1,5 +1,5 @@
 function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
-     N = par.N;
+    N = par.N;
     Pk = zeros(2,N);
     Vk = zeros(2,N);
 
@@ -7,7 +7,7 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
 
     pk = zeros(2,N);
     vk = zeros(2,N);
-
+    
     x = data.position(1,:);
     z = data.position(2,:);
 
@@ -18,7 +18,6 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
     m = data.mass;
     d = DEM2Ddist(x,z);
     
-    % fx = zeros(N,N); fz = zeros(N,N);%
     [fx,fz,ty,data] = DEM2DinteractForce(x,z,vx,vz,d,r,par,data,c);
     [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data);
 
@@ -27,8 +26,8 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
         if(data.contactsParticle.deactivated(k))
             continue
         else
-        ax = (sum(fx(k,:)) + fwx(k,:))/m(k);%  + par.g;% - par.g;
-        az = (sum(fz(k,:)) + fwz(k,:))/m(k) - 0.51*par.g;
+        ax = (sum(fx(k,:)) + fwx(k,:))/m(k);% + par.g;% - par.g;
+        az = (sum(fz(k,:)) + fwz(k,:))/m(k) - 1*par.g;
         if(par.considerRotations)
             % 2D inertia tensor for spheres around y-axis I = 0.25mr²
             I = 0.25*data.mass(k)*(data.radius(k)^2);
@@ -36,7 +35,7 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
             data.angular(1,k) = data.angular(1,k) + data.angular(2,k)*dt ;
             data.contactsWall.localContactPoint(k,:,1) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,1)'; 
             data.contactsWall.localContactPoint(k,:,2) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,2)'; 
-            data.contactsWall.localContactPoint(k,:,3) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,3)'; 
+            data.contactsWall.localContactPoint(k,:,3) = DEM2Drotation(-data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,3)'; 
             data.contactsWall.localContactPoint(k,:,4) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,4)';
            
             if(data.contactsWall.isInitialized) % check

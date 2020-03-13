@@ -14,7 +14,7 @@ fx = sparse(N,N); fz = sparse(N,N); % particle interaction forces
 
 torqY = sparse(N,N);
 Ft = zeros(2,par.N,par.N);
-F = sparse(par.N, par.N);
+F = sparse(N, N);
 
 for i=1:N-1
     for k = i:N
