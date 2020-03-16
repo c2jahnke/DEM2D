@@ -53,6 +53,7 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
     end
     if(data.contactsParticle.mergedParticles)
         for k = 1:data.contactsMerged.N
+            
             i = data.contactsMerged.index(1,k); j = data.contactsMerged.index(2,k);
 
             G = DEM2DvectField(data.contactsMerged.velocityMerged(1,k),data.contactsMerged.velocityMerged(2,k),fx(i,:)+fx(j,:),fz(i,:)+fz(j,:),fwx(i,:)+fwx(j,:),fwz(i,:)+fwz(j,:),data.contactsMerged.mass(k),par);
@@ -61,7 +62,9 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
             data.contactsMerged.velocityMerged(2,k) = data.contactsMerged.velocityMerged(2,k) + G(4)*dt;% + vtz(k);
 
             data.contactsMerged.positionMerged(:,k) = data.contactsMerged.positionMerged(:,k) + data.contactsMerged.velocityMerged(:,k).*dt;  
+            
             % angular momentum
+            
             vk(:,i) = data.contactsMerged.velocityMerged(:,k);% + vtx(k);
             vk(:,j) = data.contactsMerged.velocityMerged(:,k);% + vtz(k);
 

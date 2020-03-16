@@ -90,11 +90,11 @@ for i=1:N-1
                 data.contactsParticle.contactPoint(:,i+I(j),i) = globalContactPoint_2 - [x(i);z(i)];    
             end
             % add tangential dissipation force;
-            Ft(i,i+I(j)) = -tangentialSpring*tangentialStiffness;
+%             Ft(i,i+I(j)) = -tangentialSpring*tangentialStiffness;
             Ft1D(i,i+I(j)) =  -tangentialSpring*tangentialStiffness;
             if(par.considerRotations)
-                torqY(i,i+I(j)) = Ft(i,i+I(j))*(data.contactsParticle.actuationPoint(:,i,i+I(j))- [x(i); z(i)])'*[nx; nz];%Rsparse(i,i+I(j))/2; % check Obermayr S 29
-                torqY(i+I(j),i) = Ft(i,i+I(j))*(data.contactsParticle.actuationPoint(:,i+I(j),i)- [x(i+I(j)); z(i+I(j))])'*[nx; nz];
+                torqY(i,i+I(j)) = -Ft1D(i,i+I(j))*(data.contactsParticle.actuationPoint(:,i,i+I(j))- [x(i); z(i)])'*[nx; nz];%Rsparse(i,i+I(j))/2; % check Obermayr S 29
+                torqY(i+I(j),i) = -Ft1D(i,i+I(j))*(data.contactsParticle.actuationPoint(:,i+I(j),i)- [x(i+I(j)); z(i+I(j))])'*[nx; nz];
 
 
                 % rolling resistence CHECK!!! 11.03.2020, compare to DEM2DwallForce
@@ -119,14 +119,14 @@ for i=1:N-1
         % omegadot3 = 1/I_3*(I_2 - I_1)omega1*omega2 = M_3
         %%%%%%%%%%%%%%%%%%% END: Coulomb Friction %%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%% Transformation to global coordinate system %%%%%%%%%%%%%%%%%%%%%%%
-        fxOld(i,i+I(j)) = F(i,i+I(j))*nx + Ft(1,i,i+I(j))*tx; fxOld(i+I(j),i) = F(i+I(j),i)*nx - Ft(1,i,i+I(j))*tx;
-        fzOld(i,i+I(j)) = F(i,i+I(j))*nz + Ft(2,i,i+I(j))*tz; fzOld(i+I(j),i) = F(i+I(j),i)*nz - Ft(2,i,i+I(j))*tz;
+%         fxOld(i,i+I(j)) = F(i,i+I(j))*nx + Ft(1,i,i+I(j))*tx; fxOld(i+I(j),i) = F(i+I(j),i)*nx - Ft(1,i,i+I(j))*tx;
+%         fzOld(i,i+I(j)) = F(i,i+I(j))*nz + Ft(2,i,i+I(j))*tz; fzOld(i+I(j),i) = F(i+I(j),i)*nz - Ft(2,i,i+I(j))*tz;
         fx(i,i+I(j)) = F(i,i+I(j))*nx + Ft1D(i,i+I(j))*tx; fx(i+I(j),i) = F(i+I(j),i)*nx - Ft1D(i,i+I(j))*tx;
         fz(i,i+I(j)) = F(i,i+I(j))*nz + Ft1D(i,i+I(j))*tz; fz(i+I(j),i) = F(i+I(j),i)*nz - Ft1D(i,i+I(j))*tz;
         
-        if ~((fx - fxOld) == sparse(N,N) )
-            disp(['warning'])
-        end%&& (fz - fzNew) == sparse(N,N)
+%         if ~((fx - fxOld) == sparse(N,N) )
+%             disp(['warning'])
+%         end%&& (fz - fzNew) == sparse(N,N)
         %%%%%%%%%%%%%%%%%%%%%%% Merge Particles %%%%%%%%%%%%%%%%%%%%%%%%%
         % check if ActiveContactAge is large, relative velocities small
         % --> glue particles together
