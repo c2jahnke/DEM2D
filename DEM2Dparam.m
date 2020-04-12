@@ -44,7 +44,7 @@ function par = DEM2Dparam()
     par.cohesion = 0;
 
     % 2 DOF or 3 DOF? Not fully implemented - carefull
-    par.considerRotations = false;
+    par.considerRotations = true;
     par.Cr = 0.5; % rolling resistance coefficient
     
     %% video parameters
