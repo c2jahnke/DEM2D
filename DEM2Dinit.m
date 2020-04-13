@@ -2,6 +2,7 @@ function [data,SuccessFlag] = DEM2Dinit(par)
  
     SuccessFlag = false;
     data = struct('position',[],'velocity',[],'acceleration',[],'radius',[],'mass',[],'deltaOld',[]);
+    
     data.contactsWall = struct;
     data.contactsWall.isInitialized = zeros(par.N,4); % each particle may collide with all 4 walls
     data.contactsWall.contactAge = zeros(par.N,4); % count contact age for particles
@@ -11,6 +12,7 @@ function [data,SuccessFlag] = DEM2Dinit(par)
     data.contactsWall.rollingDeformation = zeros(par.N,2,4);
     data.contactsWall.accumulatedRollingDeformation = zeros(par.N,2,4);
     data.contactsWall.maxContactAge = 3;
+    
     data.contactsParticle = struct;
     data.contactsParticle.isInitialized = zeros(par.N,par.N);
     data.contactsParticle.ActiveContactAge = zeros(par.N,par.N);
@@ -26,6 +28,7 @@ function [data,SuccessFlag] = DEM2Dinit(par)
     
     
     data.contactsGlued = zeros(par.N,par.N);
+    
     data.contactsMerged = struct;
     data.contactsMerged.N = 0;
     data.contactsMerged.index = zeros(2,par.N);
@@ -33,8 +36,8 @@ function [data,SuccessFlag] = DEM2Dinit(par)
     data.contactsMerged.relativePosition = zeros(4,par.N);
     data.contactsMerged.positionMerged = zeros(2,par.N);
     data.contactsMerged.velocityMerged = zeros(2,par.N);
-    data.contactMerged.timeFlag = zeros(1,par.N);
-    data.contactMerged.timePoint = zeros(par.N,par.N);
+    data.contactsMerged.timeFlag = zeros(1,par.N);
+    data.contactsMerged.timePoint = zeros(par.N,par.N);
     
     %     % radii randomly distributed
 
@@ -88,9 +91,7 @@ function [data,SuccessFlag] = DEM2Dinit(par)
        
         % choose positions from indices
         data.position = [X(zInd)+ 0.1*max(data.radius)*(rand(1,par.N)-0.5) ; Z(zInd) + 0.1*max(data.radius)*(rand(1,par.N)-0.5)];
-        %data.position = [(par.bBox(2) - par.bBox(1) -2*par.r(1))*rand(1,par.N)+par.r(1) + par.bBox(1); (par.bBox(4)-par.bBox(3)-2*par.r(1))*rand(1,par.N)+par.r(1)+par.bBox(3)];
 
-        
         d = DEM2Ddist(data.position(1,:),data.position(2,:));
 
 %        Sum up radii:
@@ -116,15 +117,8 @@ function [data,SuccessFlag] = DEM2Dinit(par)
         end
     end
     data.velocity =  0.01*(rand(2,par.N)-0.05);
-    data.acceleration = zeros(2,par.N);
-    data.velocity(2,:) = 0.01*ones(1,par.N);
-    data.deltaOld = zeros(par.N,par.N);
     data.delta = zeros(par.N,par.N);
-    data.angular = zeros(3,par.N); % angular position, velocity and acceleration
-    %data.angular(2,:) = 0.05*ones(1,par.N);% 2D: angle, angular velocity
-%     data.Xc = zeros(2,par.N,par.N); % contact point in local coordinates
-%     data.Xinorm = zeros(2,par.N,par.N);
-%     data.XinormOld = zeros(2,par.N,par.N);
+    data.angular = zeros(2,par.N); % angular position, velocity and acceleration
 
     save('data')
 end

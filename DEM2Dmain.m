@@ -24,6 +24,7 @@ data.velocity(2,2) = 0.6;
 
 data.angular(2,1) = 0;
 data.angular(2,2) = 0;
+
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
@@ -32,7 +33,7 @@ T = par.T; VisualizationStep = par.VisualizationStep; CollisionStep =  par.Colli
 
 P1 = zeros(T/VisualizationStep+1,2,par.N); P1(1,:,:) = data.position;
 V1 = zeros(T/VisualizationStep+1,2,par.N); V1(1,:,:) = data.velocity;
-A1 = zeros(T/VisualizationStep+1,3,par.N); A1(1,:,:) = data.angular;
+A1 = zeros(T/VisualizationStep+1,2,par.N); A1(1,:,:) = data.angular;
 % for merged particles
 PM = zeros(T/VisualizationStep+1,2,par.N); 
 VM = zeros(T/VisualizationStep+1,2,par.N);
@@ -94,4 +95,3 @@ plot(time,A1(1:j,1,i)*180/pi)
 hold on
 title(['Angle of particle ' num2str(i)])
 end
-% save('data')

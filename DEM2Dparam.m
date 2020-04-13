@@ -8,8 +8,8 @@ function par = DEM2Dparam()
     % gravity
     par.g = 0.81; %[m/s^2]
     % friction coefficient mu \in [0,1)
-    par.mu = 0.31;
-    par.muWall = 0.31;
+    par.mu = 0.3;
+    par.muWall = 0.3;
 
     % mean radius 
     par.r = [0.9 0.9]; %[m]

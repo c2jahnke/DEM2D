@@ -43,9 +43,13 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
             end
             
         end
+
+%         pk(1,k) = data.position(1,k) + data.velocity(1,k)*dt; 
+%         pk(2,k) = data.position(2,k) + data.velocity(2,k)*dt;
+        
         vk(1,k) = vx(k) + ax*dt;% + vtx(k);
         vk(2,k) = vz(k) + az*dt;% + vtz(k);
-
+        
         pk(1,k) = data.position(1,k) + vk(1,k)*dt; 
         pk(2,k) = data.position(2,k) + vk(2,k)*dt;
         ak = data.angular;
