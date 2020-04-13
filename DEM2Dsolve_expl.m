@@ -8,18 +8,18 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
     pk = zeros(2,N);
     vk = zeros(2,N);
     
-    x = data.position(1,:);
-    z = data.position(2,:);
+    %x = data.position(1,:);
+    %z = data.position(2,:);
 
     vx = data.velocity(1,:);
     vz = data.velocity(2,:);
 
     r = data.radius;
     m = data.mass;
-    d = DEM2Ddist(x,z);
+    d = DEM2Ddist(data.position(1,:),data.position(2,:));
     
-    [fx,fz,ty,data] = DEM2DinteractForce(x,z,vx,vz,d,r,par,data,c);
-    [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data);
+    [fx,fz,ty,data] = DEM2DinteractForce(d,r,par,data,c);
+    [fwx,fwz,twy,data] = DEM2DwallForce(vx,vz,par,data);
 
     
    for k=1:N
@@ -27,9 +27,9 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
             continue
         else
         ax = (sum(fx(k,:)) + fwx(k,:))/m(k);% + par.g;% - par.g;
-        az = (sum(fz(k,:)) + fwz(k,:))/m(k);% - 1*par.g;
+        az = (sum(fz(k,:)) + fwz(k,:))/m(k)- 1*par.g;
         if(par.considerRotations)
-            % 2D inertia tensor for spheres around y-axis I = 0.25mr²
+            % 2D inertia tensor for spheres around y-axis I = 0.25mr^2
             I = 0.25*data.mass(k)*(data.radius(k)^2);
             data.angular(2,k) = data.angular(2,k) + 1/(I)*(sum(ty(k,:)) + sum(twy(k,:)))*dt;%data.angular(3,k)*dt;
             data.angular(1,k) = data.angular(1,k) + data.angular(2,k)*dt ;
@@ -46,8 +46,8 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
         vk(1,k) = vx(k) + ax*dt;% + vtx(k);
         vk(2,k) = vz(k) + az*dt;% + vtz(k);
 
-        pk(1,k) = x(k) + vk(1,k)*dt; 
-        pk(2,k) = z(k) + vk(2,k)*dt;
+        pk(1,k) = data.position(1,k) + vk(1,k)*dt; 
+        pk(2,k) = data.position(2,k) + vk(2,k)*dt;
         ak = data.angular;
         end
     end

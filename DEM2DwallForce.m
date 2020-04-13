@@ -1,4 +1,6 @@
-function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
+function [fwx,fwz,twy,data] = DEM2DwallForce(vx,vz,par,data)
+    x = data.position(1,:);
+    z = data.position(2,:);
     box = par.bBox; radius = data.radius;
     fwx_l = zeros(par.N,1);fwx_r = zeros(par.N,1);fwx_b = zeros(par.N,1);fwx_t = zeros(par.N,1);
     fwz_l = zeros(par.N,1);fwz_r = zeros(par.N,1);fwz_b = zeros(par.N,1);fwz_t = zeros(par.N,1);
@@ -86,7 +88,7 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(x,z,vx,vz,par,data)
             
             % tangential contact
             tangentialSpring = (data.contactsWall.actuationPoint(i,:,2) - data.contactsWall.contactPoint(i,:,2))*[0;1];
-            if(abs(tangentialSpring) < 10*eps)
+            if(abs(tangentialSpring) < 100*eps)
                 fwz_r(i) = 0;
             else
                 fwz_r(i) = (tangentialStiffness*tangentialSpring - par.dampTwall*2*sqrt(0.5*data.mass(i)*tangentialStiffness)*vz(i));

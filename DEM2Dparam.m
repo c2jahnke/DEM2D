@@ -6,18 +6,18 @@ function par = DEM2Dparam()
     par.N = 2;
 
     % gravity
-    par.g = 9.81; %[m/s^2]
+    par.g = 0.81; %[m/s^2]
     % friction coefficient mu \in [0,1)
     par.mu = 0.31;
     par.muWall = 0.31;
 
     % mean radius 
-    par.r = [0.416 0.4160]; %[m]
+    par.r = [0.9 0.9]; %[m]
     % bounding box, x-length, z-length (height)
-        par.bBox = [ 1.5 1.5; % x first comp z first comp
-                 3.5 3.5]; % x second comp, z second comp
-    par.spawnBox = [ 1.5 1.5; % x first comp z first comp
-                 3.5 3.5];
+        par.bBox = [ -2 -2; % x first comp z first comp
+                 2 2]; % x second comp, z second comp
+    par.spawnBox = [ -2 -2; % x first comp z first comp
+                 2 2];
     % contact detection
     par.collisionThreshold = 1.25;
     % numerical simulation

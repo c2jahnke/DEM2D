@@ -12,18 +12,18 @@ if(SuccessFlag == 0)
     return
 end
 end
-data.velocity(1,:) = 0;
-data.velocity(2,:) = 0;
-% data.angular(2,1) = 0;
-% data.angular(2,2) = 1;
-data.position(1,1) = 3.05;
-data.position(2,1) = 2.65;
-data.velocity(1,1) = -0.5;
-% data.velocity(2,1) = -0.6;
-data.position(1,2) = 2.0;
-data.position(2,2) = 2.5;
-data.velocity(1,2) = +0.3;
-% data.velocity(2,2) = -0.6;
+data.position(1,1) = -1.0;
+data.position(2,1) = 0;
+data.velocity(1,1) = -1.5;
+data.velocity(2,1) = 0.6;
+
+data.position(1,2) = 1.0;
+data.position(2,2) = 0;
+data.velocity(1,2) = +1.5;
+data.velocity(2,2) = 0.6;
+
+data.angular(2,1) = 0;
+data.angular(2,2) = 0;
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
@@ -57,6 +57,7 @@ for k = 1:T
     if VisCounter == par.VisualizationStep
         if(mod(j,10) == 0)
             disp(['################## ' sprintf('% 4d',j) '/' num2str(T/VisualizationStep) ' frames <-> ' sprintf('% 4d',floor(round(j/T*VisualizationStep,2)*100)) ' Prozent ##################']);
+            data.position
         end
         j = j+1; VisCounter = 0;
         P1(j,:,1:par.N) = data.position; 
