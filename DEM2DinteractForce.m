@@ -64,7 +64,9 @@ for j = 1:length(c.contacts)
         effMass = data.mass(i)*data.mass(k)/(data.mass(i)+data.mass(k));
         % normal stiffness
         normalStiffness = par.Emodul*(r(i)+r(k))/2*pi/2;
+
         relVel_ik = data.velocity(:,i) - data.velocity(:,k);
+
         %%%%%%%%%%%%%%%%%%% Coulomb Friction %%%%%%%%%%%%%%%%%%%%%%%
         % tangential direction
         tx = nz;
@@ -77,7 +79,9 @@ for j = 1:length(c.contacts)
         end
 %         FnormalCons = normalStiffness*delta(i,k);
 %         FnormalDiss = -par.dampN*2*sqrt(normalStiffness*effMass)*  norm(relVel_ij.*[nx; nz]);
+
         F(i,k) = normalStiffness*delta(i,k) - par.dampN*2*sqrt(normalStiffness*effMass)*(relVel_ik'*[nx; nz]) + Fcohesion ;%ddeltadt(i,k); 
+
         F(k,i) = - F(i,k);
 %         disp(["F(k,i)",num2str(F(k,i))])
         % tangential interaction
@@ -100,14 +104,17 @@ for j = 1:length(c.contacts)
             % add tangential dissipation force;
 %             Ft(i,k) = -tangentialSpring*tangentialStiffness;
             Ft(i,k) =  -tangentialSpring*tangentialStiffness;
+
             Ft(k,i) =  tangentialSpring*tangentialStiffness;
             if(par.considerRotations)
                 torqY(i,k) = Ft(i,k)*(data.contactsParticle.actuationPoint(:,i,k)- [x(i); z(i)])'*[nx; nz];%Rsparse(i,k)/2; % check Obermayr S 29
                 torqY(k,i) = -Ft(k,i)*(data.contactsParticle.actuationPoint(:,k,i)- [x(k); z(k)])'*[nx; nz];
 
 
+
                 % rolling resistence CHECK!!! 11.03.2020, compare to DEM2DwallForce
                 % consider 1-dimensional rollingDeformation in tangential plane
+
 %                 data.contactsParticle.rollingDeformation(:,i,k) = (globalContactPoint_1 - globalContactPoint_2);% - ((globalContactPoint_1 - globalContactPoint_2)'*[nx;nz])*[nx;nz];
 %                 data.contactsParticle.accumulatedRollingDeformation(:,i,k) = data.contactsParticle.accumulatedRollingDeformation(:,i,k) + data.contactsParticle.rollingDeformation(:,i,k); %rolling deformation
 %                 data.contactsParticle.accumulatedRollingDeformation(:,i,k) = data.contactsParticle.accumulatedRollingDeformation(:,i,k) - (data.contactsParticle.accumulatedRollingDeformation(:,i,k)'*[nx;nz])*[nx;nz]; %projection
@@ -120,6 +127,7 @@ for j = 1:length(c.contacts)
 %                 torqY(i,k) = torqY(i,k) - rollingResistanceiiIj; %2 d cross product
 %                 disp(['torqY(i,k) with rolling resistance ',num2str(torqY(i,k))])
 %                 torqY(k,i) = torqY(k,i) + tangentialStiffness*det([data.contactsParticle.accumulatedRollingDeformation(:,i,k) (data.contactsParticle.actuationPoint(:,k,i)-[x(k); z(k)])]);
+
                 
             end
         end
@@ -157,6 +165,7 @@ for j = 1:length(c.contacts)
             data.contactsMerged.index(:,nMerged) = [i ;k];
             data.contactsMerged.position(:,nMerged) = [data.position(:,i); data.position(:,k)];
             data.contactsMerged.mass(nMerged) = (data.mass(i)+data.mass(k)); mergedMass = data.contactsMerged.mass(nMerged);
+
             data.contactsMerged.positionMerged(:,nMerged) = 1/mergedMass*(data.position(:,i)*data.mass(i)+data.position(:,k)*data.mass(k));
             data.contactsMerged.velocityMerged(:,nMerged) =1/mergedMass*(data.velocity(:,i)*data.mass(i)+data.velocity(:,k)*data.mass(k));
             data.contactsMerged.relativePosition(:,nMerged) = [data.position(:,i)-data.contactsMerged.positionMerged(:,nMerged); data.position(:,k)-data.contactsMerged.positionMerged(:,nMerged)];
