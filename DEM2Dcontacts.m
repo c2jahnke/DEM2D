@@ -5,8 +5,14 @@ classdef DEM2Dcontacts < handle
     methods
         function c =DEM2Dcontacts(data,par)
             X = data.position;
-            DT = delaunayTriangulation(X');
-            E = edges(DT);
+              disp('Warning')
+             if strcmp(par.software,'MATLAB')
+              DT = delaunayTriangulation(X');
+              E = edges(DT);
+            elseif  strcmp(par.software,'GNU Octave') 
+                % DT = DelaunayTri(X',X'); fix, currently not working
+                %E=edges(DT);
+            end
             numconstraints = 0;
             maxr=max([data.radius]);
             for k = 1:length(E')

@@ -1,7 +1,7 @@
 %% Parameters %%
 function par = DEM2Dparam()
-    par = struct('N',[], 'g',[],'mu', [],'r',[],'bBox',[],'dt',[],'T',[],'step',[],'kN',[],'dN',[]);
-
+    par = struct;
+    par.software = 'GNU Octave';%'MATLAB';%'GNU Octave';
     %number of particles
     par.N = 2;
 
