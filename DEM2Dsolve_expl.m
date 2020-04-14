@@ -1,4 +1,4 @@
-function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
+function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
     N = par.N;
     Pk = zeros(2,N);
     Vk = zeros(2,N);
@@ -26,8 +26,8 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
         if(data.contactsParticle.deactivated(k))
             continue
         else
-        ax = (sum(fx(k,:)) + fwx(k,:))/m(k);% + par.g;% - par.g;
-        az = (sum(fz(k,:)) + fwz(k,:))/m(k)- 1*par.g;
+        ax = (sum(fx(k,:)) + fwx(k,:))/m(k) - par.g_vert;% + par.g;% - par.g;
+        az = (sum(fz(k,:)) + fwz(k,:))/m(k) - par.g;
         if(par.considerRotations)
             % 2D inertia tensor for spheres around y-axis I = 0.25mr^2
             I = 0.25*data.mass(k)*(data.radius(k)^2);
@@ -46,7 +46,7 @@ function [pk,vk,ak,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
 
 %         pk(1,k) = data.position(1,k) + data.velocity(1,k)*dt; 
 %         pk(2,k) = data.position(2,k) + data.velocity(2,k)*dt;
-        
+        acceleration(1,k) = ax; acceleration(2,k) = az;
         vk(1,k) = vx(k) + ax*dt;% + vtx(k);
         vk(2,k) = vz(k) + az*dt;% + vtz(k);
         

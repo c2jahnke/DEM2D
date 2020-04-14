@@ -1,6 +1,9 @@
+function TestValue = TEST_RotMain1()
+addpath('../')
+TestValue = true;
 % -------------------------- Initialization -------------------------- %
 global par;
-par = DEM2Dparam();
+par = TEST_RotParam1();
 global data;
 LoadData = false;
 if(LoadData == true)
@@ -13,21 +16,17 @@ if(SuccessFlag == 0)
 end
 end
 %% Test 1 bottom
-% data.position(1,1) = -1.0;
-% data.position(2,1) = -1.08;
-% data.velocity(1,1) = 2.5;
-% data.velocity(2,1) = 0;
-%% Test 2 top
 data.position(1,1) = -1.0;
-data.position(2,1) = 1.08;
+data.position(2,1) = -1.08;
 data.velocity(1,1) = 2.5;
 data.velocity(2,1) = 0;
+
 
 data.angular(2,1) = 0;
 
 % ------------------------ Plot initial state ------------------------ %
-DEM2Dplot(data,par);
-drawnow;
+% DEM2Dplot(data,par);
+% drawnow;
 
 T = par.T; VisualizationStep = par.VisualizationStep; CollisionStep =  par.CollisionStep;
 A = zeros(T/VisualizationStep+1,2,par.N);
@@ -80,33 +79,11 @@ for k = 1:T
     end
 end
 % -------------------------- Plot time series -------------------------- %
-DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
-
-
-
-time = 1:j;
-
-plot(time,A(:,:,1));
-
-for i = 1:par.N
-plot(time,A1(1:j,2,i)*180/pi)
-hold on
-title(['Angular Velocity of particle ' num2str(i)])
+% DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
+% 
+Test = data.angular;
+if(abs(Test(1))+abs(Test(2))> 1e-1)
+    TestValue = false;
 end
-
-hold off
-figure;
-
-for i = 1:par.N
-plot(time,A1(1:j,1,i)*180/pi)
-hold on
-title(['Angle of particle ' num2str(i)])
-end
-hold off
-figure;
-
-for i = 1:par.N
-plot(time,0.5*data.mass(i)*(((V1(1:j,2*i,:)).^2)+((V1(1:j,2*i,:)).^2)))
-hold on
-title(['Ekin of particle ' num2str(i)])
+rmpath('../')
 end

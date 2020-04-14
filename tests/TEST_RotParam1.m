@@ -1,12 +1,12 @@
 %% Parameters %%
-function par = DEM2Dparam()
+function par = TEST_RotParam1()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     %number of particles
     par.N = 1;
 
     % gravity
-    par.g = -9.81; %[m/s^2]
+    par.g = 9.81; %[m/s^2]
     par.g_vert = 0;
     % friction coefficient mu \in [0,1)
     par.mu = 0.3;
@@ -39,7 +39,7 @@ function par = DEM2Dparam()
    % par.kT = 1/1.2*par.kN; % adjust accordingly
     par.dampN = 0.2; % correct? 2 % of critial damping
     par.dampT = 0.1; % tangential damping
-    par.dampTwall = 0.01;
+    par.dampTwall = 0.1;
    % par.wallDistr = 0.1; % coefficient on wall
     % particle wall
     par.cohesion = 0;
