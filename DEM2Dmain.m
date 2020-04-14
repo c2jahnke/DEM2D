@@ -97,16 +97,16 @@ end
 hold off
 figure;
 
-for i = 1:par.N
-plot(time,A1(1:j,1,i)*180/pi)
-hold on
-title(['Angle of particle ' num2str(i)])
-end
-hold off
-figure;
-
-for i = 1:par.N
-plot(time,0.5*data.mass(i)*(((V1(1:j,2*i,:)).^2)+((V1(1:j,2*i,:)).^2)))
-hold on
-title(['Ekin of particle ' num2str(i)])
-end
+% for i = 1:par.N
+% plot(time,A1(1:j,1,i)*180/pi)
+% hold on
+% title(['Angle of particle ' num2str(i)])
+% end
+% hold off
+% figure;
+% 
+% for i = 1:par.N
+% plot(time,0.5*data.mass(i)*(((V1(1:j,2*i,:)).^2)+((V1(1:j,2*i,:)).^2)))
+% hold on
+% title(['Ekin of particle ' num2str(i)])
+% end
