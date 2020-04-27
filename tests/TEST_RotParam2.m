@@ -1,19 +1,19 @@
 %% Parameters %%
-function par = DEM2Dparam()
+function par = TEST_RotParam1()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     %number of particles
-    par.N = 3;
+    par.N = 1;
 
     % gravity
-    par.g = 9.81; %[m/s^2]
+    par.g = -9.81; %[m/s^2]
     par.g_vert = 0;
     % friction coefficient mu \in [0,1)
     par.mu = 0.3;
     par.muWall = 0.3;
 
     % mean radius 
-    par.r = [0.48 0.68]; %[m]
+    par.r = [0.9 0.9]; %[m]
     % bounding box, x-length, z-length (height)
         par.bBox = [ -2 -2; % x first comp z first comp
                  2 2]; % x second comp, z second comp
@@ -39,7 +39,7 @@ function par = DEM2Dparam()
    % par.kT = 1/1.2*par.kN; % adjust accordingly
     par.dampN = 0.3; % correct? 2 % of critial damping
     par.dampT = 0.02; % tangential damping
-    par.dampTwall = 0.02;
+    par.dampTwall = 0.0;
    % par.wallDistr = 0.1; % coefficient on wall
     % particle wall
     par.cohesion = 0;
@@ -60,6 +60,7 @@ function par = DEM2Dparam()
     
     %% merge parameters
     par.merge = false;
-    par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merg
+    par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merge
+
 
 end

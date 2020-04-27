@@ -114,10 +114,10 @@ for j = 1:length(c.contacts)
                     data.contactsParticle.accumulatedRollingDeformation(:,i,k) = sign(data.contactsParticle.accumulatedRollingDeformation(:,i,k))*abs(F(i,k))*par.muWall/tangentialStiffness*par.Cr;
                 end
 % 
-                disp(['torqY(i,k) no rolling resistance ',num2str(torqY(i,k))])
+%                 disp(['torqY(i,k) no rolling resistance ',num2str(torqY(i,k))])
                 rollingResistanceiiIj = tangentialStiffness*det([data.contactsParticle.accumulatedRollingDeformation(:,i,k) (data.contactsParticle.actuationPoint(:,i,k)-[x(i); z(i)])]);
                 torqY(i,k) = torqY(i,k) - rollingResistanceiiIj; %2 d cross product
-                disp(['torqY(i,k) with rolling resistance ',num2str(torqY(i,k))])
+%                 disp(['torqY(i,k) with rolling resistance ',num2str(torqY(i,k))])
 %                 torqY(k,i) = torqY(k,i) + tangentialStiffness*det([data.contactsParticle.accumulatedRollingDeformation(:,i,k) (data.contactsParticle.actuationPoint(:,k,i)-[x(k); z(k)])]);
 
                 
