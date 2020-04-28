@@ -1,36 +1,31 @@
-function TestValue = TEST_RotMain2()
+function TestValue = TEST_SymMain2()
 addpath('../')
 TestValue = true;
 % -------------------------- Initialization -------------------------- %
 global par;
-par = TEST_RotParam2();
+par = TEST_SymParam2();
 global data;
-LoadData = false;
-if(LoadData == true)
-    SuccessFlag = true;
-    data = DEM2Dload();
-else
-    [data,SuccessFlag] = DEM2Dinit(par);
+[data,SuccessFlag] = DEM2Dinit(par);
 if(SuccessFlag == 0)
     return
 end
-end
-%% Test 2 right
-data.position(2,1) = -1.0;
-data.position(1,1) = 1.1;
-data.velocity(2,1) = 1;
-data.velocity(1,1) = 0;
 
+data.position(1,1) = -1.0;
+data.position(2,1) = 0;
+data.velocity(1,1) = -1.5;
+data.velocity(2,1) = 0.6;
+
+data.position(1,2) = 1.0;
+data.position(2,2) = 0;
+data.velocity(1,2) = +1.5;
+data.velocity(2,2) = 0.6;
 
 data.angular(2,1) = 0;
-
-
+data.angular(2,2) = 0;
 % ------------------------ Plot initial state ------------------------ %
-% DEM2Dplot(data,par);
-% drawnow;
 
 T = par.T; VisualizationStep = par.VisualizationStep; CollisionStep =  par.CollisionStep;
-A = zeros(T/VisualizationStep+1,2,par.N);
+
 P1 = zeros(T/VisualizationStep+1,2,par.N); P1(1,:,:) = data.position;
 V1 = zeros(T/VisualizationStep+1,2,par.N); V1(1,:,:) = data.velocity;
 A1 = zeros(T/VisualizationStep+1,2,par.N); A1(1,:,:) = data.angular;
@@ -54,15 +49,12 @@ for k = 1:T
     data.position = pk;
     data.velocity = vk;
     data.angular = ak;
-    data.acceleration = acceleration;
     
     if VisCounter == par.VisualizationStep
         if(mod(j,10) == 0)
             disp(['################## ' sprintf('% 4d',j) '/' num2str(T/VisualizationStep) ' frames <-> ' sprintf('% 4d',floor(round(j/T*VisualizationStep,2)*100)) ' Prozent ##################']);
-            data.position
         end
         j = j+1; VisCounter = 0;
-        A(j,:,1:par.N) = acceleration;
         P1(j,:,1:par.N) = data.position; 
         A1(j,:,1:par.N) = data.angular; 
         V1(j,:,1:par.N) = data.velocity;
@@ -80,15 +72,11 @@ for k = 1:T
     end
 end
 % -------------------------- Plot time series -------------------------- %
-% DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
+DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
 
-
-Test = data.angular
-Test2 = data.position
-if(norm(Test - [-2.9; 0.3395]) > 1e-1)
-    TestValue = false;
-end
-if(Test2 - [1.1000; 0.7344] > 1e-1)
+% -------------------------- Testing -------------------------- %
+Test = par.bBox'-data.position;
+if(Test(1,1)+Test(1,2)> 1e-3)
     TestValue = false;
 end
 rmpath('../')

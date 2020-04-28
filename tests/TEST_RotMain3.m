@@ -1,9 +1,9 @@
-function TestValue = TEST_RotMain2()
+function TestValue = TEST_RotMain3()
 addpath('../')
 TestValue = true;
 % -------------------------- Initialization -------------------------- %
 global par;
-par = TEST_RotParam2();
+par = TEST_RotParam3();
 global data;
 LoadData = false;
 if(LoadData == true)
@@ -15,15 +15,14 @@ if(SuccessFlag == 0)
     return
 end
 end
-%% Test 2 right
-data.position(2,1) = -1.0;
-data.position(1,1) = 1.1;
-data.velocity(2,1) = 1;
-data.velocity(1,1) = 0;
+%% Test 1 bottom
+data.position(1,1) = -1.0;
+data.position(2,1) = -1.1;
+data.velocity(1,1) = 1;
+data.velocity(2,1) = 0;
 
 
 data.angular(2,1) = 0;
-
 
 % ------------------------ Plot initial state ------------------------ %
 % DEM2Dplot(data,par);
@@ -82,13 +81,12 @@ end
 % -------------------------- Plot time series -------------------------- %
 % DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
 
-
 Test = data.angular
 Test2 = data.position
-if(norm(Test - [-2.9; 0.3395]) > 1e-1)
+if(norm(Test - [-3.0; 0.3395]) > 1e-1)
     TestValue = false;
 end
-if(Test2 - [1.1000; 0.7344] > 1e-1)
+if(Test2 - [0.7344; -1.1000] > 1e-1)
     TestValue = false;
 end
 rmpath('../')

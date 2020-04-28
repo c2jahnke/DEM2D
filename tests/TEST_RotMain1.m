@@ -15,11 +15,11 @@ if(SuccessFlag == 0)
     return
 end
 end
-%% Test 1 bottom
-data.position(1,1) = -1.0;
-data.position(2,1) = -1.1;
-data.velocity(1,1) = 1;
-data.velocity(2,1) = 0;
+%% Test 1 left
+data.position(2,1) = -1.0;
+data.position(1,1) = -1.1;
+data.velocity(2,1) = 1;
+data.velocity(1,1) = 0;
 
 
 data.angular(2,1) = 0;
@@ -79,11 +79,15 @@ for k = 1:T
     end
 end
 % -------------------------- Plot time series -------------------------- %
-DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
+% DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
 
 
-Test = data.angular;
-if(abs(Test(1))+abs(Test(2))> 1e-1)
+Test = data.angular
+Test2 = data.position
+if(norm(Test - [2.9; -0.3395]) > 1e-1)
+    TestValue = false;
+end
+if(Test2 - [-1.1000; 0.7344] > 1e-1)
     TestValue = false;
 end
 rmpath('../')

@@ -1,13 +1,13 @@
 %% Parameters %%
-function par = TEST_RotParam1()
+function par = TEST_RotParam4()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     %number of particles
     par.N = 1;
 
     % gravity
-    par.g = 0; %[m/s^2]
-    par.g_vert = 9.81;
+    par.g = -9.81; %[m/s^2]
+    par.g_vert = 0;
     % friction coefficient mu \in [0,1)
     par.mu = 0.3;
     par.muWall = 0.3;

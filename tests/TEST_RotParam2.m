@@ -6,8 +6,8 @@ function par = TEST_RotParam1()
     par.N = 1;
 
     % gravity
-    par.g = -9.81; %[m/s^2]
-    par.g_vert = 0;
+    par.g = 0; %[m/s^2]
+    par.g_vert = -9.81;
     % friction coefficient mu \in [0,1)
     par.mu = 0.3;
     par.muWall = 0.3;
