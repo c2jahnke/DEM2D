@@ -37,7 +37,7 @@ function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
             data.contactsWall.localContactPoint(k,:,2) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,2)'; 
             data.contactsWall.localContactPoint(k,:,3) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,3)'; 
             data.contactsWall.localContactPoint(k,:,4) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,4)';
-           
+%             data.contactsWall.globalContactPoint(k,:,1) = (data.contactsWall.localContactPoint(k,:,1))'+ data.position(:,k);
             if(data.contactsWall.isInitialized) % check
                 pk(1,k) = pk(1,k);% + data.angular(2,k)*2*pi*dt;
             end
