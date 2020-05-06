@@ -46,7 +46,7 @@ function par = TEST_RotParam1()
 
     % 2 DOF or 3 DOF? Not fully implemented - carefull
     par.considerRotations = true;
-    par.Cr = 0.0; % rolling resistance coefficient
+    par.Cr = 0.00; % rolling resistance coefficient
     
     %% video parameters
     par.writePdf = false;

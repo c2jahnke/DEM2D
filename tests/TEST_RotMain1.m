@@ -79,14 +79,11 @@ for k = 1:T
     end
 end
 % -------------------------- Plot time series -------------------------- %
-% DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
+DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
 
 
 Test = data.angular
 Test2 = data.position
-if(norm(Test - [2.9; -0.3395]) > 1e-1)
-    TestValue = false;
-end
 if(Test2 - [-1.1000; 0.7344] > 1e-1)
     TestValue = false;
 end
