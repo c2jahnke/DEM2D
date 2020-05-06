@@ -19,7 +19,7 @@ function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
     d = DEM2Ddist(data.position(1,:),data.position(2,:));
     
     [fx,fz,ty,data] = DEM2DinteractForce(d,r,par,data,c);
-    [fwx,fwz,twy,data] = DEM2DwallForce(vx,vz,par,data);
+    [fwx,fwz,twy,data] = DEM2DwallForce2(vx,vz,par,data,c);
 
     
    for k=1:N

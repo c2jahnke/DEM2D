@@ -9,7 +9,6 @@ classdef DEM2Dcontacts < handle
               DT = delaunayTriangulation(X');
               E = edges(DT);
             elseif  strcmp(par.software,'GNU Octave') 
-                
                 disp('Warning, currently not working')
                 DT = delaunay(X',X'); %fix, currently not working
                 E=edges(DT);
@@ -45,6 +44,31 @@ classdef DEM2Dcontacts < handle
                     end
                 end
             end
+            % search for wall-contacts
+            for i = 1:par.N
+                x(i) = data.position(1,i); z(i) = data.position(2,i);
+                if ((x(i)< par.bBox(1)+data.radius(i))) % left
+                    normal = [1;0];
+                    numconstraints=numconstraints+1;
+                    contacts(numconstraints) = DEM2Dcontact(-1,i,data,normal,0);
+                end
+                if ((x(i)> par.bBox(2)-data.radius(i))) % right
+                    normal = [-1;0];
+                    numconstraints=numconstraints+1;
+                    contacts(numconstraints) = DEM2Dcontact(-2,i,data,normal,0);
+                end
+                if ((z(i)< par.bBox(3)+data.radius(i))) % bottom
+                    normal = [0;1];
+                    numconstraints=numconstraints+1;
+                    contacts(numconstraints) = DEM2Dcontact(-3,i,data,normal,0);
+                end
+                if ((z(i)> par.bBox(4)-data.radius(i))) % top
+                    normal = [0;-1];
+                    numconstraints=numconstraints+1;
+                    contacts(numconstraints) = DEM2Dcontact(-4,i,data,normal,0);
+                end
+            end
+                
             if numconstraints==0
                 contacts=[];
             end
