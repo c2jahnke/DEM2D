@@ -24,12 +24,12 @@ function par = TEST_SymParam2()
     % numerical simulation
     par.simulationStart = 0;
     par.simulationEnd = 4;
-    par.dt = 1e-4;%1e-6
+    par.dt = 1e-5;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
    
     par.step = round(0.025/par.dt);
     par.VisualizationStep = par.step;
-    par.CollisionTime = 5e-4;
+    par.CollisionTime = 1e-4;
     par.CollisionStep = round(par.CollisionTime/par.dt);
     %% force parameters
 
@@ -46,7 +46,7 @@ function par = TEST_SymParam2()
 
     % 2 DOF or 3 DOF? Not fully implemented - carefull
     par.considerRotations = true;
-    par.Cr = 0.5; % rolling resistance coefficient
+    par.Cr = 0.0; % rolling resistance coefficient
     
     %% video parameters
     par.writePdf = false;
