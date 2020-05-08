@@ -1,4 +1,4 @@
-function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
+function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
     N = par.N;
     Pk = zeros(2,N);
     Vk = zeros(2,N);
@@ -7,19 +7,17 @@ function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
 
     pk = zeros(2,N);
     vk = zeros(2,N);
-    
-    %x = data.position(1,:);
-    %z = data.position(2,:);
+    acceleration = zeros(2,N);
 
     vx = data.velocity(1,:);
     vz = data.velocity(2,:);
 
     r = data.radius;
     m = data.mass;
-    d = DEM2Ddist(data.position(1,:),data.position(2,:));
+
     
-    [fx,fz,ty,data] = DEM2DinteractForce(d,r,par,data,c);
-    [fwx,fwz,twy,data] = DEM2DwallForce2(vx,vz,par,data,c);
+    [fx,fz,ty,data] = DEM2DinteractForce(par,data,c);
+    [fwx,fwz,twy,data] = DEM2DwallForce(par,data,c);
 
     
    for k=1:N
@@ -56,17 +54,14 @@ function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
         end
     end
     if(data.contactsParticle.mergedParticles)
-        for k = 1:data.contactsMerged.N
-            
+        for k = 1:data.contactsMerged.N            
             i = data.contactsMerged.index(1,k); j = data.contactsMerged.index(2,k);
-
-            G = DEM2DvectField(data.contactsMerged.velocityMerged(1,k),data.contactsMerged.velocityMerged(2,k),fx(i,:)+fx(j,:),fz(i,:)+fz(j,:),fwx(i,:)+fwx(j,:),fwz(i,:)+fwz(j,:),data.contactsMerged.mass(k),par);
-            
-            data.contactsMerged.velocityMerged(1,k) = data.contactsMerged.velocityMerged(1,k) + G(3)*dt;% + vtx(k);
-            data.contactsMerged.velocityMerged(2,k) = data.contactsMerged.velocityMerged(2,k) + G(4)*dt;% + vtz(k);
-
-            data.contactsMerged.positionMerged(:,k) = data.contactsMerged.positionMerged(:,k) + data.contactsMerged.velocityMerged(:,k).*dt;  
-            
+            % G = DEM2DvectField(data.contactsMerged.velocityMerged(1,k),data.contactsMerged.velocityMerged(2,k),fx(i,:)+fx(j,:),fz(i,:)+fz(j,:),fwx(i,:)+fwx(j,:),fwz(i,:)+fwz(j,:),data.contactsMerged.mass(k),par);
+            ax = (sum(fx(i,:)+fx(j,:)) +fwx(i,:)+fwx(j,:))/m(k) + par.g_vert;
+            az = (sum(fz(i,:)+fz(j,:)) + fwz(i,:)+fwz(j,:))/m(k) + par.g;
+            data.contactsMerged.velocityMerged(1,k) = data.contactsMerged.velocityMerged(1,k) + ax*dt;% + vtx(k);
+            data.contactsMerged.velocityMerged(2,k) = data.contactsMerged.velocityMerged(2,k) + az*dt;% + vtz(k);
+            data.contactsMerged.positionMerged(:,k) = data.contactsMerged.positionMerged(:,k) + data.contactsMerged.velocityMerged(:,k).*dt;              
             % angular momentum
             
             vk(:,i) = data.contactsMerged.velocityMerged(:,k);% + vtx(k);
@@ -75,9 +70,9 @@ function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c)
             pk(:,i) = data.contactsMerged.positionMerged(:,k) + data.contactsMerged.relativePosition(1:2,k);
             pk(:,j) = data.contactsMerged.positionMerged(:,k) + data.contactsMerged.relativePosition(3:4,k);
         end
+        
         Pk = data.contactsMerged.positionMerged;
         Vk = data.contactsMerged.velocityMerged;
-
     end
     
 end

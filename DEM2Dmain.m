@@ -46,7 +46,7 @@ for k = 1:T
         ColCounter = 0;
         c = DEM2Dcontacts(data,par);
     end
-    [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c);
+    [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
 %   [pk,vk,ak,data] = DEM2Dsolve_pgs(data,par,c.contacts);
     data.position = pk;
     data.velocity = vk;
@@ -59,7 +59,7 @@ for k = 1:T
             data.position
         end
         j = j+1; VisCounter = 0;
-        A(j,:,1:par.N) = acceleration;
+        A(j,:,1:par.N) = data.acceleration;
         P1(j,:,1:par.N) = data.position; 
         A1(j,:,1:par.N) = data.angular; 
         V1(j,:,1:par.N) = data.velocity;
@@ -76,10 +76,11 @@ for k = 1:T
         end
     end
 end
+time = 1:j;
 % -------------------------- Plot time series -------------------------- %
 DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
+DEM3DplotDyn(P1,A1,data,par,j)
 
-time = 1:j;
 
 plot(time,A(:,:,1));
 

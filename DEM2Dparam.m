@@ -58,7 +58,7 @@ function par = DEM2Dparam()
     
     
     %% merge parameters
-    par.merge = false;
-    par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merg
+    par.merge = true;
+    par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merge
 
 end

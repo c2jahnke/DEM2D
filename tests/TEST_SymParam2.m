@@ -6,7 +6,7 @@ function par = TEST_SymParam2()
     par.N = 2;
 
     % gravity
-    par.g = 9.81; %[m/s^2]
+    par.g = 0; %[m/s^2]
     par.g_vert = 0;
     % friction coefficient mu \in [0,1)
     par.mu = 0.31;
@@ -23,17 +23,17 @@ function par = TEST_SymParam2()
     par.collisionThreshold = 1.25;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 4;
-    par.dt = 1e-5;%1e-6
+    par.simulationEnd = 2;
+    par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
    
     par.step = round(0.025/par.dt);
     par.VisualizationStep = par.step;
-    par.CollisionTime = 1e-4;
+    par.CollisionTime = 5e-3;
     par.CollisionStep = round(par.CollisionTime/par.dt);
     %% force parameters
 
-    par.rho = 27;%2700; % kg/m³
+    par.rho = 2700;%2700; % kg/m³
     par.Emodul = 1e8; % should be 1e8
     par.kN = par.Emodul*pi/2*par.r(1); % [N/m] stiffness
    % par.kT = 1/1.2*par.kN; % adjust accordingly

@@ -7,7 +7,7 @@ function par = TEST_RotParam1()
 
     % gravity
     par.g = 0; %[m/s^2]
-    par.g_vert = -9.81;
+    par.g_vert = 9.81;
     % friction coefficient mu \in [0,1)
     par.mu = 0.3;
     par.muWall = 0.3;
@@ -23,7 +23,7 @@ function par = TEST_RotParam1()
     par.collisionThreshold = 1.25;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 4.1;
+    par.simulationEnd = 4.0;
     par.dt = 1e-4;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
    
@@ -46,7 +46,7 @@ function par = TEST_RotParam1()
 
     % 2 DOF or 3 DOF? Not fully implemented - carefull
     par.considerRotations = true;
-    par.Cr = 0.0; % rolling resistance coefficient
+    par.Cr = 0.990; % rolling resistance coefficient
     
     %% video parameters
     par.writePdf = false;

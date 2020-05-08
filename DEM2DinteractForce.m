@@ -1,24 +1,26 @@
-function [fx,fz,torqY,data] = DEM2DinteractForce(d,r,par,data,c)
+function [fx,fz,torqY,data] = DEM2DinteractForce(par,data,c)
     x = data.position(1,:);
     z = data.position(2,:);
-N = par.N;
-Rsparse = sparse(N,N);
-for i = 1:length(c.contacts)
-    k = c.contacts(i).a;
-    if(k > 0)
-        l = c.contacts(i).b;
-        Rsparse(k,l) = r(k) + r(l);
-        data.delta(k,l) =  Rsparse(k,l) - d(k,l);
-    else
-        continue;
+    r = data.radius;
+    d = DEM2Ddist(data.position(1,:),data.position(2,:));
+    N = par.N;
+    Rsparse = sparse(N,N);
+    for i = 1:length(c.contacts)
+        k = c.contacts(i).a;
+        if(k > 0)
+            l = c.contacts(i).b;
+            Rsparse(k,l) = r(k) + r(l);
+            data.delta(k,l) =  Rsparse(k,l) - d(k,l);
+        else
+            continue;
+        end
     end
-end
 
-fx = sparse(N,N); fz = sparse(N,N); % particle interaction forces
+    fx = sparse(N,N); fz = sparse(N,N); % particle interaction forces
 
-torqY = spalloc(N,N,2*N);
-Ft = sparse(N,N);
-F = sparse(N,N);
+    torqY = spalloc(N,N,2*N);
+    Ft = sparse(N,N);
+    F = sparse(N,N);
 
 %for i=1:N-1
 for j = 1:c.numParticleContacts

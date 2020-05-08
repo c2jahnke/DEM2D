@@ -11,6 +11,5 @@ for i=1:par.N
 end
 plot([par.bBox(1) par.bBox(1) par.bBox(1) par.bBox(2) par.bBox(2) par.bBox(1)],...
      [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
-
-axis([-0.03+par.bBox(1) par.bBox(2)+0.03 0.3 0.7 -0.03+par.bBox(3) par.bBox(4)+0.03 ])
+axis equal;
 end
