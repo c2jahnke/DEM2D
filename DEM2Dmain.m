@@ -12,18 +12,15 @@ if(SuccessFlag == 0)
     return
 end
 end
-%% Test 1 bottom
-% data.position(1,1) = -1.0;
-% data.position(2,1) = -1.08;
-% data.velocity(1,1) = 2.5;
+%% Rotation p-p contact
+% data.position(2,1) = 0.8799;
+% data.position(1,1) = 0.0;
+% data.velocity(1,1) = -2.1;
 % data.velocity(2,1) = 0;
-% % %% Test 2 top
-% data.position(1,1) = -1.0;
-% data.position(2,1) = 1.1;
-% data.velocity(1,1) = 1.0;
-% data.velocity(2,1) = 0;
-% 
-% data.angular(2,1) = 0;
+% data.position(2,2) = -0.8799;
+% data.position(1,2) = 0.0;
+% data.velocity(1,2) = 2.1;
+% data.velocity(2,2) = 0;
 
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);

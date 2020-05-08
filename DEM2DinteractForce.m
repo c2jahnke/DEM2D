@@ -3,11 +3,9 @@ function [fx,fz,torqY,data] = DEM2DinteractForce(d,r,par,data,c)
     z = data.position(2,:);
 N = par.N;
 Rsparse = sparse(N,N);
-particleContacts = 0;
 for i = 1:length(c.contacts)
     k = c.contacts(i).a;
     if(k > 0)
-        particleContacts = particleContacts +1;
         l = c.contacts(i).b;
         Rsparse(k,l) = r(k) + r(l);
         data.delta(k,l) =  Rsparse(k,l) - d(k,l);
@@ -23,7 +21,7 @@ Ft = sparse(N,N);
 F = sparse(N,N);
 
 %for i=1:N-1
-for j = 1:particleContacts
+for j = 1:c.numParticleContacts
     i = c.contacts(j).a;
     k = c.contacts(j).b;
         if(data.contactsParticle.isInitialized(i,k))
@@ -37,7 +35,8 @@ for j = 1:particleContacts
                 end
             end
     end
-                
+    normal = c.contacts(j).n;
+    tangential = c.contacts(j).t;            
     %I = find( data.delta(i,(i+1):N) > 0 );
     %for j=1:length(I)
     if(data.delta(i,k) <0)
@@ -72,6 +71,7 @@ for j = 1:particleContacts
         % tangential direction
         tx = nz;
         tz = -nx;
+        %[[nx; nz], normal, [tx; tz], tangential]
         % normal interaction 
         % cohesive force
         Fcohesion = 0;
@@ -100,14 +100,14 @@ for j = 1:particleContacts
                 data.contactsParticle.localContactPoint(:,k,i) = data.contactsParticle.globalContactPoint(:,k,i) - [x(i);z(i)];    
             end
             % add tangential dissipation force;
-%             Ft(i,k) = -tangentialSpring*tangentialStiffness;
             Ft(i,k) =  -tangentialSpring*tangentialStiffness;
 
             Ft(k,i) =  tangentialSpring*tangentialStiffness;
             if(par.considerRotations)
-                torqY(i,k) = Ft(i,k)*(data.contactsParticle.actuationPoint(:,i,k)- [x(i); z(i)])'*[nx; nz];%Rsparse(i,k)/2; % check Obermayr S 29
-                torqY(k,i) = -Ft(k,i)*(data.contactsParticle.actuationPoint(:,k,i)- [x(k); z(k)])'*[nx; nz];
-
+                %torqY(i,k) = Ft(i,k)*(data.contactsParticle.actuationPoint(:,i,k)- [x(i); z(i)])'*[nx; nz];%Rsparse(i,k)/2; % check Obermayr S 29
+                %torqY(k,i) = Ft(k,i)*(data.contactsParticle.actuationPoint(:,k,i)- [x(k); z(k)])'*[nx; nz];
+                torqY(i,k) = det([(data.contactsParticle.actuationPoint(:,i,k)- [x(i); z(i)]) Ft(i,k)*tangential]);%Rsparse(i,k)/2; % check Obermayr S 29
+                torqY(k,i) = det([(data.contactsParticle.actuationPoint(:,k,i)- [x(k); z(k)]) Ft(k,i)*tangential]);
 
 
                 % rolling resistence CHECK!!! 11.03.2020, compare to DEM2DwallForce
@@ -123,6 +123,7 @@ for j = 1:particleContacts
 %                 disp(['torqY(i,k) no rolling resistance ',num2str(torqY(i,k))])
                 rollingResistanceiiIj = tangentialStiffness*det([data.contactsParticle.accumulatedRollingDeformation(:,i,k) (data.contactsParticle.actuationPoint(:,i,k)-[x(i); z(i)])]);
                 torqY(i,k) = torqY(i,k) - rollingResistanceiiIj; %2 d cross product
+                torqY(k,i) = torqY(i,k) + rollingResistanceiiIj;
 %                 disp(['torqY(i,k) with rolling resistance ',num2str(torqY(i,k))])
 %                 torqY(k,i) = torqY(k,i) + tangentialStiffness*det([data.contactsParticle.accumulatedRollingDeformation(:,i,k) (data.contactsParticle.actuationPoint(:,k,i)-[x(k); z(k)])]);
 
