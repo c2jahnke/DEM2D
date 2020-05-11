@@ -1,4 +1,4 @@
 function data =DEM2Dload()
-    temp = load('data_40.mat');
+    temp = load('data.mat');
     data = temp.data;
 end

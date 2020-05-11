@@ -70,21 +70,22 @@ function [data,SuccessFlag] = DEM2Dinit(par)
     while isArranged == 0
         count = count +1;
         disp("Arranging particles.")
-        x = [par.spawnBox(1)+par.r(2)+0.1*max(data.radius):2.2*C:par.spawnBox(2)-par.r(2)-0.1*max(data.radius)];
-        z = [par.spawnBox(3)+par.r(2)+0.1*max(data.radius):2.2*C:par.spawnBox(4)-par.r(2)-0.1*max(data.radius)];
+        x = [par.spawnBox(1)+par.r(2)+0.001*max(data.radius):2.001*C:par.spawnBox(2)-par.r(2)-0.001*max(data.radius)];
+        z = [par.spawnBox(3)+par.r(2)+0.001*max(data.radius):2.001*C:par.spawnBox(4)-par.r(2)-0.001*max(data.radius)];
         %[X,Z] = meshgrid(x,z);
 
         if(length(x) > length(z))  
             if(length(x) < sqrt(par.N))
                 error('Reduce number of particles or increase bounding box.');
             end
-        xInd = randperm(length(x),par.N);
-        zInd = randi([1 length(z)],1,par.N);
         else
             if(length(z) < sqrt(par.N))
                 error('Reduce number of particles, the particle radius or increase bounding box.');
             end 
         end
+        
+        xInd = randperm(length(x),ceil(sqrt(par.N)));
+        zInd = randi([1 length(z)],1,par.N);
         maxSize = length(x)*length(z);
         [X,Z] = meshgrid(x,z); % generate mesh
         Zr = reshape(Z,1,maxSize);

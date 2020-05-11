@@ -1,19 +1,19 @@
 %% Parameters %%
-function par = TEST_RotParam1()
+function par = Test_PPRotResistenceParam1()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     %number of particles
-    par.N = 1;
+    par.N = 4;
 
     % gravity
-    par.g = 0; %[m/s^2]
-    par.g_vert = 9.81;
+    par.g = -10; %[m/s^2]
+    par.g_vert = 0;
     % friction coefficient mu \in [0,1)
     par.mu = 0.3;
     par.muWall = 0.3;
 
     % mean radius 
-    par.r = [0.9 0.9]; %[m]
+    par.r = [0.88 0.88]; %[m]
     % bounding box, x-length, z-length (height)
         par.bBox = [ -2 -2; % x first comp z first comp
                  2 2]; % x second comp, z second comp
@@ -23,30 +23,29 @@ function par = TEST_RotParam1()
     par.collisionThreshold = 1.25;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 4.0;
-    par.dt = 1e-4;%1e-6
+    par.simulationEnd = 2.0;
+    par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
    
     par.step = round(0.025/par.dt);
     par.VisualizationStep = par.step;
-    par.CollisionTime = 5e-4;
+    par.CollisionTime = 5e-3;
     par.CollisionStep = round(par.CollisionTime/par.dt);
     %% force parameters
 
-    par.rho = 27;%2700; % kg/m³
+    par.rho = 2700;%2700; % kg/m³
     par.Emodul = 1e8; % should be 1e8
-    par.kN = par.Emodul*pi/2*par.r(1); % [N/m] stiffness
+    %par.kN = par.Emodul*pi/2*par.r(1); % [N/m] stiffness
    % par.kT = 1/1.2*par.kN; % adjust accordingly
-    par.dampN = 0.3; % correct? 2 % of critial damping
+    par.dampN = 0.5; % correct? 2 % of critial damping
     par.dampT = 0.02; % tangential damping
-    par.dampTwall = 0.0;
-   % par.wallDistr = 0.1; % coefficient on wall
+    par.dampTwall = 0.2;
     % particle wall
     par.cohesion = 0;
 
-    % 2 DOF or 3 DOF? Not fully implemented - carefull
+    % 2 DOF or 3 DOF? 
     par.considerRotations = true;
-    par.Cr = 0.990; % rolling resistance coefficient
+    par.Cr = 0.0; % rolling resistance coefficient
     par.CrWall = 0.99;
     %% video parameters
     par.writePdf = false;
@@ -61,6 +60,5 @@ function par = TEST_RotParam1()
     %% merge parameters
     par.merge = false;
     par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merge
-
 
 end

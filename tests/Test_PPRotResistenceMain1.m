@@ -1,6 +1,10 @@
+function TestValue = TEST_RotMain1()
+addpath('../')
+TestValue = true;
+
 % -------------------------- Initialization -------------------------- %
 global par;
-par = DEM2Dparam();
+par = Test_PPRotResistenceParam1();
 global data;
 LoadData = false;
 if(LoadData == true)
@@ -13,19 +17,10 @@ if(SuccessFlag == 0)
 end
 end
 %% Rotation resistance p-p contact
-data.position(1,1) = 0.879;
-data.position(2,1) = 0;
-data.position(1,2) = - 0.879;
-data.position(2,2) = 0;
-
-data.velocity(1,1) = 0;
-data.velocity(2,1) = 1.1;
-
-data.velocity(1,2) = 0;
-data.velocity(2,2) = 0;
+data.position = [0.8305   -1.1204    1.1203   -0.6390 ;...
+   -1.1210   -1.1211    0.6144    0.5712];
 % ------------------------ Plot initial state ------------------------ %
-DEM2Dplot(data,par);
-drawnow;
+
 
 T = par.T; VisualizationStep = par.VisualizationStep; CollisionStep =  par.CollisionStep;
 A = zeros(T/VisualizationStep+1,2,par.N);
@@ -54,15 +49,10 @@ for k = 1:T
     data.angular = ak;
     data.acceleration = acceleration;
     
-
     if VisCounter == par.VisualizationStep
         if(mod(j,10) == 0)
             disp(['################## ' sprintf('% 4d',j) '/' num2str(T/VisualizationStep) ' frames <-> ' sprintf('% 4d',floor(round(j/T*VisualizationStep,2)*100)) ' Prozent ##################']);
             data.position
-                data.position(1,1) = 0.879;
-                data.position(2,1) = 0;
-                data.position(1,2) = - 0.879;
-                data.position(2,2) = 0;
         end
         j = j+1; VisCounter = 0;
         A(j,:,1:par.N) = data.acceleration;
@@ -85,36 +75,12 @@ end
 time = 1:j;
 % -------------------------- Plot time series -------------------------- %
 DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
-% DEM3DplotDyn(P1,A1,data,par,j)
+disp(["No rotation of particles should occur for par.Cr = 0.99."])
 
-
-plot(time,A(:,:,1));
-
-for i = 1:par.N
-plot(time,A1(1:j,2,i)*180/pi)
-hold on
-title(['Angular Velocity of particle ' num2str(i)])
+Test = data.angular
+Test2 = data.position
+if(Test - [-0.0234    0.0195   -0.0018    0.0287] > 1e-1)
+    TestValue = false;
 end
-
-hold off
-figure;
-
-for i = 1:par.N
-plot(time*par.dt/0.025,V1(1:j,2*i-1:2*i))
-hold on
-title(['Velocity of particle ' num2str(i)])
+rmpath('../')
 end
-
-% for i = 1:par.N
-% plot(time,A1(1:j,1,i)*180/pi)
-% hold on
-% title(['Angle of particle ' num2str(i)])
-% end
-% hold off
-% figure;
-% 
-% for i = 1:par.N
-% plot(time,0.5*data.mass(i)*(((V1(1:j,2*i,:)).^2)+((V1(1:j,2*i,:)).^2)))
-% hold on
-% title(['Ekin of particle ' num2str(i)])
-% end

@@ -47,7 +47,7 @@ function par = TEST_SymParam2()
     % 2 DOF or 3 DOF? Not fully implemented - carefull
     par.considerRotations = true;
     par.Cr = 0.0; % rolling resistance coefficient
-    
+    par.CrWall = 0.99;
     %% video parameters
     par.writePdf = false;
     par.writeEps = false;
