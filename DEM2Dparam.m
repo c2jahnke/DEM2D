@@ -3,7 +3,7 @@ function par = DEM2Dparam()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     %number of particles
-    par.N = 5;
+    par.N = 3;
 
     % gravity
     par.g = -9.81; %[m/s^2]
@@ -13,12 +13,14 @@ function par = DEM2Dparam()
     par.muWall = 0.3;
 
     % mean radius 
-    par.r = [0.28 0.38]; %[m]
+    par.r = [0.7 0.7]; %[m]
     % bounding box, x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
                  2 2]; % x second comp, z second comp
-    par.spawnBox = [ -2 -2; % x first comp z first comp
-                 2 2];
+%     par.bBox = [ -0.02 -0.02; % x first comp z first comp
+%                      0.02 0.02]; % x second comp, z second comp
+    %par.spawnBox = [ -2 -2; % x first comp z first comp
+     %            2 2];
     % contact detection
     par.collisionThreshold = 1.25;
     % numerical simulation
@@ -45,7 +47,7 @@ function par = DEM2Dparam()
     par.cohesion = 0;
 
     % 2 DOF or 3 DOF? 
-    par.considerRotations = false;
+    par.considerRotations = true;
     par.Cr = 0.990; % rolling resistance coefficient
     par.CrWall = 0.990;% rolling resistance coefficient for walls
     
@@ -60,7 +62,7 @@ function par = DEM2Dparam()
     
     
     %% merge parameters
-    par.merge = false;
+    par.merge = true;
     par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merge
 
 end

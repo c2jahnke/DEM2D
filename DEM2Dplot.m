@@ -33,7 +33,7 @@ function DEM2Dplot(data,par)
     plot([par.bBox(1) par.bBox(1) par.bBox(1) par.bBox(2) par.bBox(2) par.bBox(1)],...
          [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
 
-    axis([-0.15+par.bBox(1) par.bBox(2)+0.15 -0.15+par.bBox(3) par.bBox(4)+0.15])
+    axis([-0.95*par.r(2)+par.bBox(1) par.bBox(2)+0.95*par.r(2) -0.95*par.r(2)+par.bBox(3) par.bBox(4)+0.95*par.r(2)])
     axis equal
     hold off
 end

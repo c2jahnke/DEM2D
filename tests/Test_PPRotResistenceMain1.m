@@ -11,7 +11,7 @@ if(LoadData == true)
     SuccessFlag = false;
     data = DEM2Dload();
 else
-    [data,SuccessFlag] = DEM2Dinit(par);
+    [data,par,SuccessFlag] = DEM2Dinit(par);
 if(SuccessFlag == 0)
     return
 end

@@ -10,7 +10,7 @@ if(LoadData == true)
     SuccessFlag = true;
     data = DEM2Dload();
 else
-    [data,SuccessFlag] = DEM2Dinit(par);
+    [data,par,SuccessFlag] = DEM2Dinit(par);
 if(SuccessFlag == 0)
     return
 end
@@ -79,7 +79,7 @@ for k = 1:T
     end
 end
 % -------------------------- Plot time series -------------------------- %
-DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
+% DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
 
 
 Test = data.angular
