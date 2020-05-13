@@ -73,9 +73,11 @@ output.velocity = V1;
 output.MergePosition = PM;
 output.MergeVelocity = VM;
 output.timeInc = 1:visuIndex;
+output.finalVisuIndex = visuIndex;
 % -------------------------- Plot time series -------------------------- %
 DEM2DplotSim(P1,V1,A1,PM,VM,par,data,visuIndex)
 % DEM3DplotDyn(P1,A1,data,par,visuIndex)
 
 
-% DEM2DplotAngularVelocity(data,par,output,visuIndex)
+% DEM2DplotAngularVelocity(data,par,output)
+DEM2DplotEnergy(data,par,output)

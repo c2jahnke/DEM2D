@@ -1,9 +1,9 @@
 %% Parameters %%
 function par = DEM2Dparam()
     par = struct;
-    par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
+    par.software = 'GNU Octave';%'GNU Octave';%'MATLAB';%'GNU Octave';
     %number of particles
-    par.N = 3;
+    par.N = 5;
 
     % gravity
     par.g = -9.81; %[m/s^2]
