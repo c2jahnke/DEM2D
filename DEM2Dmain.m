@@ -45,7 +45,11 @@ for k = 1:T
 
     if visuCounter == par.VisualizationStep
         if(mod(visuIndex,25) == 0)
-            disp(['################## ' sprintf('% 4d',visuIndex) '/' num2str(T/visuStep) ' frames <-> ' sprintf('% 4d',floor(round(visuIndex/T*visuStep,2)*100)) ' Prozent ##################']);
+%         if(par.software == 'GNU Octave')
+            disp(['################## ' sprintf('% 4d',visuIndex) '/' num2str(T/visuStep) ' frames <-> ' sprintf('% 4d',floor(round(visuIndex/T*visuStep*100))) ' Prozent ##################']);
+%         else
+%             disp(['################## ' sprintf('% 4d',visuIndex) '/' num2str(T/visuStep) ' frames <-> ' sprintf('% 4d',floor(round(visuIndex/T*visuStep,2)*100)) ' Prozent ##################']);
+%         end
         end
         visuIndex = visuIndex+1; visuCounter = 0;
         A(visuIndex,:,1:par.N) = data.acceleration;
