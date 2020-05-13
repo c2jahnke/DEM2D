@@ -8,11 +8,25 @@ classdef DEM2Dcontacts < handle
     methods
         function c =DEM2Dcontacts(data,par)
             X = data.position;
-             if strcmp(par.software,'MATLAB')
+            
+            if strcmp(par.software,'MATLAB')
+               
+                DT = delaunayTriangulation(X');
+                E = edges(DT);
+      
+            elseif  strcmp(par.software,'GNU Octave') 
+                    
+              DT = delaunay(X(1,:),X(2,:));
+              if length(DT) == 1
+                E = [1,2];
+              else
+                E = [DT(:,1:2); DT(:,2:3); DT(:,[3,1])];
+              end
+            end
                 DT = delaunayTriangulation(X');
                 E = edges(DT);
                 maxr=max([data.radius]);
-                for k = 1:length(E')
+                for k = 1:size(E,1)
                     i=E(k,1);
                     j=E(k,2);
                     Di=data.position(1:2,i) - data.position(1:2,j);
