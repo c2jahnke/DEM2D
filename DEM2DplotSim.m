@@ -23,7 +23,7 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
     scal = linspace(-1,1,AngleRes);
     s = sin(theta);
     c = cos(theta);
-    DELAY = par.dt*par.VisualizationStep*0.4/par.N*10;
+    DELAY = par.dt*par.VisualizationStep/par.N;
 
     for k=1:j    
         plot(reshape(P1(k,1,:),[1 par.N]),reshape(P1(k,2,:),[1 par.N]),'.','MarkerEdgeColor','w')
@@ -44,7 +44,7 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
             plot(xCross(1)*scal*r(i) + P1(k,1,i)*ones(1,AngleRes),xCross(2)*scal*r(i) + P1(k,2,i)*ones(1,AngleRes),'k-')
             %plot(zCross(1)*scal*r(i) + P1(k,1,i)*ones(1,AngleRes),zCross(2)*scal*r(i) + P1(k,2,i)*ones(1,AngleRes),'k-')            
             plot(zCross(1)*scal*r(i) + P1(k,1,i)*ones(1,AngleRes),zCross(2)*scal*r(i) + P1(k,2,i)*ones(1,AngleRes),'-g')
-            text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',min(round(par.videoFontsize*20*par.r(2)),par.videoFontsize));
+            text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',max(1,min(round(par.videoFontsize*20*par.r(2)),par.videoFontsize)));
 
         end
 
@@ -54,18 +54,16 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
          [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
 
         title('Simulation','fontsize',par.videoFontsize)
-        text(par.bBox(2)-0.55,par.bBox(4)-0.25,['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)
-        axis([-0.15+par.bBox(1) par.bBox(2)+0.15 -0.15+par.bBox(3) par.bBox(4)+0.15])
+        text(par.bBox(2)-2.95*par.r(2),par.bBox(4)-0.95*par.r(2),['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)
+        
+        axis([-0.95*par.r(2)+par.bBox(1) par.bBox(2)+0.95*par.r(2) -0.95*par.r(2)+par.bBox(3) par.bBox(4)+0.95*par.r(2)])
         axis equal
 
         set(gca,'fontsize', par.videoFontsize);
         drawnow;
         F(j) = getframe(h1);
         pause(DELAY)
-        %size(F(j).cdata)
-        %hf=figure('Position', [100, 100, 1049, 895]);
 
-        %pause(0.1)
         if(par.writeVid)
              writeVideo(video,F(j));
         end

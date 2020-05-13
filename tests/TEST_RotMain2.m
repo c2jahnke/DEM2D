@@ -10,7 +10,7 @@ if(LoadData == true)
     SuccessFlag = true;
     data = DEM2Dload();
 else
-    [data,SuccessFlag] = DEM2Dinit(par);
+    [data,par,SuccessFlag] = DEM2Dinit(par);
 if(SuccessFlag == 0)
     return
 end
@@ -49,7 +49,7 @@ for k = 1:T
         ColCounter = 0;
         c = DEM2Dcontacts(data,par);
     end
-    [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(data,par,c);
+    [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
 %   [pk,vk,ak,data] = DEM2Dsolve_pgs(data,par,c.contacts);
     data.position = pk;
     data.velocity = vk;
@@ -85,9 +85,6 @@ end
 
 Test = data.angular
 Test2 = data.position
-if(norm(Test - [-2.9; 0.3395]) > 1e-1)
-    TestValue = false;
-end
 if(Test2 - [1.1000; 0.7344] > 1e-1)
     TestValue = false;
 end
