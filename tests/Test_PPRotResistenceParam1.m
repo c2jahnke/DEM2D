@@ -45,8 +45,10 @@ function par = Test_PPRotResistenceParam1()
 
     % 2 DOF or 3 DOF? 
     par.considerRotations = true;
-    par.Cr = 0.0; % rolling resistance coefficient
+    par.Cr = 0.99; % rolling resistance coefficient
     par.CrWall = 0.99;
+    
+    
     %% video parameters
     par.writePdf = false;
     par.writeEps = false;

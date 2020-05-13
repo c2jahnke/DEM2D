@@ -13,16 +13,22 @@ if(SuccessFlag == 0)
 end
 end
 %% Rotation resistance p-p contact
-data.position(1,1) = 0.879;
-data.position(2,1) = 0;
-data.position(1,2) = - 0.879;
-data.position(2,2) = 0;
+% data.position(1,1) = 0.889;
+% data.position(2,1) = 0;
+% 
+% data.position(1,2) = - 0.89;
+% data.position(2,2) = 0;
+% 
+% data.velocity(1,1) = -0.1;
+% data.velocity(2,1) = 0.1;
+% 
+% data.velocity(1,2) = 0.1;
+% data.velocity(2,2) = -0.1;
+% 
+% 
+% data.angular(2,1) = 0;
+% data.angular(2,2) = 0;
 
-data.velocity(1,1) = 0;
-data.velocity(2,1) = 1.1;
-
-data.velocity(1,2) = 0;
-data.velocity(2,2) = 0;
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
@@ -41,6 +47,10 @@ VM = zeros(T/VisualizationStep+1,2,par.N);
 j = 1; VisCounter = 0; ColCounter = 0;
 c = DEM2Dcontacts(data,par);
 for k = 1:T
+%     data.position(1,1) = 0.875;
+%     data.position(2,1) = 0;
+%     data.position(1,2) = - 0.875;
+%     data.position(2,2) = 0;
     VisCounter = VisCounter +1;
     ColCounter = ColCounter +1;
     if ColCounter == par.CollisionStep
@@ -58,11 +68,8 @@ for k = 1:T
     if VisCounter == par.VisualizationStep
         if(mod(j,10) == 0)
             disp(['################## ' sprintf('% 4d',j) '/' num2str(T/VisualizationStep) ' frames <-> ' sprintf('% 4d',floor(round(j/T*VisualizationStep,2)*100)) ' Prozent ##################']);
-            data.position
-                data.position(1,1) = 0.879;
-                data.position(2,1) = 0;
-                data.position(1,2) = - 0.879;
-                data.position(2,2) = 0;
+            
+            data.angular
         end
         j = j+1; VisCounter = 0;
         A(j,:,1:par.N) = data.acceleration;
@@ -87,7 +94,7 @@ time = 1:j;
 DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
 % DEM3DplotDyn(P1,A1,data,par,j)
 
-
+figure;
 plot(time,A(:,:,1));
 
 for i = 1:par.N
@@ -96,25 +103,11 @@ hold on
 title(['Angular Velocity of particle ' num2str(i)])
 end
 
-hold off
-figure;
-
-for i = 1:par.N
-plot(time*par.dt/0.025,V1(1:j,2*i-1:2*i))
-hold on
-title(['Velocity of particle ' num2str(i)])
-end
-
-% for i = 1:par.N
-% plot(time,A1(1:j,1,i)*180/pi)
-% hold on
-% title(['Angle of particle ' num2str(i)])
-% end
 % hold off
 % figure;
-% 
+
 % for i = 1:par.N
-% plot(time,0.5*data.mass(i)*(((V1(1:j,2*i,:)).^2)+((V1(1:j,2*i,:)).^2)))
+% plot(time*par.dt/0.025,V1(1:j,2*i-1:2*i))
 % hold on
-% title(['Ekin of particle ' num2str(i)])
+% title(['Velocity of particle ' num2str(i)])
 % end

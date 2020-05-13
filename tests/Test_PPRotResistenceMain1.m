@@ -1,4 +1,4 @@
-function TestValue = TEST_RotMain1()
+function TestValue = Test_PPRotResistenceMain1()
 addpath('../')
 TestValue = true;
 

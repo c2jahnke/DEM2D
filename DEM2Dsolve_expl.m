@@ -1,4 +1,4 @@
-function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
+function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
     N = par.N;
     Pk = zeros(2,N);
     Vk = zeros(2,N);
@@ -7,7 +7,7 @@ function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
 
     pk = zeros(2,N);
     vk = zeros(2,N);
-    acceleration = zeros(2,N);
+    acc = zeros(2,N);
 
     vx = data.velocity(1,:);
     vz = data.velocity(2,:);
@@ -35,16 +35,16 @@ function [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
             data.contactsWall.localContactPoint(k,:,2) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,2)'; 
             data.contactsWall.localContactPoint(k,:,3) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,3)'; 
             data.contactsWall.localContactPoint(k,:,4) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,4)';
-%             data.contactsWall.globalContactPoint(k,:,1) = (data.contactsWall.localContactPoint(k,:,1))'+ data.position(:,k);
             if(data.contactsWall.isInitialized) % check
                 pk(1,k) = pk(1,k);% + data.angular(2,k)*2*pi*dt;
             end
             
         end
-
+        % standard Euler
 %         pk(1,k) = data.position(1,k) + data.velocity(1,k)*dt; 
 %         pk(2,k) = data.position(2,k) + data.velocity(2,k)*dt;
-        acceleration(1,k) = ax; acceleration(2,k) = az;
+        % symplectic Euler
+        acc(1,k) = ax; acc(2,k) = az;
         vk(1,k) = vx(k) + ax*dt;% + vtx(k);
         vk(2,k) = vz(k) + az*dt;% + vtz(k);
         
