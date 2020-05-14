@@ -56,11 +56,14 @@ function [data,par,SuccessFlag] = DEM2Dinit(par)
     
     data.contactsMerged = struct;
     data.contactsMerged.N = 0;
-    data.contactsMerged.index = zeros(2,par.N);
+    data.contactsMerged.index = zeros(2,par.N); %maxSize of aggregates
     data.contactsMerged.position = zeros(4,par.N);
     data.contactsMerged.relativePosition = zeros(4,par.N);
     data.contactsMerged.positionMerged = zeros(2,par.N);
     data.contactsMerged.velocityMerged = zeros(2,par.N);
+    data.contactsMerged.angularMerged = zeros(2,par.N);
+    data.contactsMerged.inertiaTensor = zeros(2,2,2);
+    
     data.contactsMerged.timeFlag = zeros(1,par.N);
     data.contactsMerged.timePoint = zeros(par.N,par.N);
     save('data')
