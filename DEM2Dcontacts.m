@@ -8,6 +8,7 @@ classdef DEM2Dcontacts < handle
     methods
         function c =DEM2Dcontacts(data,par)
             X = data.position;
+
 %              if strcmp(par.software,'MATLAB')
 %                 DT = delaunayTriangulation(X');
 %                 E = edges(DT);
@@ -39,41 +40,26 @@ classdef DEM2Dcontacts < handle
                         c.numParticleContacts = c.numParticleContacts +1;
                         contacts(c.numConstraints) = DEM2Dcontact(i,j,data,normal,d);
                     end
+
                 end
-                if(isempty(E) && par.N > 1) % points collinear?
-                    d = DEM2Ddist(X(1,:),X(2,:));
-                    for k = 1:length(X)
-                        for l = k+1:length(X)
-                            d(k,l) = d(k,l) - data.radius(k) - data.radius(l);
-                            if(d(k,l)<0)
-                                Di=data.position(1:2,k) - data.position(1:2,l);
-                                Di=Di';
-                                nD=norm(Di);
-                                normal = Di'/nD;
-                                c.numConstraints=c.numConstraints+1;
-                                c.numParticleContacts = c.numParticleContacts +1;
-                                contacts(c.numConstraints) = DEM2Dcontact(k,l,data,normal,d(k,l));
-                            end
+            end
+            if(isempty(E) && par.N > 1) % points collinear?
+                d = DEM2Ddist(X(1,:),X(2,:));
+                for k = 1:length(X)
+                    for l = k+1:length(X)
+                        d(k,l) = d(k,l) - data.radius(k) - data.radius(l);
+                        if(d(k,l)<0)
+                            Di=data.position(1:2,k) - data.position(1:2,l);
+                            Di=Di';
+                            nD=norm(Di);
+                            normal = Di'/nD;
+                            c.numConstraints=c.numConstraints+1;
+                            c.numParticleContacts = c.numParticleContacts +1;
+                            contacts(c.numConstraints) = DEM2Dcontact(k,l,data,normal,d(k,l));
                         end
                     end
                 end
-%                 d = DEM2Ddist(X(1,:),X(2,:));
-%                 for k = 1:par.N-1
-%                     for l = max(1,min(k+1,par.N)):par.N
-%                        d(k,l) = d(k,l) - data.radius(k) - data.radius(l);
-%                             if(d(k,l)<0)
-%                                 Di=data.position(1:2,k) - data.position(1:2,l);
-%                                 Di=Di';
-%                                 nD=norm(Di);
-%                                 normal = Di'/nD;
-%                                 c.numConstraints=c.numConstraints+1;
-%                                 c.numParticleContacts = c.numParticleContacts +1;
-%                                 contacts(c.numConstraints) = DEM2Dcontact(k,l,data,normal,d(k,l));
-%                             end
-%                     end
-%                 end 
-%             end
-
+            end
             
             % search for wall-contacts
             for i = 1:par.N
