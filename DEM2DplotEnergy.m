@@ -22,17 +22,23 @@ for k = 1 : output.finalVisuIndex
 end
 % kinetic energy
 figure('Name','Total Energy')
-semilogy(output.timeInc*par.dt,Ekin(:))
+subplot(2,1,1);
+semilogy(output.timeInc*par.VisualResolution,Ekin(:))
 hold on
-semilogy(output.timeInc*par.dt,Erot(:))
+semilogy(output.timeInc*par.VisualResolution,Erot(:))
 hold on
-semilogy(output.timeInc*par.dt,abs(Epot))
-
-semilogy(output.timeInc*par.dt,Etotal)
+semilogy(output.timeInc*par.VisualResolution,abs(Epot))
+hold on
+semilogy(output.timeInc*par.VisualResolution,Etotal)
 ylabel("Energy [J = kg m/s^2]")
 xlabel("Time [s]")
 legend('Ekin', 'Erot','Epot','Etotal')
 hold off
+subplot(2,1,2)
+plot(output.timeInc*par.VisualResolution,Etotal)
+ylabel("Energy [J = kg m/s^2]")
+xlabel("Time [s]")
+legend('Etotal')
 % potential energy
 % rotational energy
 % total energy

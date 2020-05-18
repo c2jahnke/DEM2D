@@ -161,12 +161,13 @@ for j = 1:c.numParticleContacts
             data.contactsMerged.timeFlag(nMerged) = true;
             data.contactsMerged.index(:,nMerged) = [i ;k];
             data.contactsMerged.position(:,nMerged) = [data.position(:,i); data.position(:,k)];
-            data.contactsMerged.mass(nMerged) = (data.mass(i)+data.mass(k)); mergedMass = data.contactsMerged.mass(nMerged);
+            data.contactsMerged.mass(nMerged) = (data.mass(i)+data.mass(k)); 
+            mergedMass = data.contactsMerged.mass(nMerged);
 
             data.contactsMerged.positionMerged(:,nMerged) = 1/mergedMass*(data.position(:,i)*data.mass(i)+data.position(:,k)*data.mass(k));
             data.contactsMerged.velocityMerged(:,nMerged) =1/mergedMass*(data.velocity(:,i)*data.mass(i)+data.velocity(:,k)*data.mass(k));
             data.contactsMerged.relativePosition(:,nMerged) = [data.position(:,i)-data.contactsMerged.positionMerged(:,nMerged); data.position(:,k)-data.contactsMerged.positionMerged(:,nMerged)];
-            
+            data.contactsMerged.inertiaTensor(nMerged) = 0;
         end       
     %end 
 end
