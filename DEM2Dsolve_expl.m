@@ -56,7 +56,12 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
     if(data.contactsParticle.mergedParticles)
         for k = 1:data.contactsMerged.N            
             i = data.contactsMerged.index(1,k); j = data.contactsMerged.index(2,k);
-            % G = DEM2DvectField(data.contactsMerged.velocityMerged(1,k),data.contactsMerged.velocityMerged(2,k),fx(i,:)+fx(j,:),fz(i,:)+fz(j,:),fwx(i,:)+fwx(j,:),fwz(i,:)+fwz(j,:),data.contactsMerged.mass(k),par);
+            data.contactsMerged.inertiaTensor(1,i,j) = 0.5*data.mass(i)*(data.radius(i)^2)...
+                + data.mass(i)*norm(data.position(:,i) - data.contactsParticle.actuationPoint(:,i,j))^2 ...
+                + 0.5*data.mass(j)*(data.radius(j)^2) + ...
+                data.mass(i)*norm(data.position(:,i) - data.contactsParticle.actuationPoint(:,i,j))^2; % J_i + m_i*d_ij^2 + J_j + m_j*d_ji^2
+            data.contactsMerged.angularMerged(2,k) = data.contactsMerged.angularMerged(2,k) + 1/(data.contactsMerged.inertiaTensor(1,i,j))*(sum(ty(i,:)) + sum(twy(j,:)) + sum(ty(i,:)) + sum(twy(j,:)))*dt;
+            data.contactsMerged.angularMerged(1,k) = data.contactsMerged.angularMerged(1,k) + data.contactsMerged.angularMerged(2,k)*dt;
             ax = (sum(fx(i,:)+fx(j,:)) +fwx(i,:)+fwx(j,:))/m(k) + par.g_vert;
             az = (sum(fz(i,:)+fz(j,:)) + fwz(i,:)+fwz(j,:))/m(k) + par.g;
             data.contactsMerged.velocityMerged(1,k) = data.contactsMerged.velocityMerged(1,k) + ax*dt;% + vtx(k);

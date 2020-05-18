@@ -42,7 +42,6 @@ classdef DEM2Dcontacts < handle
                     end
 
                 end
-            end
             if(isempty(E) && par.N > 1) % points collinear?
                 d = DEM2Ddist(X(1,:),X(2,:));
                 for k = 1:length(X)
