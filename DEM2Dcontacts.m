@@ -9,12 +9,12 @@ classdef DEM2Dcontacts < handle
         function c =DEM2Dcontacts(data,par)
             X = data.position;
 
-%              if strcmp(par.software,'MATLAB')
-%                 DT = delaunayTriangulation(X');
-%                 E = edges(DT);
-%                 
-%             elseif  strcmp(par.software,'GNU Octave') 
-                %disp('Warning, currently not working')
+             if strcmp(par.software,'MATLAB')
+                DT = delaunayTriangulation(X');
+                E = edges(DT);
+                
+            elseif  strcmp(par.software,'GNU Octave') 
+                disp('Warning, currently not working')
 %                 DT = delaunay(X(1,:),X(2,:)); %fix, currently not working
 %                 triplot(DT,X(1,:),X(2,:));
 % %               TRI = DelaunayTri(X');
@@ -25,7 +25,7 @@ classdef DEM2Dcontacts < handle
                 else
                   E = [DT(:,1:2); DT(:,2:3); DT(:,[3,1])];
                 end
-%              end
+             end
              maxr=max([data.radius]);
                 for k = 1:length(E')
                     i=E(k,1);

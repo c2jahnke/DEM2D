@@ -8,7 +8,7 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
     pk = zeros(2,N);
     vk = zeros(2,N);
     acc = zeros(2,N);
-
+    ak = zeros(2,N);
     vx = data.velocity(1,:);
     vz = data.velocity(2,:);
 

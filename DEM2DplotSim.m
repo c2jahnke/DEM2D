@@ -44,7 +44,7 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
             plot(xCross(1)*scal*r(i) + P1(k,1,i)*ones(1,AngleRes),xCross(2)*scal*r(i) + P1(k,2,i)*ones(1,AngleRes),'k-')
             %plot(zCross(1)*scal*r(i) + P1(k,1,i)*ones(1,AngleRes),zCross(2)*scal*r(i) + P1(k,2,i)*ones(1,AngleRes),'k-')            
             plot(zCross(1)*scal*r(i) + P1(k,1,i)*ones(1,AngleRes),zCross(2)*scal*r(i) + P1(k,2,i)*ones(1,AngleRes),'-g')
-            text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',max(1,min(round(par.videoFontsize*20*par.r(2)),par.videoFontsize)));
+            text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',par.videoPartFontsize);%max(1,min(round(par.videoFontsize*20*par.r(2)),par.videoPartFontsize)));
 
         end
 
