@@ -38,7 +38,7 @@ classdef DEM2Dcontacts < handle
                         normal=Di'/nD;
                         c.numConstraints=c.numConstraints+1;
                         c.numParticleContacts = c.numParticleContacts +1;
-                        contacts(c.numConstraints) = DEM2Dcontact(i,j,data,normal,d);
+                        contacts(c.numConstraints) = DEM2Dcontact(i,j,data,par,normal,d);
                     end
 
                 end
@@ -47,14 +47,14 @@ classdef DEM2Dcontacts < handle
                 for k = 1:length(X)
                     for l = k+1:length(X)
                         d(k,l) = d(k,l) - data.radius(k) - data.radius(l);
-                        if(d(k,l)<0)
+                        if(d(k,l)<maxr*(par.collisionThreshold-1))
                             Di=data.position(1:2,k) - data.position(1:2,l);
                             Di=Di';
                             nD=norm(Di);
                             normal = Di'/nD;
                             c.numConstraints=c.numConstraints+1;
                             c.numParticleContacts = c.numParticleContacts +1;
-                            contacts(c.numConstraints) = DEM2Dcontact(k,l,data,normal,d(k,l));
+                            contacts(c.numConstraints) = DEM2Dcontact(k,l,data,par,normal,-d(k,l));
                         end
                     end
                 end
@@ -63,29 +63,29 @@ classdef DEM2Dcontacts < handle
             % search for wall-contacts
             for i = 1:par.N
                 x(i) = data.position(1,i); z(i) = data.position(2,i);
-                if ((x(i)< par.bBox(1)+data.radius(i))) % left
-                    normal = [1;0];
+                if (x(i)- par.bBox(1) < data.radius(i)*par.collisionThreshold)%((x(i)< par.bBox(1)+data.radius(i))) % left
+                    normal = [1;0]; d = data.radius(i) -abs(par.bBox(1)- x(i));
                     c.numConstraints=c.numConstraints+1;
                     c.numWallContacts = c.numWallContacts+1;
-                    contacts(c.numConstraints) = DEM2Dcontact(-1,i,data,normal,0);
+                    contacts(c.numConstraints) = DEM2Dcontact(-1,i,data,par,normal,d);
                 end
-                if ((x(i)> par.bBox(2)-data.radius(i))) % right
-                    normal = [-1;0];
+                if (par.bBox(2)-x(i)<data.radius(i)*par.collisionThreshold)%((x(i)> par.bBox(2)-data.radius(i))) % right
+                    normal = [-1;0]; d = data.radius(i) -abs(par.bBox(2) - x(i));
                     c.numConstraints=c.numConstraints+1;
                     c.numWallContacts = c.numWallContacts+1;
-                    contacts(c.numConstraints) = DEM2Dcontact(-2,i,data,normal,0);
+                    contacts(c.numConstraints) = DEM2Dcontact(-2,i,data,par,normal,d);
                 end
-                if ((z(i)< par.bBox(3)+data.radius(i))) % bottom
-                    normal = [0;1];
+                if z(i) - par.bBox(3)  < data.radius(i)*par.collisionThreshold%(z(i)< (par.bBox(3)+data.radius(i)))%z(i) - par.bBox(3)  < data.radius(i)*par.collisionThreshold% % bottom
+                    normal = [0;1]; d = data.radius(i) - abs(par.bBox(3) - z(i));
                     c.numConstraints=c.numConstraints+1;
                     c.numWallContacts = c.numWallContacts+1;
-                    contacts(c.numConstraints) = DEM2Dcontact(-3,i,data,normal,0);
+                    contacts(c.numConstraints) = DEM2Dcontact(-3,i,data,par,normal,d);
                 end
-                if ((z(i)> par.bBox(4)-data.radius(i))) % top
-                    normal = [0;-1];
+                if (par.bBox(4) - z(i) < data.radius(i)*par.collisionThreshold) %((z(i)> par.bBox(4)-data.radius(i))) % top
+                    normal = [0;-1]; d = data.radius(i) -abs(par.bBox(4) - z(i));
                     c.numConstraints=c.numConstraints+1;
                     c.numWallContacts = c.numWallContacts+1;
-                    contacts(c.numConstraints) = DEM2Dcontact(-4,i,data,normal,0);
+                    contacts(c.numConstraints) = DEM2Dcontact(-4,i,data,par,normal,d);
                 end
             end
             if ( c.numConstraints ~= c.numParticleContacts+c.numWallContacts)

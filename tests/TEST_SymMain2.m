@@ -5,7 +5,7 @@ TestValue = true;
 global par;
 par = TEST_SymParam2();
 global data;
-[data,SuccessFlag] = DEM2Dinit(par);
+    [data,par,SuccessFlag] = DEM2Dinit(par);
 if(SuccessFlag == 0)
     return
 end

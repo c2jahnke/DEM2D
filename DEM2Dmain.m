@@ -12,7 +12,10 @@ if(SuccessFlag == 0)
     return
 end
 end
-
+data.position(:,1) = [0.99;0.99]
+data.position(:,2) = [-0.99;-0.99]
+data.velocity(:,1) = [-0.5;-0.5]
+data.velocity(:,2) = [0.5;0.5]
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
@@ -36,8 +39,8 @@ for k = 1:T
         collisionCounter = 0;
         c = DEM2Dcontacts(data,par);
     end
-    [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
-%   [pk,vk,ak,data] = DEM2Dsolve_pgs(data,par,c.contacts);
+%     [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
+    [pk,vk,ak,acc,data] = DEM2Dsolve_pgs(par,data,c);
     data.position = pk;
     data.velocity = vk;
     data.angular = ak;
