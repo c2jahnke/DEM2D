@@ -12,6 +12,7 @@ if(SuccessFlag == 0)
     return
 end
 end
+data.angular(:,:) = 0;
 % data.position(:,1) = [-1;-1];
 % data.velocity(:,1) = [0.5;0];
 % % data.position(:,1) = [0.99;0.99];
