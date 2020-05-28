@@ -50,7 +50,7 @@ classdef DEM2Dcontact < handle
             else
                 %sliding
                 temp=(delta(1)+par.mu*absDelta2)/(par.mu^2+1);
-                delta=temp*[1;sign(delta(1))*par.mu];
+                delta=temp*[1;sign(delta(2))*par.mu];
             end
         end
 

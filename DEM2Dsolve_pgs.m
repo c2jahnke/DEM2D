@@ -16,12 +16,13 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pgs(par,data,c)
     while iter < maxiter
         iter = iter +1;
         for j = 1:numcontacts
-            a = contacts(j).a;
-            b = contacts(j).b;
-             
-            ui = contacts(j).rhs + contacts(j).Gb'*data.velocity(:,b);
-            if( a >0)
-                 ui=ui+contacts(j).Ga'*data.velocity(:,a);        
+            
+            bs = contacts(j).b;
+            as = contacts(j).a;
+            
+            ui = contacts(j).rhs + contacts(j).Gb'*data.velocity(:,bs);
+            if( as >0)
+                 ui=ui+contacts(j).Ga'*data.velocity(:,as);        
             end
             delta = contacts(j).l - w*contacts(j).eta*ui;
             %delta = delta + [par.cohesion; 0];
@@ -30,11 +31,11 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pgs(par,data,c)
         end
         data.velocity =  v0;
         for i=1:numcontacts
-            a=contacts(i).a;
-            b=contacts(i).b;
-            data.velocity(:,b) = data.velocity(:,b)+1/contacts(i).redMass*contacts(i).Gb*contacts(i).l;
-            if(a>0)
-                data.velocity(:,a)=data.velocity(:,a)+1/contacts(i).redMass*contacts(i).Ga*contacts(i).l;
+            as=contacts(i).a;
+            bs=contacts(i).b;
+            data.velocity(:,bs) = data.velocity(:,bs)+1/contacts(i).redMass*contacts(i).Gb*contacts(i).l;
+            if(as>0)
+                data.velocity(:,as)=data.velocity(:,as)+1/contacts(i).redMass*contacts(i).Ga*contacts(i).l;
             end
         end
     end

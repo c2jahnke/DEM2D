@@ -56,7 +56,7 @@ function par = TEST_RotParam3()
     par.videoname = 'video-40-rot';%video4-merged';
     par.video_framerate = 20;
     par.videoFontsize = 16;
-    
+    par.videoPartFontsize = 3;
     
     %% merge parameters
     par.merge = false;

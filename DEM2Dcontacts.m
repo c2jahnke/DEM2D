@@ -34,11 +34,11 @@ classdef DEM2Dcontacts < handle
                     Di=Di';
                     nD=norm(Di);
                     d=nD-data.radius(i)-data.radius(j);
-                    if d < par.collisionThreshold*maxr
+                    if d < (par.collisionThreshold-1)*maxr
                         normal=Di'/nD;
                         c.numConstraints=c.numConstraints+1;
                         c.numParticleContacts = c.numParticleContacts +1;
-                        contacts(c.numConstraints) = DEM2Dcontact(i,j,data,par,normal,d);
+                        contacts(c.numConstraints) = DEM2Dcontact(i,j,data,par,normal,-d);
                     end
 
                 end
