@@ -26,12 +26,12 @@ function par = DEM2Dparam()
     % numerical simulation
     par.simulationStart = 0;
     par.simulationEnd = 1;
-    par.dt = 1e-4;%1e-6
+    par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.025;
     par.step = round(par.VisualResolution/par.dt);
     par.VisualizationStep = par.step;
-    par.CollisionTime = 5e-3;
+    par.CollisionTime = 1e-3;
     par.CollisionStep = round(par.CollisionTime/par.dt);
     %% force parameters
 
