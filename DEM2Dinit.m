@@ -56,9 +56,12 @@ function [data,par,SuccessFlag] = DEM2Dinit(par)
     
     data.contactsMerged = struct;
     data.contactsMerged.N = 0;
-    data.contactsMerged.index = zeros(2,par.N); %maxSize of aggregates
+    data.contactsMerged.index = spalloc(ceil(par.N/2),par.N,par.N); 
+    % index 1 (i): aggrete body index, index 2 (j): particles in body (i), third component: maximal size
+    data.contactsMerged.aggregateSize = spalloc(ceil(par.N/2),1,ceil(par.N/2));
     data.contactsMerged.position = zeros(4,par.N);
-    data.contactsMerged.relativePosition = zeros(4,par.N);
+    % data.contactsMerged.relativePosition = zeros(4,par.N);
+    data.contactsMerged.relativePosition = spalloc(2*ceil(par.N/2),ceil(par.N/2),par.N);
     data.contactsMerged.positionMerged = zeros(2,par.N);
     data.contactsMerged.velocityMerged = zeros(2,par.N);
     data.contactsMerged.angularMerged = zeros(2,par.N);

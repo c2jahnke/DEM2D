@@ -11,9 +11,7 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
         video = VideoWriter(['videos/' par.videoname '.avi']);
         video.FrameRate = par.video_framerate;
         open(video);
-
     end
-
     h1 = gcf;%subplot(1,2,1);
     
     r = data.radius;
@@ -53,7 +51,7 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
         plot([par.bBox(1) par.bBox(1) par.bBox(1) par.bBox(2) par.bBox(2) par.bBox(1)],...
          [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
 
-        title('Simulation','fontsize',par.videoFontsize)
+        title(par.videoname,'fontsize',par.videoFontsize)
         text(par.bBox(2)-2.95*par.r(2),par.bBox(4)-0.95*par.r(2),['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)
         
         axis([-0.95*par.r(2)+par.bBox(1) par.bBox(2)+0.95*par.r(2) -0.95*par.r(2)+par.bBox(3) par.bBox(4)+0.95*par.r(2)])

@@ -13,7 +13,7 @@ function par = DEM2Dparam()
     par.muWall = 0.3;
 
     % mean radius 
-    par.r = [0.2 0.5]; %[m]
+    par.r = [0.4 0.6]; %[m]
     % bounding box, x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
                  2 2]; % x second comp, z second comp
@@ -25,7 +25,7 @@ function par = DEM2Dparam()
     par.collisionThreshold = 1.1;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 8;
+    par.simulationEnd = 2;
     par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.025;
@@ -59,11 +59,11 @@ function par = DEM2Dparam()
     par.videoname = 'video-EXP-200-mu-0-3-NoRotation';
     par.video_framerate = 20;
     par.videoFontsize = 16;
-    par.videoPartFontsize = 3;
+    par.videoPartFontsize = 6;
     
     
     %% merge parameters
-    par.merge = false;
+    par.merge = true;
     par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merge
 
 end

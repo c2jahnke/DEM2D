@@ -15,7 +15,6 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
     r = data.radius;
     m = data.mass;
 
-    
     [fx,fz,ty,data] = DEM2DinteractForce(par,data,c);
     [fwx,fwz,twy,data] = DEM2DwallForce(par,data,c);
 
@@ -45,8 +44,8 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
 %         pk(2,k) = data.position(2,k) + data.velocity(2,k)*dt;
         % symplectic Euler
         acc(1,k) = ax; acc(2,k) = az;
-        vk(1,k) = vx(k) + ax*dt;% + vtx(k);
-        vk(2,k) = vz(k) + az*dt;% + vtz(k);
+        vk(1,k) = vx(k) + ax*dt;
+        vk(2,k) = vz(k) + az*dt;
         
         pk(1,k) = data.position(1,k) + vk(1,k)*dt; 
         pk(2,k) = data.position(2,k) + vk(2,k)*dt;
@@ -55,7 +54,7 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
     end
     if(data.contactsParticle.mergedParticles)
         for k = 1:data.contactsMerged.N            
-            i = data.contactsMerged.index(1,k); j = data.contactsMerged.index(2,k);
+            i = data.contactsMerged.index(k,1); j = data.contactsMerged.index(k,2);
             data.contactsMerged.inertiaTensor(1,i,j) = 0.5*data.mass(i)*(data.radius(i)^2)...
                 + data.mass(i)*norm(data.position(:,i) - data.contactsParticle.actuationPoint(:,i,j))^2 ...
                 + 0.5*data.mass(j)*(data.radius(j)^2) + ...

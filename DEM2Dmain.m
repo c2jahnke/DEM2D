@@ -51,11 +51,7 @@ for k = 1:T
 
     if visuCounter == par.VisualizationStep
         if(mod(visuIndex,25) == 0)
-%         if(par.software == 'GNU Octave')
             disp(['################## ' sprintf('% 4d',visuIndex) '/' num2str(T/visuStep) ' frames <-> ' sprintf('% 4d',floor(round(visuIndex/T*visuStep*100))) ' Prozent ##################']);
-%         else
-%             disp(['################## ' sprintf('% 4d',visuIndex) '/' num2str(T/visuStep) ' frames <-> ' sprintf('% 4d',floor(round(visuIndex/T*visuStep,2)*100)) ' Prozent ##################']);
-%         end
         end
         visuIndex = visuIndex+1; visuCounter = 0;
         A(visuIndex,:,1:par.N) = data.acceleration;
@@ -65,7 +61,7 @@ for k = 1:T
         if(data.contactsParticle.mergedParticles)
             for kk = 1: data.contactsMerged.N
                 if(data.contactsMerged.timeFlag(kk))
-                    i = data.contactsMerged.index(1,kk); jj = data.contactsMerged.index(2,kk);
+                    i = data.contactsMerged.index(kk,1); jj = data.contactsMerged.index(kk,2);
                     data.contactsMerged.timePoint(i,jj) = visuIndex;
                     data.contactsMerged.timeFlag(kk) = false;
                 end

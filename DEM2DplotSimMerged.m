@@ -16,7 +16,7 @@ function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
     scal = linspace(-1,1,AngleRes);
     s = sin(theta);
     c = cos(theta);
-    DELAY = par.dt*par.VisualizationStep*0.4/par.N;
+    DELAY = par.dt*par.VisualizationStep/par.N;
     for k=1:j    
         plot(reshape(P1(k,1,:),[1 par.N]),reshape(P1(k,2,:),[1 par.N]),'.','MarkerEdgeColor','w')
         hold all
@@ -24,19 +24,19 @@ function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
         for i=1:par.N
             if(data.contactsParticle.deactivated(i))
                 for kk = 1:data.contactsMerged.N % inefficient
-                    if(data.contactsMerged.index(1,kk) == i)
-                        ii = data.contactsMerged.index(2,kk);
+                    if(data.contactsMerged.index(kk,1) == i)
+                        ii = data.contactsMerged.index(kk,2);
                         if(data.contactsMerged.timePoint(i,ii) <= k)
-                            text(P1(k,1,i),P1(k,2,i),[num2str(i) "M"],'Color','red','fontsize',par.videoFontsize)
-                            text(P1(k,1,ii),P1(k,2,ii),[num2str(ii) "M"],'Color','red','fontsize',par.videoFontsize)
+                            text(P1(k,1,i),P1(k,2,i),[num2str(i) "M"],'Color','red','fontsize',par.videoPartFontsize)
+                            text(P1(k,1,ii),P1(k,2,ii),[num2str(ii) "M"],'Color','red','fontsize',par.videoPartFontsize)
                         else
-                            text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',par.videoFontsize)
-                            text(P1(k,1,ii),P1(k,2,ii),num2str(ii),'fontsize',par.videoFontsize)
+                            text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',par.videoPartFontsize)
+                            text(P1(k,1,ii),P1(k,2,ii),num2str(ii),'fontsize',par.videoPartFontsize)
                         end
                     end % this part is not fully implemented
                 end
             else
-                text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',par.videoFontsize)
+                text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',par.videoPartFontsize)
             end
             vnorm = norm(V1(k,:,i));
             x1 = [P1(k,1,i) P1(k,1,i)+V1(k,1,i)/vnorm*r(i)];
@@ -51,15 +51,14 @@ function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
             zCross = DEM2Drotation(A1(k,1,i))*[0;1];
             plot(xCross(1)*scal*r(i) + P1(k,1,i)*ones(1,AngleRes),xCross(2)*scal*r(i) + P1(k,2,i)*ones(1,AngleRes),'k-')
             plot(zCross(1)*scal*r(i) + P1(k,1,i)*ones(1,AngleRes),zCross(2)*scal*r(i) + P1(k,2,i)*ones(1,AngleRes),'k-')
-
-            
+    
         end
 
         % Walls: 
         plot([par.bBox(1) par.bBox(1) par.bBox(1) par.bBox(2) par.bBox(2) par.bBox(1)],...
          [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
 
-        title('Simulation merged','fontsize',par.videoFontsize)
+        title([par.videoname 'merged'],'fontsize',par.videoFontsize)
         text(par.bBox(2)-2.95*par.r(2),par.bBox(4)-0.95*par.r(2),['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)
         
         axis([-0.15+par.bBox(1) par.bBox(2)+0.15 -0.15+par.bBox(3) par.bBox(4)+0.15])
@@ -68,11 +67,8 @@ function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
         set(gca,'fontsize', par.videoFontsize);
         drawnow;
         F(j) = getframe(h1);
-        %pause(DELAY)
-        %size(F(j).cdata)
-        %hf=figure('Position', [100, 100, 1049, 895]);
+        pause(DELAY)
 
-        %pause(0.1)
         if(par.writeVid)
              writeVideo(video,F(j));
         end
