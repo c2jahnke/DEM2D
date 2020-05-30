@@ -65,9 +65,9 @@ function [data,par,SuccessFlag] = DEM2Dinit(par)
     data.contactsMerged.positionMerged = zeros(2,par.N);
     data.contactsMerged.velocityMerged = zeros(2,par.N);
     data.contactsMerged.angularMerged = zeros(2,par.N);
-    data.contactsMerged.inertiaTensor = zeros(2,par.N,1);
+    data.contactsMerged.inertiaTensor = spalloc(ceil(par.N/2),1,ceil(par.N/2));
     
     data.contactsMerged.timeFlag = zeros(1,par.N);
-    data.contactsMerged.timePoint = zeros(par.N,par.N);
+    data.contactsMerged.timePoint = sparse(par.N,par.N);
     save('data')
 end

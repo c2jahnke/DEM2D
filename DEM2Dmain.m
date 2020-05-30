@@ -61,9 +61,15 @@ for k = 1:T
         if(data.contactsParticle.mergedParticles)
             for kk = 1: data.contactsMerged.N
                 if(data.contactsMerged.timeFlag(kk))
-                    i = data.contactsMerged.index(kk,1); jj = data.contactsMerged.index(kk,2);
-                    data.contactsMerged.timePoint(i,jj) = visuIndex;
-                    data.contactsMerged.timeFlag(kk) = false;
+                    %i = data.contactsMerged.index(kk,1); jj = data.contactsMerged.index(kk,2);
+                    tmp = nonzeros(data.contactsMerged.index(kk,:))
+                    for jj = 1:data.contactsMerged.aggregateSize(kk) 
+                        for ii = jj+1:data.contactsMerged.aggregateSize(kk) 
+                            data.contactsMerged.timePoint(tmp(ii),tmp(jj)) = visuIndex;
+                            data.contactsMerged.timePoint(tmp(jj),tmp(ii)) = visuIndex;
+                            data.contactsMerged.timeFlag(kk) = false;
+                        end
+                    end
                 end
             end
             PM(visuIndex,:,1:par.N) = Pk;

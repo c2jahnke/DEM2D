@@ -145,8 +145,10 @@ function [fx,fz,torqY,data] = DEM2DinteractForce(par,data,c)
             %%%%%%%%%%%%%%%%%%%%%%% Merge Particles %%%%%%%%%%%%%%%%%%%%%%%%%
             % check if ActiveContactAge is large, relative velocities small
             % --> glue particles together
-            if(data.contactsParticle.ActiveContactAge(i,k) > 10 &&  norm(data.velocity(:,i)-data.velocity(:,k)) < par.mergeThreashold && (data.contactsGlued(i,k) == false) && par.merge == true ...
-                    && sum(data.contactsGlued(i,:)) == false && sum(data.contactsGlued(:,k)) == false )
+            if(data.contactsParticle.ActiveContactAge(i,k) > 10 &&  ...
+                    norm(data.velocity(:,i)-data.velocity(:,k)) < par.mergeThreashold ...
+                    && (data.contactsGlued(i,k) == false) && par.merge == true ...
+                   )%&& sum(data.contactsGlued(i,:)) == false && sum(data.contactsGlued(:,k)) == false )
                 data.contactsGlued(i,k) = true;
                 data.contactsGlued(k,i) = true;
                 fx(i,k) = 0;             fx(k,i) = 0;
@@ -163,7 +165,7 @@ function [fx,fz,torqY,data] = DEM2DinteractForce(par,data,c)
                 elseif(data.contactsParticle.deactivated(i) == 1 && data.contactsParticle.deactivated(k) == 1)
                     continue
                 else
-                    nMerged = data.contactsMerged.N + 1 ; data.contactsMerged.N = nMerged;
+                    nMerged = data.contactsMerged.N;% + 1 ; data.contactsMerged.N = nMerged;
                     data.contactsMerged.aggregateSize(nMerged) = data.contactsMerged.aggregateSize(nMerged) +1;
                     if(data.contactsParticle.deactivated(i))
                         data.contactsMerged.index(nMerged,data.contactsMerged.aggregateSize(nMerged)+1) = k;
@@ -179,7 +181,7 @@ function [fx,fz,torqY,data] = DEM2DinteractForce(par,data,c)
                 data.contactsParticle.deactivated(k) = 1;
                 % append merged particles                
                 mergedMass = data.contactsMerged.mass(nMerged);
-                tmp = nonzeros(data.contactsMerged.index(nMerged,:))
+                tmp = nonzeros(data.contactsMerged.index(nMerged,:));
                 for jj = 1:data.contactsMerged.aggregateSize(nMerged) 
                     k = tmp(jj); 
                     data.contactsMerged.positionMerged(:,nMerged) = data.contactsMerged.positionMerged(:,nMerged) + data.position(:,k)*data.mass(k);

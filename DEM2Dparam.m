@@ -3,7 +3,7 @@ function par = DEM2Dparam()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     %number of particles
-    par.N = 5;
+    par.N = 15;
 
     % gravity
     par.g = -9.81;% -9.81; %[m/s^2]
@@ -13,7 +13,7 @@ function par = DEM2Dparam()
     par.muWall = 0.3;
 
     % mean radius 
-    par.r = [0.4 0.6]; %[m]
+    par.r = [0.3 0.35]; %[m]
     % bounding box, x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
                  2 2]; % x second comp, z second comp
@@ -56,7 +56,7 @@ function par = DEM2Dparam()
     par.writeEps = false;
     par.writePng = false;
     par.writeVid = false;
-    par.videoname = 'video-EXP-200-mu-0-3-NoRotation';
+    par.videoname = 'Simulation';
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 6;

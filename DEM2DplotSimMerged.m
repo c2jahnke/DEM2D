@@ -25,13 +25,16 @@ function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
             if(data.contactsParticle.deactivated(i))
                 for kk = 1:data.contactsMerged.N % inefficient
                     if(data.contactsMerged.index(kk,1) == i)
-                        ii = data.contactsMerged.index(kk,2);
-                        if(data.contactsMerged.timePoint(i,ii) <= k)
-                            text(P1(k,1,i),P1(k,2,i),[num2str(i) "M"],'Color','red','fontsize',par.videoPartFontsize)
-                            text(P1(k,1,ii),P1(k,2,ii),[num2str(ii) "M"],'Color','red','fontsize',par.videoPartFontsize)
-                        else
-                            text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',par.videoPartFontsize)
-                            text(P1(k,1,ii),P1(k,2,ii),num2str(ii),'fontsize',par.videoPartFontsize)
+                        ii = nonzeros(data.contactsMerged.index(kk,:));
+                        for j = 1:data.contactsMerged.aggregateSize(kk) 
+                        %ii = data.contactsMerged.index(kk,2);
+                            if(data.contactsMerged.timePoint(i,ii(j)) <= k && i < ii(j))
+                                text(P1(k,1,i),P1(k,2,i),[num2str(i) "M" num2str(kk)],'Color','red','fontsize',par.videoPartFontsize)
+                                text(P1(k,1,ii(j)),P1(k,2,ii(j)),[num2str(ii(j)) "M" num2str(kk)],'Color','red','fontsize',par.videoPartFontsize)
+                            else
+                                text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',par.videoPartFontsize)
+                                text(P1(k,1,ii(j)),P1(k,2,ii(j)),num2str(ii(j)),'fontsize',par.videoPartFontsize)
+                            end
                         end
                     end % this part is not fully implemented
                 end
