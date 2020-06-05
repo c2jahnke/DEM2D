@@ -3,17 +3,17 @@ function par = DEM2Dparam()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     %number of particles
-    par.N = 15;
+    par.N = 1;
 
     % gravity
-    par.g = -9.81;% -9.81; %[m/s^2]
-    par.g_vert = 0;
+    par.g = 0;% -9.81; %[m/s^2]
+    par.g_vert = -9.81;
     % friction coefficient mu \in [0,1)
     par.mu = 0.3;
     par.muWall = 0.3;
 
     % mean radius 
-    par.r = [0.3 0.35]; %[m]
+    par.r = [0.7 0.85]; %[m]
     % bounding box, x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
                  2 2]; % x second comp, z second comp

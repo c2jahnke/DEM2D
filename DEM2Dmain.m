@@ -42,8 +42,8 @@ for k = 1:T
         collisionCounter = 0;
         c = DEM2Dcontacts(data,par);
     end
-    [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
-%     [pk,vk,ak,acc,data] = DEM2Dsolve_pgs(par,data,c);
+%     [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
+     [pk,vk,ak,acc,data] = DEM2Dsolve_pgs(par,data,c);
     data.position = pk;
     data.velocity = vk;
     data.angular = ak;
