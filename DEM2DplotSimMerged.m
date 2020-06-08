@@ -1,12 +1,14 @@
 function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
     drawArrow = @(x,y) quiver(x(1),y(1),x(2)-x(1),y(2)-y(1),0,'b-');
-    figure('units','normalized','outerposition',[0.3 0.0 0.5 1.0])
+    figure('units','normalized','outerposition',[0.3 0.4 0.5 0.6])
+    
     if(par.writeVid)
         video = VideoWriter(['videos/' par.videoname '.avi']);
         video.FrameRate = par.video_framerate;
         open(video);
 
     end
+    set(gcf,'Color',[1 1 1]);
     h1 = gcf; %subplot(1,2,1);
 
     r = data.radius;
@@ -17,9 +19,13 @@ function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
     s = sin(theta);
     c = cos(theta);
     DELAY = par.dt*par.VisualizationStep/par.N;
+    
     for k=1:j    
-        plot(reshape(P1(k,1,:),[1 par.N]),reshape(P1(k,2,:),[1 par.N]),'.','MarkerEdgeColor','w')
-        hold all
+         % Walls: 
+        plot([par.bBox(1) par.bBox(1) par.bBox(1) par.bBox(2) par.bBox(2) par.bBox(1)],...
+         [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
+        %plot(reshape(P1(k,1,:),[1 par.N]),reshape(P1(k,2,:),[1 par.N]),'.','MarkerEdgeColor','w')
+        hold on
         % Partical position:
         for i=1:par.N
             if(data.contactsParticle.deactivated(i))
@@ -28,10 +34,10 @@ function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
                         ii = nonzeros(data.contactsMerged.index(kk,:));
                         for j = 1:data.contactsMerged.aggregateSize(kk) 
                         %ii = data.contactsMerged.index(kk,2);
-                            if(data.contactsMerged.timePoint(i,ii(j)) <= k && i < ii(j))
+                            if(any(data.contactsMerged.timePoint(i,ii(j))) && data.contactsMerged.timePoint(i,ii(j)) <= k && i < ii(j))
                                 text(P1(k,1,i),P1(k,2,i),[num2str(i) "M" num2str(kk)],'Color','red','fontsize',par.videoPartFontsize)
                                 text(P1(k,1,ii(j)),P1(k,2,ii(j)),[num2str(ii(j)) "M" num2str(kk)],'Color','red','fontsize',par.videoPartFontsize)
-                            else
+                            elseif(data.contactsMerged.timePoint(i,ii(j)) > k)
                                 text(P1(k,1,i),P1(k,2,i),num2str(i),'fontsize',par.videoPartFontsize)
                                 text(P1(k,1,ii(j)),P1(k,2,ii(j)),num2str(ii(j)),'fontsize',par.videoPartFontsize)
                             end
@@ -57,17 +63,17 @@ function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
     
         end
 
-        % Walls: 
-        plot([par.bBox(1) par.bBox(1) par.bBox(1) par.bBox(2) par.bBox(2) par.bBox(1)],...
-         [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
+       
 
-        title([par.videoname 'merged'],'fontsize',par.videoFontsize)
+        title([par.videoname '_merged'],'fontsize',par.videoFontsize)
         text(par.bBox(2)-2.95*par.r(2),par.bBox(4)-0.95*par.r(2),['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)
         
         axis([-0.15+par.bBox(1) par.bBox(2)+0.15 -0.15+par.bBox(3) par.bBox(4)+0.15])
         axis equal
-
+        
+        %set(gca,'Visible','off','XTick',[],'YTick',[]);
         set(gca,'fontsize', par.videoFontsize);
+        title(par.videoname,'fontsize',par.videoFontsize)
         drawnow;
         F(j) = getframe(h1);
         pause(DELAY)

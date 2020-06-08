@@ -188,14 +188,16 @@ function [fx,fz,torqY,data] = DEM2DinteractForce(par,data,c)
 
                     data.contactsMerged.velocityMerged(:,nMerged) =data.contactsMerged.velocityMerged(:,nMerged)+data.velocity(:,k)*data.mass(k);
                     %data.contactsMerged.relativePosition(:,nMerged) = [data.position(:,i)-data.contactsMerged.positionMerged(:,nMerged); data.position(:,k)-data.contactsMerged.positionMerged(:,nMerged)];
-                    data.contactsMerged.inertiaTensor(nMerged) = 0;
+                    
                     %data.contactsMerged.relativePosition(2*jj-1:2*jj,nMerged) = data.position(:,k)-data.contactsMerged.positionMerged(:,nMerged);
                 end                
                 data.contactsMerged.positionMerged(:,nMerged) = 1/mergedMass*(data.contactsMerged.positionMerged(:,nMerged));
                 data.contactsMerged.velocityMerged(:,nMerged) =1/mergedMass *data.contactsMerged.velocityMerged(:,nMerged);              
+                data.contactsMerged.inertiaTensor(nMerged) = 0;
                 for jj = 1:data.contactsMerged.aggregateSize(nMerged) 
-                    k = tmp(jj); 
+                    k = tmp(jj);              
                     data.contactsMerged.relativePosition(2*jj-1:2*jj,nMerged) = data.position(:,k)-data.contactsMerged.positionMerged(:,nMerged);
+                    data.contactsMerged.inertiaTensor(nMerged) = data.contactsMerged.inertiaTensor(nMerged) + 0.5*data.radius(k)^2*data.mass(k)+ data.mass(k)*norm(data.contactsMerged.relativePosition(2*jj-1:2*jj,nMerged));
                 end   
 %                 data.contactsMerged.positionMerged(:,nMerged) = 1/mergedMass*(data.position(:,i)*data.mass(i)+data.position(:,k)*data.mass(k));
 %                 data.contactsMerged.velocityMerged(:,nMerged) =1/mergedMass*(data.velocity(:,i)*data.mass(i)+data.velocity(:,k)*data.mass(k));

@@ -3,6 +3,9 @@ function DEM2Dplot(data,par)
     
     figure('units','normalized','outerposition',[0.3 0.0 0.5 1.0])
     h1 = gcf;
+    
+    set(gcf,'Color',[1 1 1]);
+    hold on;
     p = data.position;
     v = data.velocity;     
     vnorm = norm(v);
@@ -32,8 +35,9 @@ function DEM2Dplot(data,par)
     % Walls: 
     plot([par.bBox(1) par.bBox(1) par.bBox(1) par.bBox(2) par.bBox(2) par.bBox(1)],...
          [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
-
-    axis([-0.95*par.r(2)+par.bBox(1) par.bBox(2)+0.95*par.r(2) -0.95*par.r(2)+par.bBox(3) par.bBox(4)+0.95*par.r(2)])
+    
+    set(gca,'Visible','off','XTick',[],'YTick',[]);
+    %axis([-0.95*par.r(2)+par.bBox(1) par.bBox(2)+0.95*par.r(2) -0.95*par.r(2)+par.bBox(3) par.bBox(4)+0.95*par.r(2)])
     axis equal
     hold off
 end

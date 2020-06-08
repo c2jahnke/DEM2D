@@ -4,9 +4,10 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
         return
     else
     drawArrow = @(x,y) quiver(x(1),y(1),x(2)-x(1),y(2)-y(1),0,'b-');
-    figure('units','normalized','outerposition',[0.3 0.0 0.5 1.0])
+ %   figure('units','normalized','outerposition',[0.3 0.0 0.5 1.0])
+    figure('units','normalized','outerposition',[0.3 0.4 0.5 0.6])
     set(gcf,'renderer','zbuffer'); 
-
+    set(gcf,'Color',[1 1 1]);
     if(par.writeVid)
         video = VideoWriter(['videos/' par.videoname '.avi']);
         video.FrameRate = par.video_framerate;
@@ -51,13 +52,14 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
         plot([par.bBox(1) par.bBox(1) par.bBox(1) par.bBox(2) par.bBox(2) par.bBox(1)],...
          [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
 
-        title(par.videoname,'fontsize',par.videoFontsize)
-        text(par.bBox(2)-2.95*par.r(2),par.bBox(4)-0.95*par.r(2),['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)
+       
+        text(par.bBox(2)-0.0645*par.videoFontsize,par.bBox(4)-0.0208*par.videoFontsize,['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)
         
         axis([-0.95*par.r(2)+par.bBox(1) par.bBox(2)+0.95*par.r(2) -0.95*par.r(2)+par.bBox(3) par.bBox(4)+0.95*par.r(2)])
         axis equal
-
+        %set(gca,'Visible','off','XTick',[],'YTick',[]);
         set(gca,'fontsize', par.videoFontsize);
+        title(par.videoname,'fontsize',par.videoFontsize)
         drawnow;
         F(j) = getframe(h1);
         pause(DELAY)
