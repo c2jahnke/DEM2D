@@ -2,7 +2,7 @@
 global par;
 par = DEM2Dparam();
 global data;
-LoadData = 1;
+LoadData = 0;
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -20,9 +20,19 @@ data.angular(:,:) = 0;
 % %data.velocity(:,1) = [-0.5;-0.5];
 % data.velocity(:,2) = [1;0];
 % 
-% data.position(:,3) = [2.99;0.99];
+% data.position(:,3) = [0.99;0.99];
 % %data.velocity(:,1) = [-0.5;-0.5];
-% data.velocity(:,3) = [-5.5;0];
+% data.velocity(:,3) = [0;0];
+data.position(:,1) = [1;-0.9];
+ data.velocity(:,1) = [0;0];
+% data.position(:,1) = [0.99;0.99];
+% data.position(:,2) = [-1;-1.1];
+% %data.velocity(:,1) = [-0.5;-0.5];
+% data.velocity(:,2) = [0;0];
+% 
+% data.position(:,3) = [0;0.99];
+% %data.velocity(:,1) = [-0.5;-0.5];
+% data.velocity(:,3) = [0.5;0];
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
@@ -46,8 +56,8 @@ for k = 1:T
         collisionCounter = 0;
         c = DEM2Dcontacts(data,par);
     end
-    [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
-%      [pk,vk,ak,acc,data] = DEM2Dsolve_pgs(par,data,c);
+%     [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
+     [pk,vk,ak,acc,data] = DEM2Dsolve_pgs(par,data,c);
     data.position = pk;
     data.velocity = vk;
     data.angular = ak;

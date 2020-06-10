@@ -3,7 +3,7 @@ function par = DEM2Dparam()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     %number of particles
-    par.N = 200;
+    par.N = 1;
 
     % gravity
     par.g =  -9.81;% -9.81; %[m/s^2]
@@ -13,10 +13,10 @@ function par = DEM2Dparam()
     par.muWall = 0.3;
 
     % mean radius 
-    par.r = [0.2 0.35]; %[m]
+    par.r = [0.6 0.95]; %[m]
     % bounding box, x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
-                 2 -1]; % x second comp, z second comp
+                 2 2]; % x second comp, z second comp
 %     par.bBox = [ -0.02 -0.02; % x first comp z first comp
 %                      0.02 0.02]; % x second comp, z second comp
     par.spawnBox = [ -1 -2; % x first comp z first comp
@@ -25,7 +25,7 @@ function par = DEM2Dparam()
     par.collisionThreshold = 1.1;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 1;
+    par.simulationEnd = 4;
     par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.025;
@@ -55,11 +55,11 @@ function par = DEM2Dparam()
     par.writePdf = false;
     par.writeEps = false;
     par.writePng = false;
-    par.writeVid = false;
-    par.videoname = 'DEM merge mu 0-3';
-    par.video_framerate = 40;
+    par.writeVid = true;
+    par.videoname = 'DEM merge 3 particles';
+    par.video_framerate = 20;
     par.videoFontsize = 16;
-    par.videoPartFontsize = 5;
+    par.videoPartFontsize = 8;
     
     
     %% merge parameters
