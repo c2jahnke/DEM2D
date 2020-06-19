@@ -1,4 +1,4 @@
-function [pk,vk,ak,acc,data] = DEM2Dsolve_pgs(par,data,c)
+function [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c)
     contacts = c.contacts;
     pk = zeros(2,par.N);
     vk = zeros(2,par.N);

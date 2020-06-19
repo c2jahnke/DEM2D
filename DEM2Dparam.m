@@ -2,8 +2,9 @@
 function par = DEM2Dparam()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
+    par.PGJ = 1; % use PGJ (non-smooth) scheme or explicit solution
     %number of particles
-    par.N = 1;
+    par.N = 3;
 
     % gravity
     par.g =  -9.81;% -9.81; %[m/s^2]
@@ -13,7 +14,7 @@ function par = DEM2Dparam()
     par.muWall = 0.3;
 
     % mean radius 
-    par.r = [0.6 0.95]; %[m]
+    par.r = [0.9 0.95]; %[m]
     % bounding box, x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
                  2 2]; % x second comp, z second comp
@@ -25,7 +26,7 @@ function par = DEM2Dparam()
     par.collisionThreshold = 1.1;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 4;
+    par.simulationEnd = 1;
     par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.025;
@@ -56,7 +57,7 @@ function par = DEM2Dparam()
     par.writeEps = false;
     par.writePng = false;
     par.writeVid = true;
-    par.videoname = 'DEM merge 3 particles';
+    par.videoname = 'Simulation';
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 8;

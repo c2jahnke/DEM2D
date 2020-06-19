@@ -21,7 +21,7 @@ classdef DEM2Dcontact < handle
         function c = DEM2Dcontact(iA,iB,data,par,normal,d)
             c.a = iA;
             c.b = iB;
-            c.n = normal;
+            c.n = -normal;
             c.t = [c.n(2) ;-c.n(1)];
             % PGJ stuff
             

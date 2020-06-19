@@ -24,8 +24,8 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(par,data,c)
             boundaryContacts = boundaryContacts +1;
             normalStiffness = par.Emodul*pi/2*data.radius(i);
             tangentialStiffness = 1/1.2*normalStiffness;
-           normal = c.contacts(l).n;
-           tangential = c.contacts(l).t;
+           normal = -c.contacts(l).n;
+           tangential = -c.contacts(l).t;
            
            if(data.contactsWall.isInitialized(i,k))
                 data.contactsWall.contactAge(i,k) = 1;

@@ -2,7 +2,8 @@
 global par;
 par = DEM2Dparam();
 global data;
-LoadData = 0;
+
+LoadData = 0; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -12,27 +13,7 @@ if(SuccessFlag == 0)
     return
 end
 end
-data.angular(:,:) = 0;
-% data.position(:,1) = [-0;-0.9];
-%  data.velocity(:,1) = [1;0];
-% % data.position(:,1) = [0.99;0.99];
-% data.position(:,2) = [-0;1.1];
-% %data.velocity(:,1) = [-0.5;-0.5];
-% data.velocity(:,2) = [1;0];
-% 
-% data.position(:,3) = [0.99;0.99];
-% %data.velocity(:,1) = [-0.5;-0.5];
-% data.velocity(:,3) = [0;0];
-data.position(:,1) = [1;-0.9];
- data.velocity(:,1) = [0;0];
-% data.position(:,1) = [0.99;0.99];
-% data.position(:,2) = [-1;-1.1];
-% %data.velocity(:,1) = [-0.5;-0.5];
-% data.velocity(:,2) = [0;0];
-% 
-% data.position(:,3) = [0;0.99];
-% %data.velocity(:,1) = [-0.5;-0.5];
-% data.velocity(:,3) = [0.5;0];
+
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
@@ -45,10 +26,10 @@ A1 = zeros(T/visuStep+1,2,par.N); A1(1,:,:) = data.angular;
 % for merged particles
 PM = zeros(T/visuStep+1,2,par.N); 
 VM = zeros(T/visuStep+1,2,par.N);
-
-% ---------------------------- Iteration ---------------------------- %
 visuIndex = 1; visuCounter = 0; collisionCounter = 0;
 c = DEM2Dcontacts(data,par);
+% ---------------------------- Iteration ---------------------------- %
+
 for k = 1:T
     visuCounter = visuCounter +1;
     collisionCounter = collisionCounter +1;
@@ -56,8 +37,11 @@ for k = 1:T
         collisionCounter = 0;
         c = DEM2Dcontacts(data,par);
     end
-%     [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
-     [pk,vk,ak,acc,data] = DEM2Dsolve_pgs(par,data,c);
+    if par.PGJ
+        [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c);
+    else
+        [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
+    end
     data.position = pk;
     data.velocity = vk;
     data.angular = ak;
@@ -75,8 +59,7 @@ for k = 1:T
         if(data.contactsParticle.mergedParticles)
             for kk = 1: data.contactsMerged.N
                 if(data.contactsMerged.timeFlag(kk))
-                    %i = data.contactsMerged.index(kk,1); jj = data.contactsMerged.index(kk,2);
-                    tmp = nonzeros(data.contactsMerged.index(kk,:))
+                    tmp = nonzeros(data.contactsMerged.index(kk,:));
                     for jj = 1:data.contactsMerged.aggregateSize(kk) 
                         for ii = jj+1:data.contactsMerged.aggregateSize(kk) 
                             data.contactsMerged.timePoint(tmp(ii),tmp(jj)) = visuIndex;
