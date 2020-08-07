@@ -57,7 +57,8 @@ function par = TEST_RotParam3()
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 3;
-    
+    par.videoPartFontsize = 8;
+       
     %% merge parameters
     par.merge = false;
     par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merge

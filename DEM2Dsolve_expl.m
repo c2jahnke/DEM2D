@@ -58,7 +58,7 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
             ax = 0; az = 0; tyMerged = 0;
             for jj = 1:data.contactsMerged.aggregateSize(k)
                 
-%                         % angular momentum
+            %% angular momentum
               %tyMerged = tyMerged + det([data.contactsMerged.relativePosition(k,:)' [sum(fx(i(jj),:))+fwx(i(jj),:);sum(fz(i(jj),:))+fwz(i(jj))]])
               data.contactsMerged.angularMerged(2,k) = data.contactsMerged.angularMerged(2,k) ...
                   + 1/(data.contactsMerged.inertiaTensor(k))*(sum(ty(i(jj),:)) + sum(twy(i(jj),:)))*dt; ...

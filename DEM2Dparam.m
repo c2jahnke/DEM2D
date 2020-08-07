@@ -2,7 +2,7 @@
 function par = DEM2Dparam()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
-    par.PGJ = 1; % use PGJ (non-smooth) scheme or explicit solution
+    par.PGJ = 0; % use PGJ (non-smooth) scheme or explicit solution
     %number of particles
     par.N = 3;
 
