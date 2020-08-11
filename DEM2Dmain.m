@@ -3,7 +3,7 @@ global par;
 par = DEM2Dparam();
 global data;
 
-LoadData = 0; % if true, load previous initial data
+LoadData = 1; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -33,12 +33,15 @@ c = DEM2Dcontacts(data,par);
 for k = 1:T
     visuCounter = visuCounter +1;
     collisionCounter = collisionCounter +1;
-    if collisionCounter == par.CollisionStep
+    if collisionCounter == par.CollisionStep && par.PBD == 0
         collisionCounter = 0;
         c = DEM2Dcontacts(data,par);
     end
     if par.PGJ
         [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c);
+    elseif par.PBD
+        [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c);
+        DEM2Dplot(data,par);
     else
         [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
     end
@@ -90,3 +93,5 @@ DEM2DplotSim(P1,V1,A1,PM,VM,par,data,visuIndex)
 
 % DEM2DplotAngularVelocity(data,par,output)
 DEM2DplotEnergy(data,par,output)
+%pause(3)
+%close all

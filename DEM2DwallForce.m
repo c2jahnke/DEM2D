@@ -18,7 +18,8 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(par,data,c)
            elseif(k <5)   
            data.contactsWall.actuationPoint(i,:,k) = [data.position(1,i) box(k)]; % 1
            deltaW(k,i) = data.radius(i) - abs(box(k)-data.position(2,i));
-%            ddeltaW = data.velocity(2,i);
+           elseif(k<9)
+               continue;
            end
             if(deltaW(k,i) > 0)
             boundaryContacts = boundaryContacts +1;

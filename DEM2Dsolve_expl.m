@@ -14,26 +14,33 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
 
     r = data.radius;
     m = data.mass;
-
+    ftx = zeros(par.N,1); ftz = zeros(par.N,1); tty = zeros(par.N,1);
     [fx,fz,ty,data] = DEM2DinteractForce(par,data,c);
     [fwx,fwz,twy,data] = DEM2DwallForce(par,data,c);
-
-    
+    if(par.toolBool)
+    [ftx,ftz,tty,data] = DEM2DtoolForce(par,data,c);
+    end
    for k=1:N
         if(data.contactsParticle.deactivated(k))
             continue
         else
-        ax = (sum(fx(k,:)) + fwx(k,:))/m(k) + par.g_vert;
-        az = (sum(fz(k,:)) + fwz(k,:))/m(k) + par.g;
+        ax = (sum(fx(k,:)) + fwx(k,:) + ftx(k,:))/m(k) + par.g_vert;
+        az = (sum(fz(k,:)) + fwz(k,:) + ftz(k,:))/m(k) + par.g;
         if(par.considerRotations)
             % 2D inertia tensor for spheres around y-axis I = 0.25mr^2
             I = 0.25*data.mass(k)*(data.radius(k)^2);
-            data.angular(2,k) = data.angular(2,k) + 1/(I)*(sum(ty(k,:)) + sum(twy(k,:)))*dt;%data.angular(3,k)*dt;
+            data.angular(2,k) = data.angular(2,k) + 1/(I)*(sum(ty(k,:)) + sum(twy(k,:)) + sum(tty(k,:)))*dt;%data.angular(3,k)*dt;
             data.angular(1,k) = data.angular(1,k) + data.angular(2,k)*dt ;
             data.contactsWall.localContactPoint(k,:,1) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,1)'; 
             data.contactsWall.localContactPoint(k,:,2) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,2)'; 
             data.contactsWall.localContactPoint(k,:,3) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,3)'; 
             data.contactsWall.localContactPoint(k,:,4) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsWall.localContactPoint(k,:,4)';
+            
+            data.contactsTool.localContactPoint(k,:,1) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsTool.localContactPoint(k,:,1)'; 
+            data.contactsTool.localContactPoint(k,:,2) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsTool.localContactPoint(k,:,2)'; 
+            data.contactsTool.localContactPoint(k,:,3) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsTool.localContactPoint(k,:,3)'; 
+            data.contactsTool.localContactPoint(k,:,4) = DEM2Drotation(data.angular(2,k)*dt)*data.contactsTool.localContactPoint(k,:,4)';
+            
             if(data.contactsWall.isInitialized) % check
                 pk(1,k) = pk(1,k);% + data.angular(2,k)*2*pi*dt;
             end

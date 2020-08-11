@@ -40,6 +40,19 @@ function [data,par,SuccessFlag] = DEM2Dinit(par)
     data.contactsWall.accumulatedRollingDeformation = zeros(par.N,2,4);
     data.contactsWall.maxContactAge = 3;
     
+    
+    data.contactsTool = struct;
+    data.contactsTool.isInitialized = sparse(par.N,4); % each particle may collide with all 4 walls
+    data.contactsTool.contactAge = zeros(par.N,4); % count contact age for particles
+    data.contactsTool.actuationPoint = zeros(par.N,2,4); % actuation point for each particle and each wall
+    data.contactsTool.globalContactPoint = zeros(par.N,2,4);
+    data.contactsTool.localContactPoint = zeros(par.N,2,4);
+    data.contactsTool.globalContactPoint2 = zeros(par.N,2,4);
+    data.contactsTool.localContactPoint2 = zeros(par.N,2,4);
+    data.contactsTool.rollingDeformation = zeros(par.N,2,4);
+    data.contactsTool.accumulatedRollingDeformation = zeros(par.N,2,4);
+    data.contactsTool.maxContactAge = 3;
+    
     data.contactsParticle = struct;
     data.contactsParticle.isInitialized = sparse(par.N,par.N);
     data.contactsParticle.ActiveContactAge = sparse(par.N,par.N);
