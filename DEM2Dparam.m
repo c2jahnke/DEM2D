@@ -12,7 +12,7 @@ function par = DEM2Dparam()
     par.g_vert = 0;
     % friction coefficient mu \in [0,1)
     par.mu = 0.3;
-    par.muWall = 0.3;
+    par.muWall = 0.01;
 
     % mean radius 
     par.r = [0.39 0.55]; %[m]
@@ -31,7 +31,7 @@ function par = DEM2Dparam()
     par.collisionThreshold = 1.1;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 1;
+    par.simulationEnd = 5;
     par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.025;
@@ -65,7 +65,7 @@ function par = DEM2Dparam()
     par.videoname = 'Simulation';
     par.video_framerate = 20;
     par.videoFontsize = 16;
-    par.videoPartFontsize = 8;
+    par.videoPartFontsize = 10;
     
     
     %% merge parameters
