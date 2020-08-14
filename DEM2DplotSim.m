@@ -52,10 +52,10 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
         plot([par.bBox(1) par.bBox(1) par.bBox(1) par.bBox(2) par.bBox(2) par.bBox(1)],...
          [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
         % Tool: 
-
+        if(par.toolBool)
         plot([par.toolbBox(1) par.toolbBox(1) par.toolbBox(1) par.toolbBox(2) par.toolbBox(2) par.toolbBox(1)],...
          [par.toolbBox(3) par.toolbBox(4) par.toolbBox(3) par.toolbBox(3) par.toolbBox(4) par.toolbBox(4)],'r-','LineWidth',2)
-    
+        end
        
         text(par.bBox(2)-0.0645*par.videoFontsize,par.bBox(4)-0.0208*par.videoFontsize,['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)
         

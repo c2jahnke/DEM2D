@@ -3,7 +3,7 @@ global par;
 par = DEM2Dparam();
 global data;
 
-LoadData = 0; % if true, load previous initial data
+LoadData = 2; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -13,6 +13,8 @@ if(SuccessFlag == 0)
     return
 end
 end
+
+data.position = [0; 0];
 
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
