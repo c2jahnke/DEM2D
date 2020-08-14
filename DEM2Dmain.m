@@ -3,7 +3,7 @@ global par;
 par = DEM2Dparam();
 global data;
 
-LoadData = 2; % if true, load previous initial data
+LoadData = 0; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -13,8 +13,8 @@ if(SuccessFlag == 0)
     return
 end
 end
-
-data.position = [0; 0];
+data.toolbBox = par.toolbBox;
+%data.position = [0; 0];
 
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
@@ -25,6 +25,8 @@ A = zeros(T/visuStep+1,2,par.N);
 P1 = zeros(T/visuStep+1,2,par.N); P1(1,:,:) = data.position;
 V1 = zeros(T/visuStep+1,2,par.N); V1(1,:,:) = data.velocity;
 A1 = zeros(T/visuStep+1,2,par.N); A1(1,:,:) = data.angular;
+% tool
+PT = zeros(T/visuStep+1,2,2); PT(1,:,:) = data.toolbBox;
 % for merged particles
 PM = zeros(T/visuStep+1,2,par.N); 
 VM = zeros(T/visuStep+1,2,par.N);
@@ -61,6 +63,7 @@ for k = 1:T
         P1(visuIndex,:,1:par.N) = data.position; 
         A1(visuIndex,:,1:par.N) = data.angular; 
         V1(visuIndex,:,1:par.N) = data.velocity;
+        PT(visuIndex,:,:) = data.toolbBox;
         if(data.contactsParticle.mergedParticles)
             for kk = 1: data.contactsMerged.N
                 if(data.contactsMerged.timeFlag(kk))
@@ -89,7 +92,7 @@ output.MergeVelocity = VM;
 output.timeInc = 1:visuIndex;
 output.finalVisuIndex = visuIndex;
 % -------------------------- Plot time series -------------------------- %
-DEM2DplotSim(P1,V1,A1,PM,VM,par,data,visuIndex)
+DEM2DplotSim(P1,V1,A1,PT,PM,VM,par,data,visuIndex)
 % DEM3DplotDyn(P1,A1,data,par,visuIndex)
 
 

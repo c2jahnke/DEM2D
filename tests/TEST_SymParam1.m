@@ -19,6 +19,10 @@ function par = TEST_SymParam1()
                  2 2]; % x second comp, z second comp
     par.spawnBox = [ -2 -2; % x first comp z first comp
                  2 2];
+    par.toolBool = 0;
+    par.toolbBox = [ -1.150 -1.0; % x first comp z first comp
+                 -1.050 1.2];
+    par.toolSpeed = [-0.03;0.005];
     % contact detection
     par.collisionThreshold = 1.25;
     % numerical simulation

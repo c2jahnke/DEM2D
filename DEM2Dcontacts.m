@@ -93,26 +93,26 @@ classdef DEM2Dcontacts < handle
             % search for tool-contacts
             for j = 1:par.N
                 x(j) = data.position(1,j); z(j) = data.position(2,j);
-                if (x(j)- par.toolbBox(1) < data.radius(j)*par.collisionThreshold && (z(j) < par.toolbBox(4) && z(j) > par.toolbBox(3)))%abs(z(j)-par.toolbBox(4)) <  data.radius(j)|| abs(z(j)-par.toolbBox(3)) < data.radius(j)) % left
-                    normal = [1;0]; d = data.radius(j) -abs(par.toolbBox(1)- x(j));
+                if (x(j)- data.toolbBox(1) < data.radius(j)*par.collisionThreshold && (z(j) < data.toolbBox(4) && z(j) > data.toolbBox(3)))%abs(z(j)-data.toolbBox(4)) <  data.radius(j)|| abs(z(j)-data.toolbBox(3)) < data.radius(j)) % left
+                    normal = [1;0]; d = data.radius(j) -abs(data.toolbBox(1)- x(j));
                     c.numConstraints=c.numConstraints+1;
                     c.numToolContacts = c.numToolContacts+1;
                     contacts(c.numConstraints) = DEM2Dcontact(-5,j,data,par,normal,d);
                 end
-                if (par.toolbBox(2)-x(j)<data.radius(j)*par.collisionThreshold && (z(j) < par.toolbBox(4) && z(j) > par.toolbBox(3)))%&& (abs(z(j)-data.radius(j)) < par.toolbBox(3) || abs(z(j)-data.radius(j)) > par.toolbBox(4))) % right
-                    normal = [-1;0]; d = data.radius(j) -abs(par.toolbBox(2) - x(j));
+                if (data.toolbBox(2)-x(j)<data.radius(j)*par.collisionThreshold && (z(j) < data.toolbBox(4) && z(j) > data.toolbBox(3)))%&& (abs(z(j)-data.radius(j)) < data.toolbBox(3) || abs(z(j)-data.radius(j)) > data.toolbBox(4))) % right
+                    normal = [-1;0]; d = data.radius(j) -abs(data.toolbBox(2) - x(j));
                     c.numConstraints=c.numConstraints+1;
                     c.numToolContacts = c.numToolContacts+1;
                     contacts(c.numConstraints) = DEM2Dcontact(-6,j,data,par,normal,d);
                 end
-                if (z(j) - par.toolbBox(3)  < data.radius(j)*par.collisionThreshold && (x(j) < par.toolbBox(2) && x(j) > par.toolbBox(1)))%&& (abs(x(j)-data.radius(j)) < par.toolbBox(2) || abs(x(j)-data.radius(j)) > par.toolbBox(1)))% bottom
-                    normal = [0;1]; d = data.radius(j) - abs(par.toolbBox(3) - z(j));
+                if (z(j) - data.toolbBox(3)  < data.radius(j)*par.collisionThreshold && (x(j) < data.toolbBox(2) && x(j) > data.toolbBox(1)))%&& (abs(x(j)-data.radius(j)) < data.toolbBox(2) || abs(x(j)-data.radius(j)) > data.toolbBox(1)))% bottom
+                    normal = [0;1]; d = data.radius(j) - abs(data.toolbBox(3) - z(j));
                     c.numConstraints=c.numConstraints+1;
                     c.numToolContacts = c.numToolContacts+1;
                     contacts(c.numConstraints) = DEM2Dcontact(-7,j,data,par,normal,d);
                 end
-                if (par.toolbBox(4) - z(j) < data.radius(j)*par.collisionThreshold && (x(j) < par.toolbBox(2) && x(j) > par.toolbBox(1)))%&& (abs(x(j)-data.radius(j)) < par.toolbBox(1) || abs(x(j)-data.radius(j)) > par.toolbBox(2))) % top
-                    normal = [0;-1]; d = data.radius(j) -abs(par.toolbBox(4) - z(j));
+                if (data.toolbBox(4) - z(j) < data.radius(j)*par.collisionThreshold && (x(j) < data.toolbBox(2) && x(j) > data.toolbBox(1)))%&& (abs(x(j)-data.radius(j)) < data.toolbBox(1) || abs(x(j)-data.radius(j)) > data.toolbBox(2))) % top
+                    normal = [0;-1]; d = data.radius(j) -abs(data.toolbBox(4) - z(j));
                     c.numConstraints=c.numConstraints+1;
                     c.numToolContacts = c.numToolContacts+1;
                     contacts(c.numConstraints) = DEM2Dcontact(-8,j,data,par,normal,d);

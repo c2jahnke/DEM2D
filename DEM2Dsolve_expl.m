@@ -56,6 +56,8 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
         
         pk(1,k) = data.position(1,k) + vk(1,k)*dt; 
         pk(2,k) = data.position(2,k) + vk(2,k)*dt;
+        data.toolbBox(:,1) = data.toolbBox(:,1) + par.toolSpeed(1)*par.dt;
+        data.toolbBox(:,2) = data.toolbBox(:,2) + par.toolSpeed(2)*par.dt;
         ak = data.angular;
         end
     end

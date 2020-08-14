@@ -27,8 +27,8 @@ function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
         %plot(reshape(P1(k,1,:),[1 par.N]),reshape(P1(k,2,:),[1 par.N]),'.','MarkerEdgeColor','w')
         hold all
         if(par.toolBool)
-        plot([par.toolbBox(1) par.toolbBox(1) par.toolbBox(1) par.toolbBox(2) par.toolbBox(2) par.toolbBox(1)],...
-         [par.toolbBox(3) par.toolbBox(4) par.toolbBox(3) par.toolbBox(3) par.toolbBox(4) par.toolbBox(4)],'r-','LineWidth',2)
+        plot([PT(k,1) PT(k,1) PT(k,1) PT(k,2) PT(k,2) PT(k,1)],...
+         [PT(k,3) PT(k,4) PT(k,3) PT(k,3) PT(k,4) PT(k,4)],'r-','LineWidth',2)
         end
         % Partical position:
         for i=1:par.N

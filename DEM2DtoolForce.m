@@ -1,7 +1,7 @@
 function [ftx,ftz,tty,data] = DEM2DtoolForce(par,data,c)
     ftx = zeros(par.N,1);
     ftz = zeros(par.N,1);
-    tty = zeros(par.N,4); box = par.toolbBox;
+    tty = zeros(par.N,4); box = data.toolbBox;
     ftnormal = zeros(par.N,1);     deltaT = zeros(4,par.N);
     fttangential = zeros(par.N,1);
     frictionForce = zeros(2,par.N);

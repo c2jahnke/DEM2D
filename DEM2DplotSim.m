@@ -1,6 +1,6 @@
-function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
+function DEM2DplotSim(P1,V1,A1,PT,PM,VM,par,data,j)
     if(data.contactsParticle.mergedParticles)
-        DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
+        DEM2DplotSimMerged(P1,V1,A1,PT,PM,VM,par,data,j)
         return
     else
     drawArrow = @(x,y) quiver(x(1),y(1),x(2)-x(1),y(2)-y(1),0,'b-');
@@ -53,8 +53,8 @@ function DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
          [par.bBox(3) par.bBox(4) par.bBox(3) par.bBox(3) par.bBox(4) par.bBox(4)],'b-','LineWidth',2)
         % Tool: 
         if(par.toolBool)
-        plot([par.toolbBox(1) par.toolbBox(1) par.toolbBox(1) par.toolbBox(2) par.toolbBox(2) par.toolbBox(1)],...
-         [par.toolbBox(3) par.toolbBox(4) par.toolbBox(3) par.toolbBox(3) par.toolbBox(4) par.toolbBox(4)],'r-','LineWidth',2)
+        plot([PT(k,1) PT(k,1) PT(k,1) PT(k,2) PT(k,2) PT(k,1)],...
+         [PT(k,3) PT(k,4) PT(k,3) PT(k,3) PT(k,4) PT(k,4)],'r-','LineWidth',2)
         end
        
         text(par.bBox(2)-0.0645*par.videoFontsize,par.bBox(4)-0.0208*par.videoFontsize,['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)
