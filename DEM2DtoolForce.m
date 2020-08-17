@@ -1,8 +1,8 @@
 function [ftx,ftz,tty,data] = DEM2DtoolForce(par,data,c)
     ftx = zeros(par.N,1);
     ftz = zeros(par.N,1);
-    tty = zeros(par.N,4); box = data.toolbBox;
-    ftnormal = zeros(par.N,1);     deltaT = zeros(4,par.N);
+    tty = zeros(par.N,8); box = data.toolbBox;
+    ftnormal = zeros(par.N,1);     deltaT = zeros(8,par.N);
     fttangential = zeros(par.N,1);
     frictionForce = zeros(2,par.N);
     boundaryContacts = 0;
@@ -17,6 +17,22 @@ function [ftx,ftz,tty,data] = DEM2DtoolForce(par,data,c)
             elseif(k <5)   
             data.contactsTool.actuationPoint(i,:,k) = [data.position(1,i) box(k)]; % 1
             deltaT(k,i) = data.radius(i) - abs(box(k)-data.position(2,i));
+            elseif(k<9)
+                k = k;
+                deltaT(k,i) = c.contacts(l).distance;
+                disp('contact with corner')
+                if(k == 5)
+                    data.contactsTool.actuationPoint(i,:,k) = diag(data.toolbBox);
+                elseif(k ==6)
+                    data.contactsTool.actuationPoint(i,:,k) = [data.toolbBox(2); data.toolbBox(3)] ;
+                elseif(k == 7)
+                    data.contactsTool.actuationPoint(i,:,k) = data.toolbBox(1,:)'  ;
+                elseif(k == 8)
+                    data.contactsTool.actuationPoint(i,:,k) = data.toolbBox(2,:)' ;
+                else
+                    disp('Error at tool contacts.')
+                continue
+                end
          else
              continue;
          end

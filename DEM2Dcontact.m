@@ -23,6 +23,7 @@ classdef DEM2Dcontact < handle
             c.b = iB;
             c.n = -normal;
             c.t = [c.n(2) ;-c.n(1)];
+            c.distance = d;
             % PGJ stuff
             
             c.Gb(1:2,1)=normal;

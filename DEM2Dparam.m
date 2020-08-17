@@ -5,7 +5,7 @@ function par = DEM2Dparam()
     par.PGJ = 0; % use PGJ (non-smooth) scheme or explicit solution
     par.PBD = 0; % use Position Based Dynamics (Müller & Macklin et all)
     %number of particles
-    par.N = 10;
+    par.N = 8;
 
     % gravity
     par.g = -9.81; %[m/s^2]
@@ -15,7 +15,7 @@ function par = DEM2Dparam()
     par.muWall = 0.3;
 
     % mean radius 
-    par.r = [0.27 0.47]; %[m]
+    par.r = [0.25 0.5]; %[m]
     % bounding box, x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
                  2 2]; % x second comp, z second comp
@@ -25,13 +25,13 @@ function par = DEM2Dparam()
      %            2 2];
     par.toolBool = 1;
     par.toolbBox = [ 1.050 -1.18; % x first comp z first comp
-                 1.150 -0.1];
-    par.toolSpeed = [-0.03;0.005];
+                 1.150 1.1];
+    par.toolSpeed = [-0.08;0.005];
     % contact detection
     par.collisionThreshold = 1.25;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 1;
+    par.simulationEnd = 4;
     par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.025;
@@ -50,10 +50,10 @@ function par = DEM2Dparam()
     par.dampTwall = 0.02;
     
     % particle particle cohesion
-    par.cohesion = 1e6;
+    par.cohesion = 0;
 
     % 2 DOF or 3 DOF? 
-    par.considerRotations = true;
+    par.considerRotations = false;
     par.Cr = 0.990; % rolling resistance coefficient
     par.CrWall = 0.990;% rolling resistance coefficient for walls
     

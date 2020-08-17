@@ -14,7 +14,7 @@ if(SuccessFlag == 0)
 end
 end
 data.toolbBox = par.toolbBox;
-%data.position = [0; 0];
+%data.position = [1.4; 1.5];
 
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
