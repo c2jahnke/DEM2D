@@ -5,7 +5,7 @@ function par = DEM2Dparam()
     par.PGJ = 0; % use PGJ (non-smooth) scheme or explicit solution
     par.PBD = 0; % use Position Based Dynamics (Müller & Macklin et all)
     %number of particles
-    par.N = 8;
+    par.N = 25;
 
     % gravity
     par.g = -9.81; %[m/s^2]
@@ -15,7 +15,7 @@ function par = DEM2Dparam()
     par.muWall = 0.3;
 
     % mean radius 
-    par.r = [0.25 0.5]; %[m]
+    par.r = [0.175 0.285]; %[m]
     % bounding box, x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
                  2 2]; % x second comp, z second comp
@@ -65,7 +65,7 @@ function par = DEM2Dparam()
     par.videoname = 'video';%video4-merged';
     par.video_framerate = 20;
     par.videoFontsize = 16;
-    par.videoPartFontsize = 3;
+    par.videoPartFontsize = 8;
     
     
     %% merge parameters

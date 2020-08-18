@@ -40,6 +40,9 @@ for k = 1:T
     if collisionCounter == par.CollisionStep && par.PBD == 0
         collisionCounter = 0;
         c = DEM2Dcontacts(data,par);
+        if(par.merge && data.contactsMerged.N > 0)
+            DEM2Dsplit(data,par)
+        end
     end
     if par.PGJ
         [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c);
