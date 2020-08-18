@@ -20,7 +20,7 @@ function [ftx,ftz,tty,data] = DEM2DtoolForce(par,data,c)
             elseif(k<9)
                 k = k;
                 deltaT(k,i) = c.contacts(l).distance;
-                disp('contact with corner')
+                % disp('contact with corner')
                 if(k == 5)
                     data.contactsTool.actuationPoint(i,:,k) = diag(data.toolbBox);
                 elseif(k ==6)

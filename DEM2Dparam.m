@@ -23,7 +23,7 @@ function par = DEM2Dparam()
 %                      0.02 0.02]; % x second comp, z second comp
     %par.spawnBox = [ -2 -2; % x first comp z first comp
      %            2 2];
-    par.toolBool = 1;
+    par.toolBool = 0; % works only for force-based DEM
     par.toolbBox = [ 1.050 -1.18; % x first comp z first comp
                  1.150 1.1];
     par.toolSpeed = [-0.08;0.005];
@@ -31,7 +31,7 @@ function par = DEM2Dparam()
     par.collisionThreshold = 1.25;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 4;
+    par.simulationEnd = 2;
     par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.025;
@@ -53,7 +53,7 @@ function par = DEM2Dparam()
     par.cohesion = 0;
 
     % 2 DOF or 3 DOF? 
-    par.considerRotations = false;
+    par.considerRotations = true;
     par.Cr = 0.990; % rolling resistance coefficient
     par.CrWall = 0.990;% rolling resistance coefficient for walls
     
@@ -61,15 +61,15 @@ function par = DEM2Dparam()
     par.writePdf = false;
     par.writeEps = false;
     par.writePng = false;
-    par.writeVid = true;
-    par.videoname = 'video-200-Schuettwinkel_mu0-3_c1e6';%video4-merged';
+    par.writeVid = false;
+    par.videoname = 'video';%video4-merged';
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 3;
     
     
     %% merge parameters
-    par.merge = false;
+    par.merge = true;
     par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merge
 
 end

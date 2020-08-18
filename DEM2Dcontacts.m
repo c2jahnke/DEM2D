@@ -89,7 +89,7 @@ classdef DEM2Dcontacts < handle
                     contacts(c.numConstraints) = DEM2Dcontact(-4,j,data,par,normal,d);
                 end
             end
-             
+            if(par.toolBool)
             % search for tool-contacts
             for j = 1:par.N
                 x(j) = data.position(1,j); z(j) = data.position(2,j);
@@ -146,6 +146,7 @@ classdef DEM2Dcontacts < handle
                     contacts(c.numConstraints) = DEM2Dcontact(-12,j,data,par,normal,d);
                 end
                 
+            end
             end
             if ( c.numConstraints ~= c.numParticleContacts+c.numWallContacts+c.numToolContacts)
                 warning;

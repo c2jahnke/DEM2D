@@ -1,4 +1,4 @@
-function DEM2DplotSimMerged(P1,V1,A1,PM,VM,par,data,j)
+function DEM2DplotSimMerged(P1,V1,A1,PT,PM,VM,par,data,j)
     drawArrow = @(x,y) quiver(x(1),y(1),x(2)-x(1),y(2)-y(1),0,'b-');
     figure('units','normalized','outerposition',[0.3 0.4 0.5 0.6])
     

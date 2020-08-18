@@ -29,7 +29,9 @@ function [data,par,SuccessFlag] = DEM2Dinit(par)
     data.angular = sparse(2,par.N); % angular position, velocity and acceleration
     
     data.toolbBox = par.toolbBox;
-    
+    if(par.PGJ)
+        par.dt = par.CollisionStep;
+    end
     data.contactsWall = struct;
     data.contactsWall.isInitialized = sparse(par.N,4); % each particle may collide with all 4 walls
     data.contactsWall.contactAge = zeros(par.N,4); % count contact age for particles
