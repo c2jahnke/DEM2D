@@ -3,7 +3,7 @@ global par;
 par = DEM2Dparam();
 global data;
 
-LoadData = 0; % if true, load previous initial data
+LoadData = 1; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -38,6 +38,11 @@ for k = 1:T
     visuCounter = visuCounter +1;
     collisionCounter = collisionCounter +1;
     if collisionCounter == par.CollisionStep && par.PBD == 0
+        if par.Frozen
+            dist = DEM2DtoolDistance(par,data);
+            index = (dist > 10*data.radius);
+            data.contactsParticle.deactivated = index';
+        end
         collisionCounter = 0;
         c = DEM2Dcontacts(data,par);
         if(par.merge && data.contactsMerged.N > 0)

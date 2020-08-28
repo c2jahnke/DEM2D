@@ -5,7 +5,7 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
 
     dt = par.dt;
 
-    pk = zeros(2,N);
+    pk = data.position;
     vk = zeros(2,N);
     acc = zeros(2,N);
     ak = zeros(2,N);
@@ -56,6 +56,7 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
         
         pk(1,k) = data.position(1,k) + vk(1,k)*dt; 
         pk(2,k) = data.position(2,k) + vk(2,k)*dt;
+        
         data.toolbBox(:,1) = data.toolbBox(:,1) + par.toolSpeed(1)*par.dt;
         data.toolbBox(:,2) = data.toolbBox(:,2) + par.toolSpeed(2)*par.dt;
         ak = data.angular;
@@ -68,15 +69,12 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
             for jj = 1:data.contactsMerged.aggregateSize(k)
                 
             %% angular momentum
-              %tyMerged = tyMerged + det([data.contactsMerged.relativePosition(k,:)' [sum(fx(i(jj),:))+fwx(i(jj),:);sum(fz(i(jj),:))+fwz(i(jj))]])
               data.contactsMerged.angularMerged(2,k) = data.contactsMerged.angularMerged(2,k) ...
                   + 1/(data.contactsMerged.inertiaTensor(k))*(sum(ty(i(jj),:)) + sum(twy(i(jj),:)))*dt; ...
-%              + 0.01*det([data.contactsMerged.relativePosition(k,:)' [sum(fx(i(jj),:))+fwx(i(jj),:);sum(fz(i(jj),:))+fwz(i(jj))]]);
-  
+%              + 0.01*det([data.contactsMerged.relativePosition(k,:)' [sum(fx(i(jj),:))+fwx(i(jj),:);sum(fz(i(jj),:))+fwz(i(jj))]]); 
               ax = ax + sum(fx(i(jj),:)+fwx(i(jj),:))/m(i(jj));
               az = az + sum(fz(i(jj),:)+fwz(i(jj),:))/m(i(jj));
-                        % angular momentum
- 
+            % angular momentum
             end
       
             data.contactsMerged.angularMerged(1,k) = data.contactsMerged.angularMerged(1,k) + data.contactsMerged.angularMerged(2,k)*dt;

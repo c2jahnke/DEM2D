@@ -4,8 +4,9 @@ function par = DEM2Dparam()
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     par.PGJ = 0; % use PGJ (non-smooth) scheme or explicit solution
     par.PBD = 0; % use Position Based Dynamics (Müller & Macklin et all)
+    par.Frozen = 0;
     %number of particles
-    par.N = 25;
+    par.N = 20;
 
     % gravity
     par.g = -9.81; %[m/s^2]
@@ -18,20 +19,20 @@ function par = DEM2Dparam()
     par.r = [0.175 0.285]; %[m]
     % bounding box, x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
-                 2 2]; % x second comp, z second comp
+                 2 1]; % x second comp, z second comp
 %     par.bBox = [ -0.02 -0.02; % x first comp z first comp
 %                      0.02 0.02]; % x second comp, z second comp
     %par.spawnBox = [ -2 -2; % x first comp z first comp
      %            2 2];
-    par.toolBool = 0; % works only for force-based DEM
-    par.toolbBox = [ 1.050 -1.18; % x first comp z first comp
-                 1.150 1.1];
-    par.toolSpeed = [-0.08;0.005];
+    par.toolBool = 1; % works only for force-based DEM
+    par.toolbBox = [ 2.050 -1.18; % x first comp z first comp
+                 2.150 -0.4];
+    par.toolSpeed = [-0.02;0.005];
     % contact detection
     par.collisionThreshold = 1.25;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 2;
+    par.simulationEnd = 1;
     par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.025;
@@ -69,7 +70,7 @@ function par = DEM2Dparam()
     
     
     %% merge parameters
-    par.merge = true;
+    par.merge = false;
     par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merge
 
 end
