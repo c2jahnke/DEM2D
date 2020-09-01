@@ -1,4 +1,4 @@
-function DEM2DplotSim(P1,V1,A1,PT,PM,VM,par,data,j)
+function DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,j)
     if(data.contactsParticle.mergedParticles)
         DEM2DplotSimMerged(P1,V1,A1,PT,PM,VM,par,data,j)
         return
@@ -55,6 +55,15 @@ function DEM2DplotSim(P1,V1,A1,PT,PM,VM,par,data,j)
         if(par.toolBool)
         plot([PT(k,1) PT(k,1) PT(k,1) PT(k,2) PT(k,2) PT(k,1)],...
          [PT(k,3) PT(k,4) PT(k,3) PT(k,3) PT(k,4) PT(k,4)],'r-','LineWidth',2)
+        if(par.Frozen)
+            %PT_Frozen= [PT(:,1)-10*max(data.radius) PT(:,2)+10*max(data.radius) PT(:,3)-10*max(data.radius) PT(:,4)+10*max(data.radius)];
+            plot(c*10*max(data.radius)+0.5*(PT(k,1)+PT(k,2))*ones(1,AngleRes),s*10*max(data.radius)+0.5*(PT(k,3)+PT(k,4))*ones(1,AngleRes),'b--')
+            unfrozenIndex = find(AP(k,:));
+            pFrozen = [reshape(P1(k,1,unfrozenIndex),[1 length(unfrozenIndex)]); reshape(P1(k,2,unfrozenIndex),[1 length(unfrozenIndex)])];
+            plot(pFrozen(1,:),pFrozen(2,:),'bx')
+            %plot([PT_Frozen(k,1) PT_Frozen(k,1) PT_Frozen(k,1) PT_Frozen(k,2) PT_Frozen(k,2) PT_Frozen(k,1)],...
+            % [PT_Frozen(k,3) PT_Frozen(k,4) PT_Frozen(k,3) PT_Frozen(k,3) PT_Frozen(k,4) PT_Frozen(k,4)],'b--','LineWidth',1)
+        end
         end
        
         text(par.bBox(2)-0.0645*par.videoFontsize,par.bBox(4)-0.0208*par.videoFontsize,['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)

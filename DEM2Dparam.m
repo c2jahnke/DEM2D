@@ -4,9 +4,9 @@ function par = DEM2Dparam()
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     par.PGJ = 0; % use PGJ (non-smooth) scheme or explicit solution
     par.PBD = 0; % use Position Based Dynamics (Müller & Macklin et all)
-    par.Frozen = 0;
+    par.Frozen = 1;
     %number of particles
-    par.N = 20;
+    par.N = 10;
 
     % gravity
     par.g = -9.81; %[m/s^2]
@@ -19,26 +19,26 @@ function par = DEM2Dparam()
     par.r = [0.175 0.285]; %[m]
     % bounding box, x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
-                 2 1]; % x second comp, z second comp
+                 2 0]; % x second comp, z second comp
 %     par.bBox = [ -0.02 -0.02; % x first comp z first comp
 %                      0.02 0.02]; % x second comp, z second comp
     %par.spawnBox = [ -2 -2; % x first comp z first comp
      %            2 2];
     par.toolBool = 1; % works only for force-based DEM
-    par.toolbBox = [ 2.050 -1.18; % x first comp z first comp
-                 2.150 -0.4];
-    par.toolSpeed = [-0.02;0.005];
+    par.toolbBox = [2.050 -1.08; % x first comp z first comp
+                 2.10 -0.2];
+    par.toolSpeed = [-0.05;0.001];
     % contact detection
     par.collisionThreshold = 1.25;
     % numerical simulation
     par.simulationStart = 0;
-    par.simulationEnd = 1;
+    par.simulationEnd = 2;
     par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
-    par.VisualResolution = 0.025;
+    par.VisualResolution = 0.025;% 0.5;% 
     par.step = round(par.VisualResolution/par.dt);
     par.VisualizationStep = par.step;
-    par.CollisionTime = 5e-3;
+    par.CollisionTime = 1e-3;
     par.CollisionStep = round(par.CollisionTime/par.dt);
     %% force parameters
 
@@ -63,7 +63,7 @@ function par = DEM2Dparam()
     par.writeEps = false;
     par.writePng = false;
     par.writeVid = false;
-    par.videoname = 'video';%video4-merged';
+    par.videoname = '50particles-frozen';%video4-merged';
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 8;

@@ -30,6 +30,8 @@ PT = zeros(T/visuStep+1,2,2); PT(1,:,:) = data.toolbBox;
 % for merged particles
 PM = zeros(T/visuStep+1,2,par.N); 
 VM = zeros(T/visuStep+1,2,par.N);
+% for frozen particles
+AP = zeros(T/visuStep+1,par.N); AP(1,:) = ones(1,par.N);
 visuIndex = 1; visuCounter = 0; collisionCounter = 0;
 c = DEM2Dcontacts(data,par);
 % ---------------------------- Iteration ---------------------------- %
@@ -39,8 +41,8 @@ for k = 1:T
     collisionCounter = collisionCounter +1;
     if collisionCounter == par.CollisionStep && par.PBD == 0
         if par.Frozen
-            dist = DEM2DtoolDistance(par,data);
-            index = (dist > 10*data.radius);
+            [partDist, unfrozenIndex] = DEM2DtoolDistance(par,data);
+            index = ((partDist > 10*max(data.radius))');
             data.contactsParticle.deactivated = index';
         end
         collisionCounter = 0;
@@ -53,7 +55,7 @@ for k = 1:T
         [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c);
     elseif par.PBD
         [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c);
-        DEM2Dplot(data,par);
+%         DEM2Dplot(data,par);
     else
         [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
     end
@@ -72,6 +74,7 @@ for k = 1:T
         A1(visuIndex,:,1:par.N) = data.angular; 
         V1(visuIndex,:,1:par.N) = data.velocity;
         PT(visuIndex,:,:) = data.toolbBox;
+        AP(visuIndex,:,:) = data.contactsParticle.deactivated';
         if(data.contactsParticle.mergedParticles)
             for kk = 1: data.contactsMerged.N
                 if(data.contactsMerged.timeFlag(kk))
@@ -95,12 +98,13 @@ output.acceleration = A;
 output.position = P1;
 output.angular = A1;
 output.velocity = V1;
+output.deactivePart = AP;
 output.MergePosition = PM;
 output.MergeVelocity = VM;
 output.timeInc = 1:visuIndex;
 output.finalVisuIndex = visuIndex;
 % -------------------------- Plot time series -------------------------- %
-DEM2DplotSim(P1,V1,A1,PT,PM,VM,par,data,visuIndex)
+DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,visuIndex)
 % DEM3DplotDyn(P1,A1,data,par,visuIndex)
 
 
