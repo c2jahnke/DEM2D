@@ -30,7 +30,7 @@ function [data,par,SuccessFlag] = DEM2Dinit(par)
     
     data.toolbBox = par.toolbBox;
     if(par.PGJ)
-        par.dt = par.CollisionStep;
+        par.dt = par.CollisionTime;
     end
     data.contactsWall = struct;
     data.contactsWall.isInitialized = sparse(par.N,4); % each particle may collide with all 4 walls

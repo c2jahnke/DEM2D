@@ -3,7 +3,7 @@ global par;
 par = DEM2Dparam();
 global data;
 
-LoadData = 1; % if true, load previous initial data
+LoadData = 0; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -15,7 +15,8 @@ end
 end
 data.toolbBox = par.toolbBox;
 %data.position = [1.4; 1.5];
-
+data.velocity(:,1)=[-0.25;1];
+% data.velocity(:,2)=[0.25;0];
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
@@ -39,7 +40,7 @@ c = DEM2Dcontacts(data,par);
 for k = 1:T
     visuCounter = visuCounter +1;
     collisionCounter = collisionCounter +1;
-    if collisionCounter == par.CollisionStep && par.PBD == 0
+    if collisionCounter == par.CollisionStep
         if par.Frozen
             [partDist, unfrozenIndex] = DEM2DtoolDistance(par,data);
             index = ((partDist > 10*max(data.radius))');

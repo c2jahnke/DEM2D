@@ -2,6 +2,9 @@
 function par = TEST_RotParam4()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
+    par.PGJ = 0; % use PGJ (non-smooth) scheme or explicit solution
+    par.PBD = 0; % use Position Based Dynamics (Müller & Macklin et all)
+    par.Frozen = 0;
     %number of particles
     par.N = 1;
 
