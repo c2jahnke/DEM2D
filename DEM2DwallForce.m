@@ -48,7 +48,7 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(par,data,c)
 
            tangentialSpring2 = (data.contactsWall.globalContactPoint(i,:,k) - data.contactsWall.globalContactPoint2(i,:,k))' - ((data.contactsWall.globalContactPoint(i,:,k) - data.contactsWall.globalContactPoint2(i,:,k))*normal)*normal;
            tangentialSpringLength = norm(tangentialSpring2);
-           scaleSpringLength = abs(fwnormal(i))*par.mu/(tangentialStiffness*tangentialSpringLength+eps);
+           scaleSpringLength = abs(fwnormal(i))*par.muWall/(tangentialStiffness*tangentialSpringLength+eps);
            isSticking = true;
            if(scaleSpringLength < 1)
                isSticking = false;

@@ -1,4 +1,5 @@
 function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
+% linear contact modell (Obermayr 2011)
     N = par.N;
     Pk = zeros(2,N);
     Vk = zeros(2,N);
@@ -18,7 +19,7 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
     [fx,fz,ty,data] = DEM2DinteractForce(par,data,c);
     [fwx,fwz,twy,data] = DEM2DwallForce(par,data,c);
     if(par.toolBool)
-    [ftx,ftz,tty,data] = DEM2DtoolForce(par,data,c);
+        [ftx,ftz,tty,data] = DEM2DtoolForce(par,data,c);
     end
    for k=1:N
         if(data.contactsParticle.deactivated(k))
