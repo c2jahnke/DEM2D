@@ -14,9 +14,7 @@ if(SuccessFlag == 0)
 end
 end
 data.toolbBox = par.toolbBox;
-%data.position = [1.4; 1.5];
-data.velocity(:,1)=[-0.25;1];
-% data.velocity(:,2)=[0.25;0];
+
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
@@ -36,11 +34,11 @@ AP = zeros(T/visuStep+1,par.N); AP(1,:) = ones(1,par.N);
 visuIndex = 1; visuCounter = 0; collisionCounter = 0;
 c = DEM2Dcontacts(data,par);
 % ---------------------------- Iteration ---------------------------- %
-
+tic
 for k = 1:T
     visuCounter = visuCounter +1;
     collisionCounter = collisionCounter +1;
-    if collisionCounter == par.CollisionStep
+   if collisionCounter == par.CollisionStep && ~par.PBD
         if par.Frozen
             [partDist, unfrozenIndex] = DEM2DtoolDistance(par,data);
             index = ((partDist > 10*max(data.radius))');
@@ -57,6 +55,8 @@ for k = 1:T
     elseif par.PBD
         [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c);
 %         DEM2Dplot(data,par);
+    elseif par.HMD
+        [pk,vk,ak,acc,data] = DEM2Dsolve_hmd(par,data,c);
     else
         [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
     end
@@ -104,6 +104,8 @@ output.MergePosition = PM;
 output.MergeVelocity = VM;
 output.timeInc = 1:visuIndex;
 output.finalVisuIndex = visuIndex;
+
+SimeTime = toc
 % -------------------------- Plot time series -------------------------- %
 DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,visuIndex)
 % DEM3DplotDyn(P1,A1,data,par,visuIndex)

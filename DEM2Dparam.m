@@ -8,16 +8,16 @@ function par = DEM2Dpar()
     par.HMD = 0; % use Hertz-Mindlin and Deresievicz DEM contact model (not implemented prototype)
     par.Frozen = 1; % frozen particles 
     %number of particles
-    par.N = 20;
+    par.N = 2;
     % gravity
     par.g = -9.81;%[m/s^2]
-    par.g_vert = 0; 
+    par.g_vert = 7; 
     % friction coefficient mu \in [0,1)
     par.mu = 0.1;
     par.muWall = 0.01;
 
     % particle radius radius 
-    par.r = [0.130 0.230]; %[m]
+    par.r = [0.630 0.630]; %[m]
     %% bounding Box for particle container
     % x-length, z-length (height)
     par.bBox = [ -2 -2; % x first comp z first comp
@@ -34,12 +34,12 @@ function par = DEM2Dpar()
     % numerical time stepping
     par.simulationStart = 0;
     par.simulationEnd = 4;
-    par.dt = 1e-3;%1e-6
+    par.dt = 1e-2;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.1 % visualization
     par.step = round(par.VisualResolution/par.dt);
     par.VisualizationStep = par.step;
-    par.CollisionTime = 1e-3; % collision detection, must coincide for prototypes
+    par.CollisionTime = 1e-2; % collision detection, must coincide for prototypes
     par.CollisionStep = round(par.CollisionTime/par.dt);
     %% model parameters
     par.rho = 2700;%2700; % kg/m³

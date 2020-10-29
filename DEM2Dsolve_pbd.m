@@ -1,6 +1,6 @@
 function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
 % Position Based Dynamics (Miles, Macklin 2007, 2014, etc)
-    nStab = 10; gamma = 0.3; nSteps = 5;
+    nStab = 10; gamma = 0.3; nSteps = 10;
     dts = par.dt/nSteps;
     
 %     pk = zeros(2,par.N);
@@ -11,7 +11,7 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
     for k = 1:nSteps 
         xOld = data.position;
         v0 = data.velocity;
-        data.position = data.position + dts*data.velocity + dts^2*([par.g_vert; par.g].*ones(2,par.N)-gamma*data.velocity);%
+        x = data.position + dts*data.velocity + dts^2*([par.g_vert; par.g].*ones(2,par.N)-gamma*data.velocity);%
         c = DEM2Dcontacts(data,par);
         contacts = c.contacts;
         numcontacts = length(contacts);
@@ -24,22 +24,47 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
                 Dbs = 1/(contacts(j).distance/nSteps+data.radius(bs))*contacts(j).n;
                 denom = Dbs'*1/data.mass(bs)*Dbs;
                 if(as>0)
-                    Das = 1/(contacts(j).distance/nSteps+data.radius(bs)+data.radius(as))*(data.position(:,as) - data.position(:,bs));
-                    Dbs = 1/(contacts(j).distance/nSteps+data.radius(bs)+data.radius(as))*(data.position(:,bs) - data.position(:,as));
+                    Das = 1/(contacts(j).distance/nSteps+data.radius(bs)+data.radius(as))*(x(:,as) - x(:,bs));
+                    Dbs = 1/(contacts(j).distance/nSteps+data.radius(bs)+data.radius(as))*(x(:,bs) - x(:,as));
                     denom = Das'*1/data.mass(as)*Das + Dbs'*1/data.mass(bs)*Dbs;
                 end
                 deltaLambda = -overlap./denom;
                 deltaXbs = 1/data.mass(bs)*Dbs*deltaLambda;
-                data.position(:,bs) = data.position(:,bs) + deltaXbs;
+                x(:,bs) = x(:,bs) + deltaXbs;
                 if(as>0)
                     deltaXas = -1/data.mass(as)*Das*deltaLambda;
-                    data.position(:,as) = data.position(:,as) + deltaXas;
-                    data.position(:,bs) = data.position(:,bs) - 2*deltaXbs;
+                    x(:,as) = x(:,as) + deltaXas;
+                    x(:,bs) = x(:,bs) - 2*deltaXbs;
+                    % friction
+%                     cf = [xOld(:,bs)-xOld(:,as) - (x(:,bs)-x(:,as))]'*contacts(j).t;
+%                     Dcfas_1 = -(x(1,as)-x(1,bs))/norm(x(:,as)-x(:,bs))^3*((xOld(1,as)-xOld(1,bs)-x(1,as)+x(1,bs))*(x(1,as)-x(1,bs))...
+%                         +(xOld(2,as)-xOld(2,bs)-x(2,as)-x(2,bs))*(x(2,as)-x(2,bs)))...
+%                         +1/norm(x(:,as)-x(:,bs))*(-(x(1,as)-x(1,bs))+(xOld(1,as)-xOld(1,bs)-x(1,as)+x(1,bs)));
+%                     Dcfas_2 = -(x(2,as)-x(2,bs))/norm(x(:,as)-x(:,bs))^3*((xOld(1,as)-xOld(1,bs)-x(1,as)+x(1,bs))*(x(1,as)-x(1,bs))...
+%                          +(xOld(2,as)-xOld(2,bs)-x(2,as)-x(2,bs))*(x(2,as)-x(2,bs)))...
+%                         +1/norm(x(:,as)-x(:,bs))*(-(x(2,as)-x(2,bs))+(xOld(2,as)-xOld(2,bs)-x(2,as)+x(2,bs)));
+%                     Dcfbs_1 = (x(1,bs)-x(1,as))/norm(x(:,bs)-x(:,as))^3*((xOld(1,bs)-xOld(1,as)-x(1,bs)+x(1,as))*(x(1,bs)-x(1,as))...
+%                         +(xOld(2,bs)-xOld(2,as)-x(2,bs)-x(2,as))*(x(2,bs)-x(2,as)))...
+%                         +1/norm(x(:,bs)-x(:,as))*(-(x(1,bs)-x(1,as))+(xOld(1,bs)-xOld(1,as)-x(1,bs)+x(1,as)));
+%                     Dcfbs_2 = -(x(2,bs)-x(2,as))/norm(x(:,bs)-x(:,as))^3*((xOld(1,bs)-xOld(1,as)-x(1,bs)+x(1,as))*(x(1,bs)-x(1,as))...
+%                          +(xOld(2,bs)-xOld(2,as)-x(2,bs)-x(2,as))*(x(2,bs)-x(2,as)))...
+%                         +1/norm(x(:,bs)-x(:,as))*(-(x(2,bs)-x(2,as))+(xOld(2,bs)-xOld(2,as)-x(2,bs)+x(2,as)));
+%                  
+%                     Dfas = [Dcfas_1 ;Dcfas_2 ]
+%                     Dfbs = [Dcfbs_1 ;Dcfbs_2 ]
+%                     denom = Dfas' *1/data.mass(as)*Dfas + Dfbs'*1/data.mass(bs)*Dfbs;
+%                     deltaLf = -cf/denom;
+%                     deltaLf = sign(deltaLf)*min(par.mu*deltaLambda,abs(deltaLf));
+%                     deltaXfas = -1/data.mass(as)*Dfas*deltaLambda;
+%                     deltaXfbs = -1/data.mass(bs)*Dfbs*deltaLambda;
+%                     x(:,as) = x(:,as) + deltaXfas;
+%                     x(:,bs) = x(:,bs) + deltaXfbs;
                 end
             end
-            data.velocity = (data.position - xOld)/dts;
+            data.velocity = (x - xOld)/dts;
         end
     end   
+    data.position = x;
     pk = data.position;
     vk = data.velocity;
 end
