@@ -1,9 +1,11 @@
 % -------------------------- Initialization -------------------------- %
+clc, clear all
 global par;
-par = DEM2Dparam();
+addpath('showcases/AngleOfRepose200p/');
+par = DEM2Dparam200p();
 global data;
 
-LoadData = 0; % if true, load previous initial data
+LoadData = 1; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -14,7 +16,10 @@ if(SuccessFlag == 0)
 end
 end
 data.toolbBox = par.toolbBox;
-
+% data.velocity(:,1) = [10;0];
+% data.velocity(:,2) = [-2;0];
+% data.position(:,1) = [-1;-1.1];
+% data.position(:,2) = [1;-1];
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
@@ -58,7 +63,7 @@ for k = 1:T
     elseif par.HMD
         [pk,vk,ak,acc,data] = DEM2Dsolve_hmd(par,data,c);
     else
-        [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
+        [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_linearDEM(par,data,c);
     end
     data.position = pk;
     data.velocity = vk;
@@ -114,4 +119,4 @@ DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,visuIndex)
 % DEM2DplotAngularVelocity(data,par,output)
 DEM2DplotEnergy(data,par,output)
 %pause(3)
-%close all
+close all

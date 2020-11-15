@@ -4,17 +4,17 @@ function par = DEM2Dpar()
     %% Choose contact algorithm)
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
     par.PGJ = 0; % use PGJ (non-smooth) scheme (prototype)
-    par.PBD = 1; % use Position Based Dynamics (Müller & Macklin et all) (prototype)
+    par.PBD = 0; % use Position Based Dynamics (Müller & Macklin et all) (prototype)
     par.HMD = 0; % use Hertz-Mindlin and Deresievicz DEM contact model (not implemented prototype)
-    par.Frozen = 1; % frozen particles 
+    par.Frozen = 0; % frozen particles 
     %number of particles
-    par.N = 2;
+    par.N = 200;
     % gravity
-    par.g = -9.81;%[m/s^2]
-    par.g_vert = 7; 
+    par.g = -50;% -9.81;%[m/s^2]
+    par.g_vert = 0; 
     % friction coefficient mu \in [0,1)
-    par.mu = 0.1;
-    par.muWall = 0.01;
+    par.mu = 0.3;
+    par.muWall = 0.3;
 
     % particle radius radius 
     par.r = [0.630 0.630]; %[m]
@@ -25,16 +25,16 @@ function par = DEM2Dpar()
     %par.spawnBox = [ -2 -2; % x first comp z first comp
      %            2 2];
     %% Tool in DEM simulation
-    par.toolBool = 1; % works only for force-based DEM
+    par.toolBool = 0; % works only for force-based DEM
     par.toolbBox = [2.050 -0.808; % x first comp z first comp
                  2.10 -0.02];
     par.toolSpeed = [-0.05;0.001];
     % contact detection
     par.collisionThreshold = 1.25;
-    % numerical time stepping
+    %% numerical time stepping
     par.simulationStart = 0;
     par.simulationEnd = 4;
-    par.dt = 1e-2;%1e-6
+    par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.1 % visualization
     par.step = round(par.VisualResolution/par.dt);
@@ -49,7 +49,11 @@ function par = DEM2Dpar()
     par.dampTwall = 0.02;
     % particle particle cohesion
     par.cohesion =0;
-
+    %% Hertz-Mindlin Deresievicz model parameters
+    par.nu = 0.3; % Poisson-ratio, Querkontraktionszahl
+    par.e = 0.5; % coefficient of restitution
+    par.G = 1; % shear modulus
+    
     % 2 DOF or 3 DOF? 
     par.considerRotations = true;
     par.Cr = 0.990; % rolling resistance coefficient

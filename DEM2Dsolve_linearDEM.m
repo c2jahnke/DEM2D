@@ -1,4 +1,4 @@
-function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c)
+function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_linearDEM(par,data,c)
 % linear contact modell (Obermayr 2011)
     N = par.N;
     Pk = zeros(2,N);

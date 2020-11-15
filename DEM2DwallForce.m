@@ -21,13 +21,13 @@ function [fwx,fwz,twy,data] = DEM2DwallForce(par,data,c)
            elseif(k<13)
                continue;
            end
-            if(deltaW(k,i) > 0)
-            boundaryContacts = boundaryContacts +1;
-            normalStiffness = par.Emodul*pi/2*data.radius(i);
-            tangentialStiffness = 1/1.2*normalStiffness;
-           normal = -c.contacts(l).n;
-           tangential = -c.contacts(l).t;
-           
+           if(deltaW(k,i) > 0)
+               boundaryContacts = boundaryContacts +1;
+               normalStiffness = par.Emodul*pi/2*data.radius(i);
+               tangentialStiffness = 1/1.2*normalStiffness;
+               normal = -c.contacts(l).n;
+               tangential = -c.contacts(l).t;
+
            if(data.contactsWall.isInitialized(i,k))
                 data.contactsWall.contactAge(i,k) = 1;
            else
