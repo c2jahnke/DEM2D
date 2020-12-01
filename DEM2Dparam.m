@@ -1,14 +1,14 @@
 %% Parameters for the simulation%%
-function par = DEM2Dpar()
+function par = DEM2Dparam()
     par = struct;
     %% Choose contact algorithm)
-    par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
+    par.software = 'MATLAB';%'GNU Octave';
     par.PGJ = 0; % use PGJ (non-smooth) scheme (prototype)
     par.PBD = 0; % use Position Based Dynamics (Müller & Macklin et all) (prototype)
     par.HMD = 0; % use Hertz-Mindlin and Deresievicz DEM contact model (not implemented prototype)
     par.Frozen = 0; % frozen particles 
     %number of particles
-    par.N = 20;
+    par.N = 1;
     % gravity
     par.g = -9.81;% -9.81;%[m/s^2]
     par.g_vert = 0; 
@@ -33,13 +33,13 @@ function par = DEM2Dpar()
     par.collisionThreshold = 1.25;
     %% numerical time stepping
     par.simulationStart = 0;% [s] 
-    par.simulationEnd = 5.2;% [s] 
+    par.simulationEnd = 0.4;% [s] 
     par.dt = 1e-3;% [s] 1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.CollisionTime = 1e-2; % collision detection, must coincide with par.dt for prototypes, for linear DEM in can be larger
     par.CollisionStep = round(par.CollisionTime/par.dt);
     
-    par.VisualResolution = 0.1 %[s]  visualization
+    par.VisualResolution = 0.05 %[s]  visualization
     par.step = round(par.VisualResolution/par.dt);
     par.VisualizationStep = par.step;
 

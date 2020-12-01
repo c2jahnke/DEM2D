@@ -14,15 +14,10 @@ classdef DEM2Dcontacts < handle
                 DT = delaunayTriangulation(X');
                 E = edges(DT);
                 
-            elseif  strcmp(par.software,'GNU Octave') 
-                disp('Warning, currently not working')
-%                 DT = delaunay(X(1,:),X(2,:)); %fix, currently not working
-%                 triplot(DT,X(1,:),X(2,:));
-% %               TRI = DelaunayTri(X');
-% %                   E=edges(TRI);
-                DT = delaunay(X(1,:),X(2,:));
+              elseif  strcmp(par.software,'GNU Octave') 
+                DT = delaunay(X(1,:),X(2,:)); %
                 if length(DT) == 1
-                  E = [1,2];
+                  E = [];
                 else
                   E = [DT(:,1:2); DT(:,2:3); DT(:,[3,1])];
                 end

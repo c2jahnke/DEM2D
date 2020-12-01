@@ -6,7 +6,6 @@ function DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,j)
     drawArrow = @(x,y) quiver(x(1),y(1),x(2)-x(1),y(2)-y(1),0,'b-');
  %   figure('units','normalized','outerposition',[0.3 0.0 0.5 1.0])
     figure('units','normalized','outerposition',[0.3 0.4 0.5 0.6])
-    set(gcf,'renderer','zbuffer'); 
     set(gcf,'Color',[1 1 1]);
     if(par.writeVid)
         video = VideoWriter(['videos/' par.videoname '.avi']);
