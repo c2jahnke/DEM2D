@@ -1,10 +1,8 @@
 function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
 % Position Based Dynamics (Miles, Macklin 2007, 2014, etc)
-    nStab = 10; gamma = 0.3; nSteps = 10;
+    nStab = 10; gamma = 1.3; nSteps = 10;
     dts = par.dt/nSteps;
     
-%     pk = zeros(2,par.N);
-%     vk = zeros(2,par.N);
     ak = zeros(2,par.N);
     acc = zeros(2,par.N);
     
@@ -36,20 +34,20 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
                     x(:,as) = x(:,as) + deltaXas;
                     x(:,bs) = x(:,bs) - 2*deltaXbs;
                     % friction
-                    cf = [xOld(:,bs)-xOld(:,as) - (x(:,bs)-x(:,as))]'*contacts(j).t;
-                    frictionFactor = -(1/norm(x(:,bs)-x(:,as)))*(2 ...
-                        + (1/norm(x(:,bs)-x(:,as))^2)*(xOld(1,bs)-x(1,as) ...
-                        + xOld(2,bs)-xOld(2,as)- norm(x(:,bs)-x(:,as))^2));
-
-                    Dfas = frictionFactor.*[x(:,as) - x(:,bs)];
-                    Dfbs = frictionFactor.*[x(:,bs) - x(:,as)];
-                    denom = Dfas' *1/data.mass(as)*Dfas + Dfbs'*1/data.mass(bs)*Dfbs;
-                    deltaLf = cf/denom;
-                    deltaLf = sign(deltaLf)*min(par.mu*deltaLambda,abs(deltaLf));
-                    deltaXfas = -1/data.mass(as)*Dfas*deltaLambda;
-                    deltaXfbs = -1/data.mass(bs)*Dfbs*deltaLambda;
-                    x(:,as) = x(:,as) + deltaXfas;
-                    x(:,bs) = x(:,bs) - deltaXfbs;
+%                     cf = [xOld(:,bs)-xOld(:,as) - (x(:,bs)-x(:,as))]'*contacts(j).t;
+%                     frictionFactor = -(1/norm(x(:,bs)-x(:,as)))*(2 ...
+%                         + (1/norm(x(:,bs)-x(:,as))^2)*(xOld(1,bs)-x(1,as) ...
+%                         + xOld(2,bs)-xOld(2,as)- norm(x(:,bs)-x(:,as))^2));
+% 
+%                     Dfas = frictionFactor.*[x(:,as) - x(:,bs)];
+%                     Dfbs = frictionFactor.*[x(:,bs) - x(:,as)];
+%                     denom = Dfas' *1/data.mass(as)*Dfas + Dfbs'*1/data.mass(bs)*Dfbs;
+%                     deltaLf = cf/denom;
+%                     deltaLf = sign(deltaLf)*min(par.mu*deltaLambda,abs(deltaLf));
+%                     deltaXfas = -1/data.mass(as)*Dfas*deltaLambda;
+%                     deltaXfbs = -1/data.mass(bs)*Dfbs*deltaLambda;
+%                     x(:,as) = x(:,as) + deltaXfas;
+%                     x(:,bs) = x(:,bs) - deltaXfbs;
                 end
             end
             data.velocity = (x - xOld)/dts;

@@ -34,7 +34,7 @@ function par = DEM2Dparam()
     % numerical simulation
     par.simulationStart = 0;
     par.simulationEnd = 10;
-    par.dt = 1e-4;%1e-6
+    par.dt = 1e-5;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.05;
     par.step = round(par.VisualResolution/par.dt);
@@ -64,7 +64,7 @@ function par = DEM2Dparam()
     par.writeEps = false;
     par.writePng = true;
     par.writeVid = true;
-    par.videoname = 'video-200p-Schuettwinkel-mu0-5-dt1e-4_10s';%video4-merged';
+    par.videoname = 'video-200p-Schuettwinkel-mu0-5-dt1e-5_10s';%video4-merged';
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 3;
