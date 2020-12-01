@@ -1,4 +1,5 @@
 function [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c)
+% nonsmooth Projected Gauﬂ Jacobi method (From Jan Kleinerts code)
     contacts = c.contacts;
     pk = zeros(2,par.N);
     vk = zeros(2,par.N);
@@ -25,9 +26,9 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c)
                  ui=ui+contacts(j).Ga'*data.velocity(:,as);        
             end
             delta = contacts(j).l - w*contacts(j).eta*ui;
-            %delta = delta + [par.cohesion; 0];
+            delta = delta + [par.cohesion; 0];
             contacts(j).l = contacts(j).ConeProj(par,delta);
-            %contacts(j).l = contacts(j).l - [par.cohesion; 0];
+            contacts(j).l = contacts(j).l - [par.cohesion; 0];
         end
         data.velocity =  v0;
         for i=1:numcontacts
