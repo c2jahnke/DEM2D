@@ -59,7 +59,6 @@ for k = 1:T
         [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c);
     elseif par.PBD
         [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c);
-%         DEM2Dplot(data,par);
     elseif par.HMD
         [pk,vk,ak,acc,data] = DEM2Dsolve_hmd(par,data,c);
     else
@@ -84,11 +83,11 @@ for k = 1:T
         if(data.contactsParticle.mergedParticles)
             for kk = 1: data.contactsMerged.N
                 if(data.contactsMerged.timeFlag(kk))
-                    tmp = nonzeros(data.contactsMerged.index(kk,:));
+                    nonZeroIndex = nonzeros(data.contactsMerged.index(kk,:));
                     for jj = 1:data.contactsMerged.aggregateSize(kk) 
                         for ii = jj+1:data.contactsMerged.aggregateSize(kk) 
-                            data.contactsMerged.timePoint(tmp(ii),tmp(jj)) = visuIndex;
-                            data.contactsMerged.timePoint(tmp(jj),tmp(ii)) = visuIndex;
+                            data.contactsMerged.timePoint(nonZeroIndex(ii),nonZeroIndex(jj)) = visuIndex;
+                            data.contactsMerged.timePoint(nonZeroIndex(jj),nonZeroIndex(ii)) = visuIndex;
                             data.contactsMerged.timeFlag(kk) = false;
                         end
                     end

@@ -1,6 +1,6 @@
 function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
 % Position Based Dynamics (Miles, Macklin 2007, 2014, etc)
-    nStab = 10; gamma = 1.3; nSteps = 10;
+    nStab = 10; gamma = 0.3; nSteps = 10;
     dts = par.dt/nSteps;
     
     ak = zeros(2,par.N);

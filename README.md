@@ -9,3 +9,11 @@
 % To simulate the same particle setting, set LoadData = true in DEM2Dmain.m 
 
 % Rotations in beta stage: (some bugs pending), to turn it of set par.considerRotations = false
+
+% Frozen particles for linear penalty based DEM
+
+% Merged particles for linear penalty based DEM in beta stage
+
+% Position Based Dynamics in beta stage
+
+& nonsmooth Projected Gauﬂ Jacobi in beta stage
