@@ -1,7 +1,6 @@
 % -------------------------- Initialization -------------------------- %
 clc, clear all
 global par;
-%addpath('showcases/AngleOfRepose200p/');
 par = DEM2Dparam();
 global data;
 
@@ -16,10 +15,10 @@ if(SuccessFlag == 0)
 end
 end
 data.toolbBox = par.toolbBox;
-% data.velocity(:,1) = [10;0];
-% data.velocity(:,2) = [-2;0];
-% data.position(:,1) = [-1;-1.1];
-% data.position(:,2) = [1;-1];
+% data.velocity(:,1) = [0.2;0];
+% data.velocity(:,2) = [-0.2;0];
+% data.position(:,1) = [-0.2;-1.1];
+% data.position(:,2) = [0.3;-1];
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;

@@ -33,6 +33,8 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
                     deltaXas = -1/data.mass(as)*Das*deltaLambda;
                     x(:,as) = x(:,as) + deltaXas;
                     x(:,bs) = x(:,bs) - 2*deltaXbs;
+                end
+                if(as>0)
                     % friction
 %                     cf = [xOld(:,bs)-xOld(:,as) - (x(:,bs)-x(:,as))]'*contacts(j).t;
 %                     frictionFactor = -(1/norm(x(:,bs)-x(:,as)))*(2 ...
@@ -44,8 +46,8 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
 %                     denom = Dfas' *1/data.mass(as)*Dfas + Dfbs'*1/data.mass(bs)*Dfbs;
 %                     deltaLf = cf/denom;
 %                     deltaLf = sign(deltaLf)*min(par.mu*deltaLambda,abs(deltaLf));
-%                     deltaXfas = -1/data.mass(as)*Dfas*deltaLambda;
-%                     deltaXfbs = -1/data.mass(bs)*Dfbs*deltaLambda;
+%                     deltaXfas = -1/data.mass(as)*Dfas*deltaLf;
+%                     deltaXfbs = -1/data.mass(bs)*Dfbs*deltaLf;
 %                     x(:,as) = x(:,as) + deltaXfas;
 %                     x(:,bs) = x(:,bs) - deltaXfbs;
                 end

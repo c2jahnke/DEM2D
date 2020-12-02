@@ -18,6 +18,6 @@
 
 % Position Based Dynamics in beta stage
 
-% nonsmooth Projected Gauﬂ Jacobi in beta stage
+% nonsmooth Projected Gauss Jacobi in beta stage
 
-% Hertz Mindlin Deresievicz in pre-alpha state
+% Hertz Mindlin Deresievicz in beta state

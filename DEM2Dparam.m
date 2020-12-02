@@ -5,12 +5,12 @@ function par = DEM2Dparam()
     par.software = 'MATLAB';%'GNU Octave';
     par.PGJ = 0; % use PGJ (non-smooth) scheme (prototype)
     par.PBD = 0; % use Position Based Dynamics (Müller & Macklin et all) (prototype)
-    par.HMD = 0; % use Hertz-Mindlin and Deresievicz DEM contact model (not implemented prototype)
+    par.HMD = 1; % use Hertz-Mindlin and Deresievicz DEM contact model (not implemented prototype)
     par.Frozen = 0; % frozen particles 
     %number of particles
-    par.N = 1;
+    par.N = 12;
     % gravity
-    par.g = -9.81;% -9.81;%[m/s^2]
+    par.g = -20;% -9.81;%[m/s^2]
     par.g_vert = 0; 
     % friction coefficient mu \in [0,\infty)
     par.mu = 0.3; %[]
@@ -20,8 +20,8 @@ function par = DEM2Dparam()
     par.r = [0.20 0.250]; %[m]
     %% bounding Box for particle container
     % x-length, z-length (height)
-    par.bBox = [ -2 -2; % [m] x first comp z first comp
-                 2 0]; % x second comp, z second comp
+    par.bBox = [ -1 -2; % [m] x first comp z first comp
+                 1 0]; % x second comp, z second comp
     %par.spawnBox = [ -2 -2; % x first comp z first comp
      %            2 2];
     %% Tool in DEM simulation
@@ -33,10 +33,10 @@ function par = DEM2Dparam()
     par.collisionThreshold = 1.25;
     %% numerical time stepping
     par.simulationStart = 0;% [s] 
-    par.simulationEnd = 0.4;% [s] 
+    par.simulationEnd = 2.4;% [s] 
     par.dt = 1e-3;% [s] 1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
-    par.CollisionTime = 1e-2; % collision detection, must coincide with par.dt for prototypes, for linear DEM in can be larger
+    par.CollisionTime = 1e-3; % collision detection, must coincide with par.dt for prototypes, for linear DEM in can be larger
     par.CollisionStep = round(par.CollisionTime/par.dt);
     
     par.VisualResolution = 0.05 %[s]  visualization
@@ -54,7 +54,7 @@ function par = DEM2Dparam()
     %% Hertz-Mindlin Deresievicz model parameters
     par.nu = 0.3; % Poisson-ratio, Querkontraktionszahl
     par.e = 0.5; % coefficient of restitution
-    par.G = 1; % shear modulus
+    par.G = par.Emodul/(2*(1+par.nu)) ; % shear modulus for isotromic materials: 2G(1+nu)=E
     
     %% Rotations for linear DEM 2 DOF or 3 DOF? 
     par.considerRotations = true;

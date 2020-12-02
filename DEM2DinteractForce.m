@@ -57,8 +57,8 @@ function [fx,fz,torqY,data] = DEM2DinteractForce(par,data,c)
                 data.contactsParticle.localContactPoint(:,i,k) = data.contactsParticle.actuationPoint(:,i,k) - data.position(:,k);
                 data.contactsParticle.localContactPoint(:,k,i) = data.contactsParticle.actuationPoint(:,i,k) - data.position(:,i);            
             end
-            % effective mass
-            effMass = data.mass(i)*data.mass(k)/(data.mass(i)+data.mass(k));
+            % reduced mass
+            redMass = data.mass(i)*data.mass(k)/(data.mass(i)+data.mass(k));
             % normal stiffness
             normalStiffness = par.Emodul*(r(i)+r(k))/2*pi/2;
             relVel_ik = data.velocity(:,i) - data.velocity(:,k);
@@ -69,7 +69,7 @@ function [fx,fz,torqY,data] = DEM2DinteractForce(par,data,c)
                 Fcohesion = -par.cohesion*pi*((data.radius(i)+data.radius(k))/2)^2;
             end
             F_cons = normalStiffness*data.delta(i,k);
-            F_diss = - par.dampN*2*sqrt(normalStiffness*effMass)*(relVel_ik'*normal);
+            F_diss = - par.dampN*2*sqrt(normalStiffness*redMass)*(relVel_ik'*normal);
             % normal interaction 
             F(i,k) = F_cons + F_diss + Fcohesion ;%ddeltadt(i,k); 
             F(k,i) = - F(i,k);
@@ -102,8 +102,8 @@ function [fx,fz,torqY,data] = DEM2DinteractForce(par,data,c)
             if(isSticking && par.dampTwall > 0)
                    relativeTangentialVelocity = relVel_ik - relVel_ik'*normal*normal;
                    %Ft_diss = par.dampT*2*sqrt(effMass*tangentialStiffness)*relativeTangentialVelocity
-                   Ft(:,i,k) = Ft(:,i,k) - par.dampT*2*sqrt(effMass*tangentialStiffness)*relativeTangentialVelocity;
-                   Ft(:,k,i) = Ft(:,k,i) + par.dampT*2*sqrt(effMass*tangentialStiffness)*relativeTangentialVelocity;
+                   Ft(:,i,k) = Ft(:,i,k) - par.dampT*2*sqrt(redMass*tangentialStiffness)*relativeTangentialVelocity;
+                   Ft(:,k,i) = Ft(:,k,i) + par.dampT*2*sqrt(redMass*tangentialStiffness)*relativeTangentialVelocity;
             end
             if(par.considerRotations)
                 torqY(i,k) = det([(data.contactsParticle.actuationPoint(:,i,k)-data.position(:,i)) Ft(:,i,k)]);%Rsparse(i,k)/2; % check Obermayr S 29
