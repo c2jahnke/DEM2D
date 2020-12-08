@@ -1,11 +1,14 @@
 %% Parameters for the simulation%%
 function par = DEM2Dparam()
     par = struct;
-    %% Choose contact algorithm)
     par.software = 'MATLAB';%'GNU Octave';
-    par.PGJ = 0; % use PGJ (non-smooth) scheme (prototype)
-    par.PBD = 0; % use Position Based Dynamics (Müller & Macklin et all) (prototype)
-    par.HMD = 1; % use Hertz-Mindlin and Deresievicz DEM contact model (not implemented prototype)
+    
+    %% Choose contact algorithm
+    par.algorithm = 'PBD';%'PBD';'PGJ';'HMD';'LIN'
+    %   % use PGJ (non-smooth) scheme (prototype)
+    %   % use Position Based Dynamics (Müller & Macklin et all) (prototype)
+    %   % use Hertz-Mindlin and Deresievicz DEM contact model (not implemented prototype)
+    % only for linear DEM 'LIN'
     par.Frozen = 0; % frozen particles 
     %number of particles
     par.N = 12;
@@ -36,7 +39,7 @@ function par = DEM2Dparam()
     par.simulationEnd = 2.4;% [s] 
     par.dt = 1e-3;% [s] 1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
-    par.CollisionTime = 1e-3; % collision detection, must coincide with par.dt for prototypes, for linear DEM in can be larger
+    par.CollisionTime = 5e-3; % collision detection, must coincide with par.dt for prototypes, for linear DEM in can be larger
     par.CollisionStep = round(par.CollisionTime/par.dt);
     
     par.VisualResolution = 0.05 %[s]  visualization
@@ -69,8 +72,8 @@ function par = DEM2Dparam()
     par.writePdf = false;
     par.writeEps = false;
     par.writePng = false;
-    par.writeVid = false;
-    par.videoname = '2 PBD';%video4-merged';
+    par.writeVid = true;
+    par.videoname = '12 part HMD';%video4-merged';
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 8;

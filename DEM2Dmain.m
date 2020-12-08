@@ -4,7 +4,7 @@ global par;
 par = DEM2Dparam();
 global data;
 
-LoadData = 0; % if true, load previous initial data
+LoadData = 1; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -39,63 +39,125 @@ visuIndex = 1; visuCounter = 0; collisionCounter = 0;
 c = DEM2Dcontacts(data,par);
 % ---------------------------- Iteration ---------------------------- %
 tic
-for k = 1:T
-    visuCounter = visuCounter +1;
-    collisionCounter = collisionCounter +1;
-   if collisionCounter == par.CollisionStep && ~par.PBD
-        if par.Frozen
-            [partDist, unfrozenIndex] = DEM2DtoolDistance(par,data);
-            index = ((partDist > 10*max(data.radius))');
-            data.contactsParticle.deactivated = index';
+algorithm = par.algorithm
+switch algorithm
+    case 'PBD'
+        for k = 1:T
+            visuCounter = visuCounter +1;
+            c = DEM2Dcontacts(data,par);
+            [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c);
+            data.position = pk;
+            data.velocity = vk;
+            data.angular = ak;
+            data.acceleration = acc;
+            if visuCounter == par.VisualizationStep
+                if(mod(visuIndex,25) == 0)
+                    disp(['################## ' sprintf('% 4d',visuIndex) '/' num2str(T/visuStep) ' frames <-> ' sprintf('% 4d',floor(round(visuIndex/T*visuStep*100))) ' Prozent ##################']);
+                end
+                visuIndex = visuIndex+1; visuCounter = 0;
+                A(visuIndex,:,1:par.N) = data.acceleration;
+                P1(visuIndex,:,1:par.N) = data.position; 
+                A1(visuIndex,:,1:par.N) = data.angular; 
+                V1(visuIndex,:,1:par.N) = data.velocity;
+            end
         end
-        collisionCounter = 0;
-        c = DEM2Dcontacts(data,par);
-        if(par.merge && data.contactsMerged.N > 0)
-            DEM2Dsplit(data,par)
+    case 'PGJ'
+        for k = 1:T
+            visuCounter = visuCounter +1;
+            c = DEM2Dcontacts(data,par);
+            [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c);
+            data.position = pk;
+            data.velocity = vk;
+            data.angular = ak;
+            data.acceleration = acc;
+            if visuCounter == par.VisualizationStep
+                if(mod(visuIndex,25) == 0)
+                    disp(['################## ' sprintf('% 4d',visuIndex) '/' num2str(T/visuStep) ' frames <-> ' sprintf('% 4d',floor(round(visuIndex/T*visuStep*100))) ' Prozent ##################']);
+                end
+                visuIndex = visuIndex+1; visuCounter = 0;
+%                 A(visuIndex,:,1:par.N) = data.acceleration;
+                P1(visuIndex,:,1:par.N) = data.position; 
+                A1(visuIndex,:,1:par.N) = data.angular; 
+                V1(visuIndex,:,1:par.N) = data.velocity;
+            end
         end
-    end
-    if par.PGJ
-        [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c);
-    elseif par.PBD
-        [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c);
-    elseif par.HMD
-        [pk,vk,ak,acc,data] = DEM2Dsolve_hmd(par,data,c);
-    else
-        [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_linearDEM(par,data,c);
-    end
-    data.position = pk;
-    data.velocity = vk;
-    data.angular = ak;
-    data.acceleration = acc;
+    case 'HMD'
+        for k = 1:T
+            visuCounter = visuCounter +1;
+            collisionCounter = collisionCounter +1;
+            if collisionCounter == par.CollisionStep
+                collisionCounter = 0;
+                c = DEM2Dcontacts(data,par);
+            end
+            [pk,vk,ak,acc,data] = DEM2Dsolve_hmd(par,data,c);
+            data.position = pk;
+            data.velocity = vk;
+            data.angular = ak;
+            data.acceleration = acc;
+            if visuCounter == par.VisualizationStep
+                if(mod(visuIndex,25) == 0)
+                    disp(['################## ' sprintf('% 4d',visuIndex) '/' num2str(T/visuStep) ' frames <-> ' sprintf('% 4d',floor(round(visuIndex/T*visuStep*100))) ' Prozent ##################']);
+                end
+                visuIndex = visuIndex+1; visuCounter = 0;
+                A(visuIndex,:,1:par.N) = acc;
+                P1(visuIndex,:,1:par.N) = pk; 
+                A1(visuIndex,:,1:par.N) = ak; 
+                V1(visuIndex,:,1:par.N) = vk;
+            end
+        end
+    case  'LIN'
+        for k = 1:T
+            visuCounter = visuCounter +1;
+            collisionCounter = collisionCounter +1;
+           if collisionCounter == par.CollisionStep 
+                if par.Frozen
+                    [partDist, unfrozenIndex] = DEM2DtoolDistance(par,data);
+                    index = ((partDist > 10*max(data.radius))');
+                    data.contactsParticle.deactivated = index';
+                end
+                collisionCounter = 0;
+                c = DEM2Dcontacts(data,par);
+                if(par.merge && data.contactsMerged.N > 0)
+                    DEM2Dsplit(data,par)
+                end
+           end
+                [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_linearDEM(par,data,c);
+            data.position = pk;
+            data.velocity = vk;
+            data.angular = ak;
+            data.acceleration = acc;
 
-    if visuCounter == par.VisualizationStep
-        if(mod(visuIndex,25) == 0)
-            disp(['################## ' sprintf('% 4d',visuIndex) '/' num2str(T/visuStep) ' frames <-> ' sprintf('% 4d',floor(round(visuIndex/T*visuStep*100))) ' Prozent ##################']);
-        end
-        visuIndex = visuIndex+1; visuCounter = 0;
-        A(visuIndex,:,1:par.N) = data.acceleration;
-        P1(visuIndex,:,1:par.N) = data.position; 
-        A1(visuIndex,:,1:par.N) = data.angular; 
-        V1(visuIndex,:,1:par.N) = data.velocity;
-        PT(visuIndex,:,:) = data.toolbBox;
-        AP(visuIndex,:,:) = data.contactsParticle.deactivated';
-        if(data.contactsParticle.mergedParticles)
-            for kk = 1: data.contactsMerged.N
-                if(data.contactsMerged.timeFlag(kk))
-                    nonZeroIndex = nonzeros(data.contactsMerged.index(kk,:));
-                    for jj = 1:data.contactsMerged.aggregateSize(kk) 
-                        for ii = jj+1:data.contactsMerged.aggregateSize(kk) 
-                            data.contactsMerged.timePoint(nonZeroIndex(ii),nonZeroIndex(jj)) = visuIndex;
-                            data.contactsMerged.timePoint(nonZeroIndex(jj),nonZeroIndex(ii)) = visuIndex;
-                            data.contactsMerged.timeFlag(kk) = false;
+            if visuCounter == par.VisualizationStep
+                if(mod(visuIndex,25) == 0)
+                    disp(['################## ' sprintf('% 4d',visuIndex) '/' num2str(T/visuStep) ' frames <-> ' sprintf('% 4d',floor(round(visuIndex/T*visuStep*100))) ' Prozent ##################']);
+                end
+                visuIndex = visuIndex+1; visuCounter = 0;
+                A(visuIndex,:,1:par.N) = data.acceleration;
+                P1(visuIndex,:,1:par.N) = data.position; 
+                A1(visuIndex,:,1:par.N) = data.angular; 
+                V1(visuIndex,:,1:par.N) = data.velocity;
+                PT(visuIndex,:,:) = data.toolbBox;
+                AP(visuIndex,:,:) = data.contactsParticle.deactivated';
+                if(data.contactsParticle.mergedParticles)
+                    for kk = 1: data.contactsMerged.N
+                        if(data.contactsMerged.timeFlag(kk))
+                            nonZeroIndex = nonzeros(data.contactsMerged.index(kk,:));
+                            for jj = 1:data.contactsMerged.aggregateSize(kk) 
+                                for ii = jj+1:data.contactsMerged.aggregateSize(kk) 
+                                    data.contactsMerged.timePoint(nonZeroIndex(ii),nonZeroIndex(jj)) = visuIndex;
+                                    data.contactsMerged.timePoint(nonZeroIndex(jj),nonZeroIndex(ii)) = visuIndex;
+                                    data.contactsMerged.timeFlag(kk) = false;
+                                end
+                            end
                         end
                     end
+                    PM(visuIndex,:,1:par.N) = Pk;
+                    VM(visuIndex,:,1:par.N) = Vk;
                 end
             end
-            PM(visuIndex,:,1:par.N) = Pk;
-            VM(visuIndex,:,1:par.N) = Vk;
         end
-    end
+    otherwise
+        warning('Contact algorithm not available, check par.algorithm');
 end
 output = struct;
 output.acceleration = A;
