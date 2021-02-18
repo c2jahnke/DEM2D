@@ -4,23 +4,23 @@ function par = DEM2Dparam()
     par.software = 'MATLAB';%'GNU Octave';
     
     %% Choose contact algorithm
-    par.algorithm = 'PBD';%'PBD';'PGJ';'HMD';'LIN'
+    par.algorithm = 'PGJ';%'PBD';'PGJ';'HMD';'LIN'
     %   % use PGJ (non-smooth) scheme (prototype)
     %   % use Position Based Dynamics (Müller & Macklin et all) (prototype)
     %   % use Hertz-Mindlin and Deresievicz DEM contact model (not implemented prototype)
     % only for linear DEM 'LIN'
     par.Frozen = 0; % frozen particles 
-    %number of particles
+    % number of particles
     par.N = 12;
     % gravity
-    par.g = -20;% -9.81;%[m/s^2]
+    par.g = -10;% -9.81;%[m/s^2]
     par.g_vert = 0; 
     % friction coefficient mu \in [0,\infty)
     par.mu = 0.3; %[]
     par.muWall = 0.3; %[]
 
     % particle radius radius 
-    par.r = [0.20 0.250]; %[m]
+    par.r = [0.20 0.20]; %[m]
     %% bounding Box for particle container
     % x-length, z-length (height)
     par.bBox = [ -1 -2; % [m] x first comp z first comp
@@ -36,10 +36,10 @@ function par = DEM2Dparam()
     par.collisionThreshold = 1.25;
     %% numerical time stepping
     par.simulationStart = 0;% [s] 
-    par.simulationEnd = 2.4;% [s] 
+    par.simulationEnd = 5.4;% [s] 
     par.dt = 1e-3;% [s] 1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
-    par.CollisionTime = 5e-3; % collision detection, must coincide with par.dt for prototypes, for linear DEM in can be larger
+    par.CollisionTime = 1e-3; % collision detection, must coincide with par.dt for prototypes, for linear DEM it can be larger
     par.CollisionStep = round(par.CollisionTime/par.dt);
     
     par.VisualResolution = 0.05 %[s]  visualization
@@ -72,11 +72,9 @@ function par = DEM2Dparam()
     par.writePdf = false;
     par.writeEps = false;
     par.writePng = false;
-    par.writeVid = true;
-    par.videoname = '12 part HMD';%video4-merged';
+    par.writeVid = false;
+    par.videoname = '12 part PBD';%video4-merged';
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 8;
-    
-
 end

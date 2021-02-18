@@ -29,7 +29,7 @@ function [data,par,SuccessFlag] = DEM2Dinit(par)
     data.angular = sparse(2,par.N); % angular position, velocity and acceleration
     
     data.toolbBox = par.toolbBox;
-    if(par.PGJ)
+    if(par.algorithm == 'PGJ')
         par.dt = par.CollisionTime;
     end
     data.contactsWall = struct;

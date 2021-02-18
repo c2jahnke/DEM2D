@@ -4,7 +4,7 @@ global par;
 par = DEM2Dparam();
 global data;
 
-LoadData = 1; % if true, load previous initial data
+LoadData = 0; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -15,9 +15,9 @@ if(SuccessFlag == 0)
 end
 end
 data.toolbBox = par.toolbBox;
-% data.velocity(:,1) = [0.2;0];
-% data.velocity(:,2) = [-0.2;0];
-% data.position(:,1) = [-0.2;-1.1];
+% data.velocity(:,1) = [0.8;0];
+% data.velocity(:,2) = [-0.8;0];
+% data.position(:,1) = [0.1;-1.38];
 % data.position(:,2) = [0.3;-1];
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
@@ -39,7 +39,7 @@ visuIndex = 1; visuCounter = 0; collisionCounter = 0;
 c = DEM2Dcontacts(data,par);
 % ---------------------------- Iteration ---------------------------- %
 tic
-algorithm = par.algorithm
+algorithm = par.algorithm;
 switch algorithm
     case 'PBD'
         for k = 1:T

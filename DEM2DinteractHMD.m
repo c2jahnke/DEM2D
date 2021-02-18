@@ -16,7 +16,7 @@ function [fx,fz,torqY,data] = DEM2DinteractHMD(par,data,c)
     end
 
     fx = sparse(N,N); fz = sparse(N,N); % particle interaction forces
-    Estar = ((1-par.nu)/par.Emodul+(1-par.nu)/par.Emodul)^(-1); % effective E-modulus
+    Estar = ((1-par.nu^2)/par.Emodul+(1-par.nu^2)/par.Emodul)^(-1); % effective E-modulus
     Gstar = par.G/2;
     beta = log(par.e)/(sqrt(log(par.e)^2+pi^2)); % coefficient of restitution
     torqY = spalloc(N,N,2*N);
