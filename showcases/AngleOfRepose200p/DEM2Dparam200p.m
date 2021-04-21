@@ -1,11 +1,17 @@
 %% Parameters %%
-function par = DEM2Dparam()
+function par = DEM2Dparam200p()
     par = struct;
-    par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
-    par.PGJ = 0; % use PGJ (non-smooth) scheme or explicit solution
-    par.PBD = 0; % use Position Based Dynamics (M√ºller & Macklin et all) (prototype)
-    par.HMD = 0; % use Hertz-Mindlin and Deresievicz DEM contact model (not implemented prototype)
-    par.Frozen = 0; % frozen particles 
+    par.software = 'MATLAB';%'GNU Octave';
+    
+    %% Choose contact algorithm
+    par.algorithm = 'PGS';%'PGJ';%'PBD';'PGJ';'HMD';'LIN'; 'PBD-LIN'
+    %   % use PGJ (non-smooth) Projected Gauﬂ Jacobi scheme (prototype)
+    %   % use PGS (non-smooth) Projected Gauﬂ Seidel scheme (prototype)
+    %   % use Position Based Dynamics (Mueller & Macklin et all) (prototype)
+    %   % use Hertz-Mindlin and Deresievicz DEM contact model (prototype)
+    %   % use PDM (PBD and DEM around tool) hybrid approach (so far not properly implemented prototype)
+    
+    % only for linear DEM 'LIN'    par.Frozen = 0; % frozen particles 
    %number of particles
     par.N = 200;
 
@@ -34,12 +40,12 @@ function par = DEM2Dparam()
     % numerical simulation
     par.simulationStart = 0;
     par.simulationEnd = 10;
-    par.dt = 1e-5;%1e-6
+    par.dt = 1e-3;%1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.VisualResolution = 0.05;
     par.step = round(par.VisualResolution/par.dt);
     par.VisualizationStep = par.step;
-    par.CollisionTime = 5e-4;
+    par.CollisionTime = 1e-3;
     par.CollisionStep = round(par.CollisionTime/par.dt);
     %% force parameters
 
@@ -64,7 +70,9 @@ function par = DEM2Dparam()
     par.writeEps = false;
     par.writePng = true;
     par.writeVid = true;
-    par.videoname = 'video-200p-Schuettwinkel-mu0-5-dt1e-5_10s';%video4-merged';
+    par.videoname = ['video-200p-Schuettwinkel-mu' strrep(num2str(par.mu),'.','-') '-dt'...
+        strrep(num2str(par.dt),'.','-') '-' num2str(par.simulationEnd) 's-' ...
+        par.algorithm];%video4-merged';    par.video_framerate = 20;
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 3;

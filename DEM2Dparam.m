@@ -4,10 +4,13 @@ function par = DEM2Dparam()
     par.software = 'MATLAB';%'GNU Octave';
     
     %% Choose contact algorithm
-    par.algorithm = 'PGJ';%'PBD';'PGJ';'HMD';'LIN'
-    %   % use PGJ (non-smooth) scheme (prototype)
-    %   % use Position Based Dynamics (M√ºller & Macklin et all) (prototype)
-    %   % use Hertz-Mindlin and Deresievicz DEM contact model (not implemented prototype)
+    par.algorithm = 'PGJ';%'PGJ';%'PBD';'PGJ';'HMD';'LIN'; 'PBD-LIN'
+    %   % use PGJ (non-smooth) Projected Gauﬂ Jacobi scheme (prototype)
+    %   % use PGS (non-smooth) Projected Gauﬂ Seidel scheme (prototype)
+    %   % use Position Based Dynamics (Mueller & Macklin et all) (prototype)
+    %   % use Hertz-Mindlin and Deresievicz DEM contact model (prototype)
+    %   % use PDM (PBD and DEM around tool) hybrid approach (so far not properly implemented prototype)
+    
     % only for linear DEM 'LIN'
     par.Frozen = 0; % frozen particles 
     % number of particles
@@ -16,7 +19,7 @@ function par = DEM2Dparam()
     par.g = -10;% -9.81;%[m/s^2]
     par.g_vert = 0; 
     % friction coefficient mu \in [0,\infty)
-    par.mu = 0.3; %[]
+    par.mu = 0.5; %[]
     par.muWall = 0.3; %[]
 
     % particle radius radius 
@@ -36,7 +39,7 @@ function par = DEM2Dparam()
     par.collisionThreshold = 1.25;
     %% numerical time stepping
     par.simulationStart = 0;% [s] 
-    par.simulationEnd = 5.4;% [s] 
+    par.simulationEnd = 5.0;% [s] 
     par.dt = 1e-3;% [s] 1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
     par.CollisionTime = 1e-3; % collision detection, must coincide with par.dt for prototypes, for linear DEM it can be larger
@@ -60,7 +63,7 @@ function par = DEM2Dparam()
     par.G = par.Emodul/(2*(1+par.nu)) ; % shear modulus for isotromic materials: 2G(1+nu)=E
     
     %% Rotations for linear DEM 2 DOF or 3 DOF? 
-    par.considerRotations = true;
+    par.considerRotations = false;
     par.Cr = 0.990; % rolling resistance coefficient
     par.CrWall = 0.990;% rolling resistance coefficient for walls
     
@@ -72,8 +75,8 @@ function par = DEM2Dparam()
     par.writePdf = false;
     par.writeEps = false;
     par.writePng = false;
-    par.writeVid = false;
-    par.videoname = '12 part PBD';%video4-merged';
+    par.writeVid = true;
+    par.videoname = ['12 part ' par.algorithm];% frozen DEM';%video4-merged';
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 8;

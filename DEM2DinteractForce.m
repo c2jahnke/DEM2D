@@ -23,6 +23,9 @@ function [fx,fz,torqY,data] = DEM2DinteractForce(par,data,c)
     for j = 1:c.numParticleContacts
         i = c.contacts(j).a;
         k = c.contacts(j).b;
+        if(data.contactsParticle.deactivated(i) == 1)
+            continue;
+        end
             if(data.contactsParticle.isInitialized(i,k))
                 if(data.delta(i,k) < 0)
                     data.contactsParticle.PassiveContactAge(i,k) = data.contactsParticle.PassiveContactAge(i,k) +1;
