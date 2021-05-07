@@ -19,6 +19,17 @@ data.toolbBox = par.toolbBox;
 % data.velocity(:,2) = [-0.8;0];
 % data.position(:,1) = [0.1;-1.38];
 % data.position(:,2) = [0.3;-1];
+
+data.position(:,1) = [-0.5;-1];
+% data.position(:,2) = [-0.3;-1];
+% data.position(:,3) = [-0.1;-1];
+% data.position(:,4) = [0.1;-1];
+% data.position(:,5) = [0.4;-1];
+data.velocity(:,1) = [0;0];
+% data.velocity(:,2) = [0;0];
+% data.velocity(:,3) = [0;0];
+% data.velocity(:,4) = [0;0];
+% data.velocity(:,5) = [-1.0;0];
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
