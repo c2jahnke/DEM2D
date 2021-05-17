@@ -21,10 +21,12 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_linearDEM(par,data,c)
     if(par.toolBool)
         [ftx,ftz,tty,data] = DEM2DtoolForce(par,data,c);
     end
-   for k=1:N
-        if(data.contactsParticle.deactivated(k))
-            continue
-        else
+    particleIndex = 1:N;
+    
+    for k=particleIndex(~data.contactsParticle.deactivated)
+%         if(data.contactsParticle.deactivated(k))
+%             continue
+%         else
         ax = (sum(fx(k,:)) + fwx(k,:) + ftx(k,:))/m(k) + par.g_vert;
         az = (sum(fz(k,:)) + fwz(k,:) + ftz(k,:))/m(k) + par.g;
         if(par.considerRotations)
@@ -61,7 +63,7 @@ function [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_linearDEM(par,data,c)
         data.toolbBox(:,1) = data.toolbBox(:,1) + par.toolSpeed(1)*par.dt;
         data.toolbBox(:,2) = data.toolbBox(:,2) + par.toolSpeed(2)*par.dt;
         ak = data.angular;
-        end
+%         end
     end
     if(data.contactsParticle.mergedParticles)
         for k = 1:data.contactsMerged.N

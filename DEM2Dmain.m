@@ -4,7 +4,7 @@ global par;
 par = DEM2Dparam();
 global data;
 
-LoadData = 0; % if true, load previous initial data
+LoadData = 1; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -15,18 +15,20 @@ if(SuccessFlag == 0)
 end
 end
 data.toolbBox = par.toolbBox;
-% data.velocity(:,1) = [0.8;0];
+%  data.velocity(:,1) = [0;0];
 % data.velocity(:,2) = [-0.8;0];
 % data.position(:,1) = [0.1;-1.38];
 % data.position(:,2) = [0.3;-1];
 
-data.position(:,1) = [-0.5;-1];
+% data.position(:,1) = [0;-1];
+
+% data.position(:,1) = [-0.6;-1];
 % data.position(:,2) = [-0.3;-1];
 % data.position(:,3) = [-0.1;-1];
 % data.position(:,4) = [0.1;-1];
 % data.position(:,5) = [0.4;-1];
-data.velocity(:,1) = [0;0];
-% data.velocity(:,2) = [0;0];
+% data.velocity(:,1) = [0.5;0];
+% data.velocity(:,2) = [0;0.1];
 % data.velocity(:,3) = [0;0];
 % data.velocity(:,4) = [0;0];
 % data.velocity(:,5) = [-1.0;0];
@@ -143,8 +145,8 @@ switch algorithm
            if collisionCounter == par.CollisionStep 
                 if par.Frozen
                     [partDist, unfrozenIndex] = DEM2DtoolDistance(par,data);
-                    index = ((partDist > 10*max(data.radius))');
-                    data.contactsParticle.deactivated = index';
+                    FrozenIndex = ((partDist > 10*max(data.radius))');
+                    data.contactsParticle.deactivated = FrozenIndex';
                 end
                 collisionCounter = 0;
                 c = DEM2Dcontacts(data,par);
@@ -194,13 +196,15 @@ switch algorithm
            if collisionCounter == par.CollisionStep 
                 % search particles in proximity of tool
                 [partDist, unfrozenIndex] = DEM2DtoolDistance(par,data);
-                index = ((partDist > 10*max(data.radius))');
-                data.contactsParticle.deactivated = index';
+                FrozenIndex = ((partDist > 10*max(data.radius))');
+                data.contactsParticle.deactivated = FrozenIndex';
+                PbdIndex = ((partDist > 2*max(data.radius))');
+                data.contactsParticle.PBD = bitxor(PbdIndex',FrozenIndex');
                 collisionCounter = 0;
                 c = DEM2Dcontacts(data,par);
                 
            end
-            [pk,vk,ak,acc,Pk,Vk,data] = DEM2Dsolve_PBD_LIN(par,data,c);
+            [pk,vk,ak,acc,data] = DEM2Dsolve_PBD_LIN(par,data,c);
             data.position = pk;
             data.velocity = vk;
             data.angular = ak;
@@ -241,3 +245,36 @@ DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,visuIndex)
 DEM2DplotEnergy(data,par,output)
 %pause(3)
 close all
+
+subdir = 'plots'
+time = par.simulationStart:par.VisualResolution:par.simulationEnd;
+
+figName = [par.videoname '_Position'];
+figure('Name',figName)
+plot(time,P1(:,:,1))
+xlabel('Time [s]'); ylabel('Position [m]')
+title(['Position ' par.algorithm]) 
+h2_fig = gcf;
+if(par.writePdf)
+    saveas(h2_fig,[subdir '\' figName '.fig']); saveas(h2_fig,[subdir '\' figName '.png']);
+    print( h2_fig, [subdir '\' figName], ['-dpdf'] )
+end
+figName = [par.videoname '_Velocity'];
+figure('Name',figName)
+plot(time,V1(:,:,1))
+xlabel('Time [s]'); ylabel('Velocity [m/s]')
+title(['Velocity ' par.algorithm]) 
+h2_fig = gcf;
+if(par.writePdf)
+    saveas(h2_fig,[subdir '\' figName '.fig']); saveas(h2_fig,[subdir '\' figName '.png']);
+    print( h2_fig, [subdir '\' figName], ['-dpdf'] )
+end
+if(par.algorithm == 'LIN')
+figName = [par.videoname '_Acceleration'];
+figure('Name',figName)
+plot(time,A(:,:,1))
+xlabel('Time [s]'); ylabel('Position [m]')
+h2_fig = gcf;
+% saveas(h2_fig,[subdir '\' figName '.fig']); saveas(h2_fig,[subdir '\' figName '.png']);
+% print( h2_fig, [subdir '\' figName], ['-dpdf'] )
+end
