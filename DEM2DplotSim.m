@@ -68,7 +68,6 @@ function DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,j)
         text(par.bBox(2)-0.0845*par.videoFontsize,par.bBox(4)-0.0208*par.videoFontsize,['t = ',num2str((k-1)*par.dt*par.VisualizationStep,'%10.2f') 's'],'fontsize',par.videoFontsize)
         axis equal  
         axis([-0.95*par.r(2)+par.bBox(1) par.bBox(2)+0.95*par.r(2) -0.95*par.r(2)+par.bBox(3) par.bBox(4)+0.95*par.r(2)])
-        
         set(gca,'Visible','off','XTick',[],'YTick',[]);
         set(gca,'fontsize', par.videoFontsize);
         title(par.videotitle,'fontsize',par.videoFontsize)
