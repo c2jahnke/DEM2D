@@ -4,7 +4,7 @@ global par;
 par = DEM2Dparam();
 global data;
 
-LoadData = 1; % if true, load previous initial data
+LoadData = 0; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -20,15 +20,15 @@ data.toolbBox = par.toolbBox;
 % data.position(:,1) = [0.1;-1.38];
 % data.position(:,2) = [0.3;-1];
 
-% data.position(:,1) = [0;-1];
-
+data.position(:,1) = [0;-1];
+data.velocity(:,1) = [0;0];
 % data.position(:,1) = [-0.6;-1];
 % data.position(:,2) = [-0.3;-1];
 % data.position(:,3) = [-0.1;-1];
 % data.position(:,4) = [0.1;-1];
 % data.position(:,5) = [0.4;-1];
-% data.velocity(:,1) = [0.5;0];
-% data.velocity(:,2) = [0;0.1];
+% data.velocity(:,1) = [0;0];
+% data.velocity(:,2) = [0;0];
 % data.velocity(:,3) = [0;0];
 % data.velocity(:,4) = [0;0];
 % data.velocity(:,5) = [-1.0;0];
@@ -244,7 +244,7 @@ DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,visuIndex)
 % DEM2DplotAngularVelocity(data,par,output)
 DEM2DplotEnergy(data,par,output)
 %pause(3)
-close all
+%close all
 
 subdir = 'plots'
 time = par.simulationStart:par.VisualResolution:par.simulationEnd;

@@ -42,8 +42,13 @@ legend('Etotal')
 % potential energy
 % rotational energy
 % total energy
-
-
+subdir = 'plots'
+figName = [par.videoname '_totalEnergy'];
+h2_fig = gcf;
+if(par.writePdf)
+    saveas(h2_fig,[subdir '\' figName '.fig']); saveas(h2_fig,[subdir '\' figName '.png']);
+    print( h2_fig, [subdir '\' figName], ['-dpdf'] )
+end
 
 
 end

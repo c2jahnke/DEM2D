@@ -5,8 +5,8 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c)
     vk = zeros(2,par.N);
     ak = zeros(2,par.N);
     acc = zeros(2,par.N);
-    w=0.2; % relaxation factor to control convergence. w<0 -> underrelaxation
-           %                                           w>0 -> overrelaxation
+    w= par.w; % relaxation factor to control convergence. w<0 -> underrelaxation
+    %w=0.01;       %                                           w>0 -> overrelaxation
     tol=-1;
     maxiter=20;
     iter = 0;
