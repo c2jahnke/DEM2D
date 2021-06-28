@@ -1,7 +1,11 @@
 %% Parameters for the simulation%%
 function par = DEM2Dparam()
     par = struct;
-    par.software = 'MATLAB';%'GNU Octave';
+    if exist ("OCTAVE_VERSION", "builtin") > 0
+      par.software = 'GNU Octave';
+    else 
+      par.software = 'MATLAB';    
+    endif
     
     %% Choose contact algorithm
     par.algorithm = 'PBD';%'PGJ';%'PBD';'PGJ';'HMD';'LIN'; 'PBD-LIN'
