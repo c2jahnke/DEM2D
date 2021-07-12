@@ -16,7 +16,7 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_hmd(par,data,c)
 
     r = data.radius;
     m = data.mass;
-    %ftx = zeros(par.N,1); ftz = zeros(par.N,1); tty = zeros(par.N,1);
+    ftx = zeros(par.N,1); ftz = zeros(par.N,1); tty = zeros(par.N,1);
     [fx,fz,ty,data] = DEM2DinteractHMD(par,data,c);
     [fwx,fwz,twy,data] = DEM2DwallForce(par,data,c);
     for k=1:N

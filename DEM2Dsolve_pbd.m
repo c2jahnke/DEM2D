@@ -19,14 +19,20 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
         % postion_based_dynamics.jl 92 - 113
         for j = 1:numcontacts
             bs = contacts(j).b;
-            as = contacts(j).a;
+            as = contacts(j).a; % calculate overlap
             overlap = contacts(j).distance/nSteps;
             if overlap > 0
                 Dbs = 1/(contacts(j).distance/nSteps+data.radius(bs))*contacts(j).n;
                 denom = Dbs'*1/data.mass(bs)*Dbs;
                 if(as>0)
-                    Das = 1/(contacts(j).distance/nSteps+data.radius(bs)+data.radius(as))*(x(:,as) - x(:,bs));
-                    Dbs = 1/(contacts(j).distance/nSteps+data.radius(bs)+data.radius(as))*(x(:,bs) - x(:,as));
+                    overlap2 = data.radius(as) + data.radius(bs) - norm(data.position(:,as) - data.position(:,bs));
+                    if (abs(overlap - overlap2)>10^3*eps)
+%                        disp('overlaps differ') % this does make a
+%                        diference
+                       overlap = overlap2;
+                    end
+                    Das = 1/(overlap/nSteps+data.radius(bs)+data.radius(as))*(x(:,as) - x(:,bs));
+                    Dbs = 1/(overlap/nSteps+data.radius(bs)+data.radius(as))*(x(:,bs) - x(:,as));
                     denom = Das'*1/data.mass(as)*Das + Dbs'*1/data.mass(bs)*Dbs;
                 end
                 deltaLambda = -overlap./(denom+alpha);

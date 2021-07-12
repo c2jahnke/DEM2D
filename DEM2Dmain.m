@@ -4,7 +4,7 @@ global par;
 par = DEM2Dparam();
 global data;
 
-LoadData = 0; % if true, load previous initial data
+LoadData = 1; % if true, load previous initial data
 if(LoadData == true)
     SuccessFlag = false;
     [data,par] = DEM2Dload(par);
@@ -20,8 +20,8 @@ data.toolbBox = par.toolbBox;
 % data.position(:,1) = [0.1;-1.38];
 % data.position(:,2) = [0.3;-1];
 
-data.position(:,1) = [0;-1];
-data.velocity(:,1) = [0;0];
+% data.position(:,1) = [0;-1];
+% data.velocity(:,1) = [0;0];
 % data.position(:,1) = [-0.6;-1];
 % data.position(:,2) = [-0.3;-1];
 % data.position(:,3) = [-0.1;-1];
