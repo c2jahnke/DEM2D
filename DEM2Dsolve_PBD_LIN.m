@@ -1,6 +1,6 @@
-function [pk,vk,ak,acc,data] = DEM2Dsolve_hmd(par,data,c)
-    % Hertz Mindlin Deresievicz model (1882-1953), similar to EDEM-version
-    % (beta stage)
+function [pk,vk,ak,acc,data] = DEM2Dsolve_PBD_LIN(par,data,c)
+% linear contact modell (Obermayr 2011) around tool, otherwise PBD (for
+% deactivated particles)
     N = par.N;
     Pk = zeros(2,N);
     Vk = zeros(2,N);
@@ -17,12 +17,19 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_hmd(par,data,c)
     r = data.radius;
     m = data.mass;
     ftx = zeros(par.N,1); ftz = zeros(par.N,1); tty = zeros(par.N,1);
-    [fx,fz,ty,data] = DEM2DinteractHMD(par,data,c);
-    [fwx,fwz,twy,data] = DEM2DwallForceHMD(par,data,c);
-    for k=1:N
+    [fx,fz,ty,data] = DEM2DinteractForce(par,data,c);
+    [fwx,fwz,twy,data] = DEM2DwallForce(par,data,c);
+    if(par.toolBool)
+        [ftx,ftz,tty,data] = DEM2DtoolForce(par,data,c);
+    end
+    deactivatedOrPBD = bitor(data.contactsParticle.deactivated,data.contactsParticle.PBD);
+    particleIndex = 1:N;
+    for k=particleIndex(~deactivatedOrPBD)
+%         if(deactivatedOrPBD(k))
+%             continue
+%         else
         ax = (sum(fx(k,:)) + fwx(k,:) + ftx(k,:))/m(k) + par.g_vert;
         az = (sum(fz(k,:)) + fwz(k,:) + ftz(k,:))/m(k) + par.g;
-       
         if(par.considerRotations)
             % 2D inertia tensor for spheres around y-axis I = 0.25mr^2
             I = 0.25*data.mass(k)*(data.radius(k)^2);
@@ -44,15 +51,19 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_hmd(par,data,c)
             
         end
         % standard Euler
-        pk(1,k) = data.position(1,k) + data.velocity(1,k)*dt; 
-        pk(2,k) = data.position(2,k) + data.velocity(2,k)*dt;
+%         pk(1,k) = data.position(1,k) + data.velocity(1,k)*dt; 
+%         pk(2,k) = data.position(2,k) + data.velocity(2,k)*dt;
         % symplectic Euler
         acc(1,k) = ax; acc(2,k) = az;
         vk(1,k) = vx(k) + ax*dt;
         vk(2,k) = vz(k) + az*dt;
         
-%         pk(1,k) = data.position(1,k) + vk(1,k)*dt; 
-%         pk(2,k) = data.position(2,k) + vk(2,k)*dt;
+        pk(1,k) = data.position(1,k) + vk(1,k)*dt; 
+        pk(2,k) = data.position(2,k) + vk(2,k)*dt;
+        
+        data.toolbBox(:,1) = data.toolbBox(:,1) + par.toolSpeed(1)*par.dt;
+        data.toolbBox(:,2) = data.toolbBox(:,2) + par.toolSpeed(2)*par.dt;
         ak = data.angular;
-        end
+%         end
+   end    
 end

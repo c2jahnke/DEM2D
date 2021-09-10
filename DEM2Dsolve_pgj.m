@@ -8,7 +8,7 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c)
     w= par.w; % relaxation factor to control convergence. w<0 -> underrelaxation
     %w=0.01;       %                                           w>0 -> overrelaxation
     tol=-1;
-    maxiter=20;
+    maxiter=par.maxIter;
     iter = 0;
     numcontacts = length(contacts);
     

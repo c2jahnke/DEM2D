@@ -4,7 +4,7 @@ function par = DEM2Dparam()
     par.software = 'MATLAB';%'GNU Octave';
     
     %% Choose contact algorithm
-    par.algorithm = 'HMD';%'PGJ';%'PBD';'PGJ';'HMD';'LIN'; 'PBD-LIN'
+    par.algorithm = 'LIN';%'PGJ';%'PBD';'PGJ';'HMD';'LIN'; 'PBD-LIN'
     %   % use PGJ (non-smooth) Projected Gau� Jacobi scheme (prototype)
     %   % use PGS (non-smooth) Projected Gau� Seidel scheme (prototype)
     %   % use Position Based Dynamics (Mueller & Macklin et all) (prototype)
@@ -14,7 +14,7 @@ function par = DEM2Dparam()
     % only for linear DEM 'LIN'
     par.Frozen = 0; % frozen particles 
     % number of particles
-    par.N = 4;
+    par.N = 1;
     % gravity
     par.g = -9.81;% -9.81;%[m/s^2]
     par.g_vert = 0; 
@@ -23,11 +23,11 @@ function par = DEM2Dparam()
     par.muWall = 0.3; %[]
 
     % particle radius radius 
-    par.r = [0.25 0.25]; %[m]
+    par.r = [0.5 0.5]; %[m]
     %% bounding Box for particle container
     % x-length, z-length (height)
-    par.bBox = [ -1 -2; % [m] x first comp z first comp
-                 1 0]; % x second comp, z second comp
+    par.bBox = [ -1 -0.5; % [m] x first comp z first comp
+                 2 2.5]; % x second comp, z second comp
     %par.spawnBox = [ -2 -2; % x first comp z first comp
      %            2 2];
     %% Tool in DEM simulation
@@ -39,10 +39,10 @@ function par = DEM2Dparam()
     par.collisionThreshold = 1.25;
     %% numerical time stepping
     par.simulationStart = 0;% [s] 
-    par.simulationEnd = 5.0;% [s] 
-    par.dt = 1e-3;% [s] 1e-6
+    par.simulationEnd = 4.0;% [s] 
+    par.dt = 1e-4;% [s] 1e-6
     par.T = round(par.simulationEnd/par.dt); %integrationSteps %1e4; 1e6; %2e5
-    par.CollisionTime = 1e-3; % collision detection, must coincide with par.dt for prototypes, for linear DEM it can be larger
+    par.CollisionTime = 1e-4; % collision detection, must coincide with par.dt for prototypes, for linear DEM it can be larger
     par.CollisionStep = round(par.CollisionTime/par.dt);
     
     par.VisualResolution = 0.05 %[s]  visualization
@@ -59,8 +59,9 @@ function par = DEM2Dparam()
     par.cohesion =0;
     %% PGJ / PGS parameters
     par.w = 0.2; % relaxation factor, normally w = 0.2;
+    par.maxIter = 1;
     %% PBD parameters
-    par.gamma = 10;
+    par.gamma = 8;
     par.nSteps = 1;
     %% Hertz-Mindlin Deresievicz model parameters
     par.nu = 0.3; % Poisson-ratio, Querkontraktionszahl
@@ -80,9 +81,17 @@ function par = DEM2Dparam()
     par.writePdf = false;
     par.writeEps = false;
     par.writePng = false;
-    par.writeVid = false;
+    par.writeFig = false;
+    par.writeVid = true;
     par.videotitle = [num2str(par.N) ' part ' par.algorithm ' E = ' num2str(par.Emodul/(1e6)) ' MPa dt =' num2str(par.dt) ' s'];
     par.videoname = [num2str(par.N) '_part_' par.algorithm '_E_' num2str(par.Emodul/(1e6)) '_MPa_mu=' num2str(par.mu) ];% frozen DEM';%video4-merged';
+    if( par.algorithm(1)== 'P')
+        if(par.algorithm(2) == 'G')
+            par.videoname = [par.videoname '_maxIter_' num2str(par.maxIter)];
+        else
+            par.videoname = [par.videoname '_gamma_' num2str(par.gamma)];
+        end
+    end
     par.video_framerate = 20;
     par.videoFontsize = 16;
     par.videoPartFontsize = 8;

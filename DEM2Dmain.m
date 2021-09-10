@@ -20,8 +20,8 @@ data.toolbBox = par.toolbBox;
 % data.position(:,1) = [0.1;-1.38];
 % data.position(:,2) = [0.3;-1];
 
-% data.position(:,1) = [0;-1];
-% data.velocity(:,1) = [0;0];
+data.position(:,1) = [0;2];
+data.velocity(:,1) = [0;0];
 % data.position(:,1) = [-0.6;-1];
 % data.position(:,2) = [-0.3;-1];
 % data.position(:,3) = [-0.1;-1];
@@ -273,7 +273,7 @@ if(par.algorithm == 'LIN')
 figName = [par.videoname '_Acceleration'];
 figure('Name',figName)
 plot(time,A(:,:,1))
-xlabel('Time [s]'); ylabel('Position [m]')
+xlabel('Time [s]'); ylabel('Acceleration [m/s^2]')
 h2_fig = gcf;
 % saveas(h2_fig,[subdir '\' figName '.fig']); saveas(h2_fig,[subdir '\' figName '.png']);
 % print( h2_fig, [subdir '\' figName], ['-dpdf'] )

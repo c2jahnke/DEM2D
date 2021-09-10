@@ -10,7 +10,7 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
         xOld = data.position;
         v0 = data.velocity;
         data.velocity = data.velocity + dts*[par.g_vert; par.g].*ones(2,par.N);
-        x = data.position + dts*data.velocity + dts^2*([par.g_vert; par.g].*zeros(2,par.N)-gamma*data.velocity);%
+        x = data.position + dts*data.velocity + dts^2*(-gamma*data.velocity);%
 %         x = data.position + dts*data.velocity + dts^2*([par.g_vert; par.g].*ones(2,par.N)-gamma*data.velocity);%
 %         data.velocity = data.velocity + dts*[par.g_vert; par.g].*ones(2,par.N);
         c = DEM2Dcontacts(data,par);
@@ -19,8 +19,8 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
         % postion_based_dynamics.jl 92 - 113
         for j = 1:numcontacts
             bs = contacts(j).b;
-            as = contacts(j).a; % calculate overlap
-            overlap = contacts(j).distance/nSteps;
+            as = contacts(j).a; 
+            overlap = contacts(j).distance/nSteps; % calculate overlap
             if overlap > 0
                 Dbs = 1/(contacts(j).distance/nSteps+data.radius(bs))*contacts(j).n;
                 denom = Dbs'*1/data.mass(bs)*Dbs;

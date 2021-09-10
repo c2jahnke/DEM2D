@@ -7,7 +7,7 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pgs(par,data,c)
     acc = zeros(2,par.N);
     w=par.w; % relaxation factor to control convergence. w<0 -> underrelaxation
            %                                           w>0 -> overrelaxation
-    maxiter=20;
+    maxiter=par.maxIter;
     iter = 0;
     numcontacts = length(contacts);
     

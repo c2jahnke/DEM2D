@@ -78,6 +78,9 @@ function DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,j)
         if(par.writeVid)
              writeVideo(video,F(j));
         end
+        if(par.writeFig)
+            saveas(h1,['videos/' par.videoname '_' num2str(k) '.fig'])
+        end
         if(par.writePng)
             saveas(h1,['videos/' par.videoname '_' num2str(k) '.png'])
         end
