@@ -1,5 +1,5 @@
 function [pk,vk,ak,acc,data] = DEM2Dsolve_pgj(par,data,c)
-% nonsmooth Projected Gauﬂ Jacobi method (from Jan Kleinerts code)
+% nonsmooth Projected Gauﬂ Jacobi method (similar to Jan Kleinerts code)
     contacts = c.contacts;
     pk = zeros(2,par.N);
     vk = zeros(2,par.N);

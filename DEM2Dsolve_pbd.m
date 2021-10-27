@@ -11,8 +11,6 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
         v0 = data.velocity;
         data.velocity = data.velocity + dts*[par.g_vert; par.g].*ones(2,par.N);
         x = data.position + dts*data.velocity + dts^2*(-gamma*data.velocity);%
-%         x = data.position + dts*data.velocity + dts^2*([par.g_vert; par.g].*ones(2,par.N)-gamma*data.velocity);%
-%         data.velocity = data.velocity + dts*[par.g_vert; par.g].*ones(2,par.N);
         c = DEM2Dcontacts(data,par);
         contacts = c.contacts;
         numcontacts = length(contacts);
@@ -27,8 +25,6 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_pbd(par,data,c)
                 if(as>0)
                     overlap2 = data.radius(as) + data.radius(bs) - norm(data.position(:,as) - data.position(:,bs));
                     if (abs(overlap - overlap2)>10^3*eps)
-%                        disp('overlaps differ') % this does make a
-%                        diference
                        overlap = overlap2;
                     end
                     Das = 1/(overlap/nSteps+data.radius(bs)+data.radius(as))*(x(:,as) - x(:,bs));

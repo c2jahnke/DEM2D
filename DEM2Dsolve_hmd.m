@@ -51,8 +51,6 @@ function [pk,vk,ak,acc,data] = DEM2Dsolve_hmd(par,data,c)
         vk(1,k) = vx(k) + ax*dt;
         vk(2,k) = vz(k) + az*dt;
         
-%         pk(1,k) = data.position(1,k) + vk(1,k)*dt; 
-%         pk(2,k) = data.position(2,k) + vk(2,k)*dt;
         ak = data.angular;
         end
 end
