@@ -2,8 +2,8 @@
 function par = TEST_RotParam1()
     par = struct;
     par.software = 'MATLAB';%'GNU Octave';%'MATLAB';%'GNU Octave';
-    par.PGJ = 0; % use PGJ (non-smooth) scheme or explicit solution
-    par.PBD = 0; % use Position Based Dynamics (Müller & Macklin et all)
+    par.algorithm = 'LIN';
+    
     par.Frozen = 0;
     %number of particles
     par.N = 1;
@@ -55,20 +55,27 @@ function par = TEST_RotParam1()
     par.considerRotations = true;
     par.Cr = 0.01; % rolling resistance coefficient
     par.CrWall = 0.99;
-    %% video parameters
-    par.writePdf = false;
-    par.writeEps = false;
-    par.writePng = false;
-    par.writeVid = false;
-    par.videoname = 'video-40-rot';%video4-merged';
-    par.video_framerate = 20;
-    par.videoFontsize = 16;
-    par.videoPartFontsize = 8;
-       
     
     %% merge parameters
     par.merge = false;
     par.mergeThreashold = 10^-3; %Threashold for relative velocity to initialize merge
 
-
+    %% video parameters
+    par.writePdf = false;
+    par.writeEps = false;
+    par.writePng = false;
+    par.writeFig = false;
+    par.writeVid = true;
+    par.videotitle = [num2str(par.N) ' part ' par.algorithm ' E = ' num2str(par.Emodul/(1e6)) ' MPa dt =' num2str(par.dt) ' s'];
+    par.videoname = [num2str(par.N) '_part_' par.algorithm '_E_' num2str(par.Emodul/(1e6)) '_MPa_mu=' num2str(par.mu) ];% frozen DEM';%video4-merged';
+    if( par.algorithm(1)== 'P')
+        if(par.algorithm(2) == 'G')
+            par.videoname = [par.videoname '_maxIter_' num2str(par.maxIter)];
+        else
+            par.videoname = [par.videoname '_gamma_' num2str(par.gamma)];
+        end
+    end
+    par.video_framerate = 20;
+    par.videoFontsize = 16;
+    par.videoPartFontsize = 8;
 end

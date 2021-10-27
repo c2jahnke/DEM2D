@@ -1,10 +1,10 @@
 % -------------------------- Initialization -------------------------- %
 clc, clear all
 global par;
-par = DEM2Dparam200p();
+par = DEM2Dparam();
 global data;
 
-LoadData = 1; % if true, load previous initial data
+LoadData = 0; % if true, load previous initial data
 
 if(LoadData == true)
     SuccessFlag = false;

@@ -32,3 +32,12 @@
 % nonsmooth Projected Gauss Jacobi (PGJ)in beta stage
 % nonsmooth Projected Gauss Seidel (PGS) in beta stage
 % penalty based Hertz Mindlin Deresievicz DEM (HMD) in beta state
+
+%% Showcases
+PlateExperiment50p
+copy DEM2Dparam50p.m into the folder DEM2D
+in DEM2Dmain.m replace DEM2Dparam by DEM2Dparam50p
+
+AngleOfRepose200p
+copy DEM2Dparam200p.m into the folder DEM2D
+in DEM2Dmain.m replace DEM2Dparam by DEM2Dparam200p

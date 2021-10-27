@@ -42,9 +42,13 @@ A = zeros(T/VisualizationStep+1,2,par.N);
 P1 = zeros(T/VisualizationStep+1,2,par.N); P1(1,:,:) = data.position;
 V1 = zeros(T/VisualizationStep+1,2,par.N); V1(1,:,:) = data.velocity;
 A1 = zeros(T/VisualizationStep+1,2,par.N); A1(1,:,:) = data.angular;
+% tool
+PT = zeros(T/VisualizationStep+1,2,2); %PT(1,:,:) = data.toolbBox;
 % for merged particles
 PM = zeros(T/VisualizationStep+1,2,par.N); 
 VM = zeros(T/VisualizationStep+1,2,par.N);
+% for frozen particles
+AP = zeros(T/VisualizationStep+1,par.N); AP(1,:) = ones(1,par.N);
 
 % ---------------------------- Iteration ---------------------------- %
 
@@ -57,7 +61,7 @@ for k = 1:T
         ColCounter = 0;
         c = DEM2Dcontacts(data,par);
     end
-    [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
+    [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_linearDEM(par,data,c);
 %   [pk,vk,ak,data] = DEM2Dsolve_pgs(data,par,c.contacts);
     data.position = pk;
     data.velocity = vk;
@@ -93,7 +97,8 @@ for k = 1:T
 end
 time = 1:j;
 % -------------------------- Plot time series -------------------------- %
-DEM2DplotSim(P1,V1,A1,PM,VM,par,data,j)
+DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,j)
+
 disp(["Slight rotation of particle 2."])
 
 Test = data.angular

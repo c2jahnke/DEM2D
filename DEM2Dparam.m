@@ -10,11 +10,11 @@ function par = DEM2Dparam()
     %   % use Position Based Dynamics (Mueller & Macklin et all) (prototype)
     %   % use Hertz-Mindlin and Deresievicz DEM contact model (prototype)
     %   % use PDM (PBD and DEM around tool) hybrid approach (so far not properly implemented prototype)
-    
+    par.dataStr = 'data.mat';
     % only for linear DEM 'LIN'
     par.Frozen = 0; % frozen particles 
     % number of particles
-    par.N = 1;
+    par.N = 10;
     % gravity
     par.g = -9.81;% -9.81;%[m/s^2]
     par.g_vert = 0; 
@@ -23,7 +23,7 @@ function par = DEM2Dparam()
     par.muWall = 0.3; %[]
 
     % particle radius radius 
-    par.r = [0.5 0.5]; %[m]
+    par.r = [0.25 0.25]; %[m]
     %% bounding Box for particle container
     % x-length, z-length (height)
     par.bBox = [ -1 -0.5; % [m] x first comp z first comp

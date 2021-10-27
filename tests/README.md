@@ -1,3 +1,2 @@
-# Tests with bool value (true/false)
+# Different tests with bool value (true/false) mainly to debug rotations
 # TESTmain1 generates symmetric test scenario, checks if particle final position is in a tolerance ( currently for dt = 5e-5, the global error should be below 1e-4 )
-# other Test Scenarios ...

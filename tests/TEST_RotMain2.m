@@ -53,7 +53,7 @@ for k = 1:T
         ColCounter = 0;
         c = DEM2Dcontacts(data,par);
     end
-    [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_expl(par,data,c);
+    [pk,vk,ak,acceleration,Pk,Vk,data] = DEM2Dsolve_linearDEM(par,data,c);
 %   [pk,vk,ak,data] = DEM2Dsolve_pgs(data,par,c.contacts);
     data.position = pk;
     data.velocity = vk;
@@ -84,7 +84,7 @@ for k = 1:T
     end
 end
 % -------------------------- Plot time series -------------------------- %
-% DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,j)
+DEM2DplotSim(P1,V1,A1,AP,PT,PM,VM,par,data,j)
 
 Test = data.angular
 Test2 = data.position
