@@ -1,13 +1,14 @@
 % -------------------------- Initialization -------------------------- %
 clc, clear all
 global par;
-par = DEM2Dparam();
+par = DEM2Dparam200p();
 global data;
 
 LoadData = 1; % if true, load previous initial data
+
 if(LoadData == true)
     SuccessFlag = false;
-    [data,par] = DEM2Dload(par);
+    [data,par] = DEM2Dload(par,par.dataStr);
 else
     [data,par,SuccessFlag] = DEM2Dinit(par);
 if(SuccessFlag == 0)
@@ -15,23 +16,7 @@ if(SuccessFlag == 0)
 end
 end
 data.toolbBox = par.toolbBox;
-%  data.velocity(:,1) = [0;0];
-% data.velocity(:,2) = [-0.8;0];
-% data.position(:,1) = [0.1;-1.38];
-% data.position(:,2) = [0.3;-1];
 
-data.position(:,1) = [0;2];
-data.velocity(:,1) = [0;0];
-% data.position(:,1) = [-0.6;-1];
-% data.position(:,2) = [-0.3;-1];
-% data.position(:,3) = [-0.1;-1];
-% data.position(:,4) = [0.1;-1];
-% data.position(:,5) = [0.4;-1];
-% data.velocity(:,1) = [0;0];
-% data.velocity(:,2) = [0;0];
-% data.velocity(:,3) = [0;0];
-% data.velocity(:,4) = [0;0];
-% data.velocity(:,5) = [-1.0;0];
 % ------------------------ Plot initial state ------------------------ %
 DEM2Dplot(data,par);
 drawnow;
